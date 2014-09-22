@@ -1,6 +1,5 @@
 from flask import Flask
 from jinja2 import Environment, PackageLoader
-from a import a
 
 app = Flask(__name__)
 
