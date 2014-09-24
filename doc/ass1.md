@@ -66,7 +66,3 @@ The manager will use the software to bill the client.
 # Note for development
 
 Since the team is not extremely aware of the mechanics behind an hotel, we will ask to a real hotel staff feedback on the prototype of the software.
-
-# Role of the Team
-
-
