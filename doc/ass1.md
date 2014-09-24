@@ -15,6 +15,18 @@ Hotel Revolution 2014s
 
 Giovanni Pelosi, Sara Zanzottera, Gianpaolo Branca and Simone Mosciatti
 
+# Specification
+
+The system will be a Back-Office information system.
+
+The system implement the functions of:
+
++ Decision Support System, because will help decide what room offer to who.
+
+# Why Hotel Revolution 2014s ?
+
+How to manage the booking of rooms in a big hotel, including the assigment of rooms to big groups or guest with particular request (smokers, pets, disabilities, etc...)
+
 # Requirements of the system
 
 The system help in a useful and friendly way the staff in the hotel managment.
