@@ -19,7 +19,7 @@ Giovanni Pelosi, Sara Zanzottera, Gianpaolo Branca and Simone Mosciatti
 
 The system will be a Back-Office information system.
 
-The system implement the functions of a Decision Support System, because will help decide what room offer to who.
+The system implement the functions of a Decision Support System, it will help decide what room offer to who.
 
 # Why Hotel Revolution 2014s ?
 
