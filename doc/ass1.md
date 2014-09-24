@@ -25,6 +25,8 @@ The system implement the functions of:
 
 # Why Hotel Revolution 2014s ?
 
+## Problems
+
 How to manage the booking of rooms in a big hotel, including the assigment of rooms to big groups or guest with particular request (smokers, pets, disabilities, etc...)
 
 # Requirements of the system
@@ -60,4 +62,11 @@ Despite, the interface will be user friendly even for non-technical staff, so it
 The receptionist will, mainly, use the system to check the availability of the rooms in a specific period.
 
 The manager will use the software to bill the client.
+
+# Note for development
+
+Since the team is not extremely aware of the mechanics behind an hotel, we will ask to a real hotel staff feedback on the prototype of the software.
+
+# Role of the Team
+
 
