@@ -7,6 +7,44 @@ Our project aims to help hotel receptionists in their work, making easier and qu
 
 We will develop our software on three sides: realizing a database containing the information about hotel's rooms and their availiability, designing a graphical interface that will be user-friendly to minimize the training period of the staff and allow them to be comfortable with our software, and developing a software that will hold database's informations for the staff and help the owner to bill clients and to calculate the revenue of his hotel.
 
+\subsection{Requirement Analysis}
+
+\subsubsection{interface}
+
+\begin{enumerate}
+	
+\item booking interface
+    \begin{itemize}
+		\item intuitive and user-friendly to provide a quick answer to the client for his request, and if possible, confirm with one click the booking.
+		\item has a section where fill the date of check-in and check-out and show all the rooms free for that period. The system can show many type of rooms and prices.
+		\item has some feature to satisfy other request, like guest disability, pet, child, smoker. For example, for a disable guest the system choose a room at the lower floor possible
+		\item has a form for fill the guest information, like name, passport, e-mail. If the guest can't give all the information immediately can be filled later in the room section
+    \end{itemize}
+	
+\item Rooms interface
+    \begin{itemize}
+		\item has a section where see all the room in a schematic hotel map, if they are free or occupied in the current day or a choosed period
+		\item clicking on the room the user can see all the feature of the room, and also modify it if necessary, if it's booked or occupied the system show also all the guests data
+		\item the user can modify guests data, check-in/out time or delete the booking. 
+		\item a form can be filled with other particular requests, in case
+    \end{itemize}
+
+\item Billing interface
+    \begin{itemize}
+		\item can be opened only by the manager with a log-in page
+		\item show all the revenue of the hotels for a day, week, or month
+		\item in the main page show the bill for all the guest which check-out is the current day
+    \end{itemize}
+
+\end{enumerate}
+
+\subsubsection{database}
+    \begin{itemize}
+	\item must be pre-filled with the hotel map, with all the rooms
+	\item has a first table for the rooms and some column for specify rooms occupation, type and feature
+	\item has a second table for the guests information, linked with a 1-m relation with the room (a room can have many guests, but a guest can stay in only one room)
+	\item has a third table for the revenue of the hotel.
+	\item (optional) all the important information can be encrypted
 
 \subsection{Outline Plan (Principal activities and Milestones)}
 
