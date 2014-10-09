@@ -151,61 +151,66 @@ By doing so, final user will immediately have a complete view of general situati
 
 \begin{description}
 
-  \item[Book a Room] Allows the receptionist to choose and book a room for a guest in a specified period, inserting all related data into the database.
+  \item[Book a Room:] \hfill \\ Allows the receptionist to choose and book a room for a guest in a specified period, inserting all related data into the database.
   
-  \item[Show Guest] Allows the receptionist to search in the database for a specified guest's data, in order to make a new reservation for the same guest.
+  \item[Show Guest:] \hfill \\ Allows the receptionist to search in the database for a specified guest's data, in order to make a new reservation for the same guest.
     
-  \item[Modify Reservation] Allows the receptionist to modify reservation's data, for example change checkin-checkout dates, change the guest's name, change room etc.
+  \item[Modify Reservation:] \hfill \\ Allows the receptionist to modify reservation's data, for example change checkin-checkout dates, change the guest's name, change room etc.
 
-  \item[Modify Guest's Information] Allows the receptionist to modify guest's data, for example to update passport number or fix a mistake in name's spelling.
+  \item[Modify Guest's Information:] \hfill \\ Allows the receptionist to modify guest's data, for example to update passport number or fix a mistake in name's spelling.
 
-  \item[Check Rooms Availability] Searches in the database which rooms are free in a specified period and shows the results to the receptionist.
+  \item[Check Rooms Availability:] \hfill \\ Searches in the database which rooms are free in a specified period and shows the results to the receptionist.
 
-  \item[Prepare Billing Informations] Calculates the price of the stay using the reservation's data, allowing the hotel's owner to easily bill the clients.
+  \item[Prepare Billing Informations:] \hfill \\ Calculates the price of the stay using the reservation's data, allowing the hotel's owner to easily bill the clients.
 
-  \item[Calculate Revenue] Calculates the total revenue of the hotel in a specified period, summing up all the revenues from every single reservation made in that period of time.
+  \item[Calculate Revenue:] \hfill \\ Calculates the total revenue of the hotel in a specified period, summing up all the revenues from every single reservation made in that period of time.
 
 \end{description}
+
+
+\includepdf{DataModel}
 
 \subsection{Data Model Table Attributes}
 
 \begin{itemize}
   \item Guest \\ 
     The table contains the information about a single guest.
-    \begin{itemize}
-      \item GuestID: The ID for a single guest
-      \item Name: The name of the guest
-      \item Surname: The surname of the guest
-      \item DocumentID: The ID of the document of the guest
-      \item Contact: An email or a phone number to contact in case of problem
-    \end{itemize}
+    \begin{description}
+      \item[GuestID:] \hfill \\
+        The ID for a single guest
+      \item[Name:] \hfill \\
+        The name of the guest
+      \item[Surname:] \hfill \\
+        The surname of the guest
+      \item[DocumentID:] \hfill \\
+        The ID of the document of the guest
+      \item[Contact:] \hfill \\
+        An email or a phone number to contact in case of problem
+    \end{description}
   \item Reservation \\
     The table is necessary to manage the many-to-many relationship between Guest and Rooms.
-    \begin{itemize}
-      \item IDRegistration: The ID of a single reservation
-      \item IDRoom: The ID of the room the guest will use for this particolar reservation
-      \item IDGuest: The ID of the guest whose prenotation is refered to
-      \item CheckIN: The date when the guest will arrive
-      \item CheckOUT: The date when the guest will leave
-    \end{itemize}    
+    \begin{description}
+      \item[IDRegistration:] \hfill \\ The ID of a single reservation
+      \item[IDRoom:] \hfill \\ The ID of the room the guest will use for this particolar reservation
+      \item[IDGuest:] \hfill \\ The ID of the guest whose prenotation is refered to
+      \item[CheckIN:] \hfill \\ The date when the guest will arrive
+      \item[CheckOUT:] \hfill \\ The date when the guest will leave
+    \end{description}    
   \item Rooms \\
     The table contains the information about the rooms in the hotel.
-    \begin{itemize}
-      \item IDRoom: The ID of a room
-      \item RoomNumer: The number of the room in the structure
-      \item PricePerNight: How much cost the room for a single night  
-      \item NumGuest: The maximun number of people that room can accomodate
-      \item Smoker: It is possible to smoke in the room ?
-      \item WiFi: The room has WiFi access ?
-    \end{itemize}
+    \begin{description}
+      \item[IDRoom:] \hfill \\ The ID of a room
+      \item[RoomNumer:] \hfill \\ The number of the room in the structure
+      \item[PricePerNight:] \hfill \\ How much cost the room for a single night  
+      \item[NumGuest:] \hfill \\ The maximun number of people that room can accomodate
+      \item[Smoker:] \hfill \\ It is possible to smoke in the room ?
+      \item[WiFi:] \hfill \\ The room has WiFi access ?
+    \end{description}
   \item User \\
     This table will keep the information about the users who can access and use the application.
-    \begin{itemize}
-      \item Name: Use as PrimaryKey, the username necessary to access at the application
-      \item Password: The hash of the password used to access the application
-      \item Manager: Is the user a manager ?
-    \end{itemize}
+    \begin{description}
+      \item[Name:] \hfill \\ Use as PrimaryKey, the username necessary to access at the application
+      \item[Password:] \hfill \\ The hash of the password used to access the application
+      \item[Manager:] \hfill \\ Is the user a manager ?
+    \end{description}
 \end{itemize}
-
-\includepdf{DataModel}
-
