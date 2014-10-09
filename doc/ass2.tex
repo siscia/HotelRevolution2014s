@@ -150,7 +150,7 @@ By doing so, final user will immediately have a complete view of general situati
 \subsection{Data Model Table Attributes}
 
 \begin{itemize}
-  \item Guest
+  \item Guest \\ 
     The table contains the information about a single guest.
     \begin{itemize}
       \item GuestID: The ID for a single guest
@@ -159,7 +159,7 @@ By doing so, final user will immediately have a complete view of general situati
       \item DocumentID: The ID of the document of the guest
       \item Contact: An email or a phone number to contact in case of problem
     \end{itemize}
-  \item Reservation
+  \item Reservation \\
     The table is necessary to manage the many-to-many relationship between Guest and Rooms.
     \begin{itemize}
       \item IDRegistration: The ID of a single reservation
@@ -168,7 +168,7 @@ By doing so, final user will immediately have a complete view of general situati
       \item CheckIN: The date when the guest will arrive
       \item CheckOUT: The date when the guest will leave
     \end{itemize}    
-  \item Rooms
+  \item Rooms \\
     The table contains the information about the rooms in the hotel.
     \begin{itemize}
       \item IDRoom: The ID of a room
@@ -178,7 +178,7 @@ By doing so, final user will immediately have a complete view of general situati
       \item Smoker: It is possible to smoke in the room ?
       \item WiFi: The room has WiFi access ?
     \end{itemize}
-  \item User
+  \item User \\
     This table will keep the information about the users who can access and use the application.
     \begin{itemize}
       \item Name: Use as PrimaryKey, the username necessary to access at the application
