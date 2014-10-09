@@ -108,7 +108,7 @@ We will implement the main functionalities directly on the home page. These are:
 	\item To control general services.
 \end{enumerate}
 
- \subsubsection{Interactive Structure of the Hotel}
+\subsubsection{Interactive Structure of the Hotel}
 	
 According to clients’ necessity we will implement, on the home page, an interactive structure that represents the hotel. 
 By doing so, final user will immediately have a complete view of general situation, and the possibility to select a room to know its details.
@@ -128,19 +128,64 @@ By doing so, final user will immediately have a complete view of general situati
 	\end{itemize}
 
 \item (Thursday 10/23) System required analysis, it will include:
-	\begin{itemize}
-		\item The detailed data modelling.
-		\item The detailed data analysis.
-		\item The detailed process modeling. 
-	\end{itemize}
+  \begin{itemize}
+    \item The detailed data modelling.
+    \item The detailed data analysis.
+    \item The detailed process modeling. 
+  \end{itemize}
 
 \item (Friday 11/07) Final describtion of the project, it will include:
-	\begin{itemize}
-		\item The detailed explaination of the application architecture.
-		\item The detailed database design.
-		\item The datailed input of the application.
-		\item The detailed output of the application.
-		\item The user interface design.
-	\end{itemize}
+  \begin{itemize}
+    \item The detailed explaination of the application architecture.
+    \item The detailed database design.
+    \item The datailed input of the application.
+    \item The detailed output of the application.
+    \item The user interface design.
+\end{itemize}
 
 \end{enumerate}
+
+\includepdf{use-case-diagram}
+
+\subsection{Data Model Table Attributes}
+
+\begin{itemize}
+  \item Guest
+    The table contains the information about a single guest.
+    \begin{itemize}
+      \item GuestID
+      \item Name: The name of the guest
+      \item Surname: The surname of the guest
+      \item DocumentID: The ID of the document of the guest
+      \item Contact: An email or a phone number to contact in case of problem
+    \end{itemize}
+  \item Reservation
+    The table is necessary to manage the many-to-many relationship between Guest and Rooms.
+    \begin{itemize}
+      \item IDRegistration: The ID of a single reservation
+      \item IDRoom: The ID of the room the guest will use for this particolar reservation
+      \item IDGuest: The ID of the guest whose prenotation is refered to
+      \item CheckIN: The date when the guest will arrive
+      \item CheckOUT: The date when the guest will leave
+    \end{itemize}    
+  \item Rooms
+    The table contains the information about the rooms in the hotel.
+    \begin{itemize}
+      \item IDRoom: The ID of a room
+      \item RoomNumer: The number of the room in the structure
+      \item PricePerNight: How much cost the room for a single night  
+      \item NumGuest: The maximun number of people that room can accomodate
+      \item Smoker: It is possible to smoke in the room ?
+      \item WiFi: The room has WiFi access ?
+    \end{itemize}
+  \item User
+    This table will keep the information about the users who can access and use the application.
+    \begin{itemize}
+      \item Name: Use as PrimaryKey, the username necessary to access at the application
+      \item Password: The hash of the password used to access the application
+      \item Manager: Is the user a manager ?
+    \end{itemize}
+\end{itemize}
+
+\includepdf{DataModel}
+
