@@ -75,8 +75,8 @@ def main():
     return template.render(mappa)
 
 
-@app.route("/booking")
-def booking():
+@app.route("/booking_1")
+def booking1():
     if not session.get('logged_in'):
         abort(401)
     today=20141004
@@ -89,12 +89,9 @@ def booking():
     dbfullrooms = cursor.fetchall()
     cursor.execute("SELECT * FROM rooms")
     dbrooms = cursor.fetchall()
-
     rooms = set(dbrooms)
     fullrooms = set(dbfullrooms)
-    freerooms = rooms.difference(fullrooms)
-
-
+    freerooms = list(rooms.difference(fullrooms))
     mappa = {"rooms" : freerooms}
     template = env.get_template("booking.html")
     return template.render(mappa)
