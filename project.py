@@ -93,8 +93,43 @@ def booking1():
     fullrooms = set(dbfullrooms)
     freerooms = list(rooms.difference(fullrooms))
     mappa = {"rooms" : freerooms}
-    template = env.get_template("booking.html")
+    template = env.get_template("booking1.html")
     return template.render(mappa)
+
+@app.route("/booking_2")
+def booking2():
+    if not session.get('logged_in'):
+        abort(401)
+    today=20141004
+#    today = time.localtime().tm_year * 10000 + time.localtime().tm_mon * 100 + time.localtime().tm_mday
+    oggi = {"day": "04", "month": "10", "year": "2014" }    
+#    oggi = {"day": time.localtime().tm_mday, "month": time.localtime().tm_mon, "year": time.localtime().tm_year }
+    if request.method == "GET":
+        conn = sqlite3.connect("hotel.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM rooms WHERE id_room = ?", [(request.args["room"])])
+        room = cursor.fetchone()
+        mappa = {"oggi" : oggi, "room": room}   #Quando chiamo in GET uso questa funzione, invece di request.form[]
+        template = env.get_template("booking2.html")
+        return template.render(mappa)
+    
+    conn = sqlite3.connect("hotel.db")
+    cursor = conn.cursor()
+    
+    
+    return redirect(url_for("main"))
+    
+    
+@app.route("/guests")
+def guests():
+    if not session.get('logged_in'):
+        abort(401)
+    
+    
+    
+    template = env.get_template("guests.html")
+    return template.render(mappa)
+
 
 
 @app.route("/logout")
