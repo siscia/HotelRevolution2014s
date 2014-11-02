@@ -25,8 +25,17 @@ body {
 	border-radius: 5px;
 }
 
+.myform {
+	margin-top: 7px;
+	margin-bottom: 7px;
+}
+
 .c1 {
 	background-color: #ADD8E6;
+}
+
+.c1-1 {
+	background-color: #DCA1DC;
 }
 
 .c2 {
@@ -34,8 +43,12 @@ body {
 }
 
 .c3 {
-	background-color: #38C938;
+	background-color: #47B547;
 }
+
+.c3-1 {
+	background-color: #90EE90;
+} 
 
 #mng {
 	width: 100%;

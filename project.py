@@ -43,6 +43,9 @@ def loginpage():
 
 @app.route("/main", methods=["GET"])
 def main():
+    """documentazione
+    sdbseg
+    """
     if not session.get('logged_in'):
         abort(401)
     today=20141004
@@ -75,8 +78,8 @@ def main():
     return template.render(mappa)
 
 
-@app.route("/booking_1")
-def booking1():
+@app.route("/booking", methods=["GET"])
+def booking():
     if not session.get('logged_in'):
         abort(401)
     today=20141004
@@ -85,7 +88,7 @@ def booking1():
 #    oggi = {"day": time.localtime().tm_mday, "month": time.localtime().tm_mon, "year": time.localtime().tm_year }
     conn = sqlite3.connect("hotel.db")
     cursor = conn.cursor()
-    cursor.execute("SELECT id_room FROM reservations WHERE checkIN <= ? AND checkOUT >= ?", [today, today])
+    cursor.execute("SELECT id_room FROM reservations WHERE checkIN <= ? AND checkOUT >= ?", [request.args["checkin"], request.args["checkout"]])
     dbfullrooms = cursor.fetchall()
     cursor.execute("SELECT * FROM rooms")
     dbrooms = cursor.fetchall()
@@ -93,8 +96,18 @@ def booking1():
     fullrooms = set(dbfullrooms)
     freerooms = list(rooms.difference(fullrooms))
     mappa = {"rooms" : freerooms}
-    template = env.get_template("booking1.html")
+    template = env.get_template("booking.html")
     return template.render(mappa)
+   
+@app.route("/booking2", methods=["GET"])
+def booking2():
+    if not session.get('logged_in'):
+        abort(401)       
+        
+    template = env.get_template("booking.html")
+    return template.render(mappa)
+        
+    
 
 @app.route("/booking_2")
 def booking2():
@@ -116,8 +129,9 @@ def booking2():
     conn = sqlite3.connect("hotel.db")
     cursor = conn.cursor()
     
+    print request.args["x"]
     
-    return redirect(url_for("main"))
+    return #redirect(url_for("main"))
     
     
 @app.route("/guests")
