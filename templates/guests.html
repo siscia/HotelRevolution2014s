@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <title> HR - Guests </title>
+    </head>
+
+    <body>
+        <table>
+          <tr>
+            <th> Guests Matchig Your Query... </th>
+          </tr>
+          {% for guest in guests %}
+          <tr>
+              {% for i un xrange(9) %}
+              <td> {{ guest[0] }} </td>
+              {% endfor %}
+          </tr>
+        {% endfor %}
+
+    </body>
+</html>

@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <title> HR - Booking #1 </title>
+    </head>
+
+    <body>
+        <table>
+          <tr>
+            <th> Camere Libere </th>
+          </tr>
+          {% for room in freerooms %}
+          <tr>
+            <td>
+            {{ room }}
+            </td>
+          </tr>
+        {% endfor %}
+
+    </body>
+</html>
