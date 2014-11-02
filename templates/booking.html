@@ -46,7 +46,7 @@
 		</div>
 		
 		<div class="row">
-			<form class="form-horizontal" role="form" method="get">
+			<form class="form-horizontal" role="form" method="post" action="booking2">
 				<div class="col-md-8">
 					<div class="div-std">
 						<table class="table table-bordered">
@@ -61,13 +61,14 @@
 							</thead>
 							<tbody>
 								
-								<!-- {% for room in rooms %} -->
+								{% for room in rooms %}
 								<tr onclick="selectCheckBox(this);">
 									<td class="hidden"><input type="checkbox" name="{{ room[0] }}"></td>
 									<td>{{ room[0] }}</td>
 									<td>{{ room[1] }}</td>
 									<td>{{ room[2] }}</td>
 									<td>{{ room[3] }} €</td>
+								{% endfor %}
 								</tr>
 							</tbody>
 						</table>
@@ -77,7 +78,7 @@
 				<div class="col-md-4">
 					<div class="div-std c1-1">				
 						<h3>Booking Form</h3>
-						<p>{{ alert message }}</p>
+						<p>{{ msg }}</p>
 						<input name="name" type="text" class="form-control myform" placeholder="First Name">
 						<input name="surname" type="text" class="form-control myform" placeholder="Family Name">
 						<input name="e_mail" type="email" class="form-control myform" placeholder="email address">
