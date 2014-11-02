@@ -1,0 +1,56 @@
+body {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.top {
+	background-color: #BFBFBF;
+	margin-top: -20px;
+	margin-left: 20px;
+	margin-right: 20px;
+	padding-top: 30px;
+	padding-bottom: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
+	border-radius: 5px;
+}
+.div-std {
+	padding-top: 20px;
+	padding-right: 30px;
+	padding-left: 30px;
+	padding-bottom: 20px;
+	margin-top: 40px;
+	margin-left: 20px;
+	margin-right: 20px;
+	border-radius: 5px;
+}
+
+.myform {
+	margin-top: 7px;
+	margin-bottom: 7px;
+}
+
+.c1 {
+	background-color: #ADD8E6;
+}
+
+.c1-1 {
+	background-color: #DCA1DC;
+}
+
+.c2 {
+	background-color: #EADD7C;
+}
+
+.c3 {
+	background-color: #47B547;
+}
+
+.c3-1 {
+	background-color: #90EE90;
+} 
+
+#mng {
+	width: 100%;
+	height: auto;
+}
