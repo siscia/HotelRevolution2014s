@@ -1,0 +1,43 @@
+body {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.top {
+	background-color: #BFBFBF;
+	margin-top: -20px;
+	margin-left: 20px;
+	margin-right: 20px;
+	padding-top: 30px;
+	padding-bottom: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
+	border-radius: 5px;
+}
+.div-std {
+	padding-top: 20px;
+	padding-right: 30px;
+	padding-left: 30px;
+	padding-bottom: 20px;
+	margin-top: 40px;
+	margin-left: 20px;
+	margin-right: 20px;
+	border-radius: 5px;
+}
+
+.c1 {
+	background-color: #ADD8E6;
+}
+
+.c2 {
+	background-color: #EADD7C;
+}
+
+.c3 {
+	background-color: #38C938;
+}
+
+#mng {
+	width: 100%;
+	height: auto;
+}

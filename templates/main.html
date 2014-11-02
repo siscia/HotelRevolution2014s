@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<title>HR - Home</title>
+		<link rel="stylesheet" href="stylesheet.css"/>
+		<link rel="stylesheet" href="bootstrap-3.2.0-dist/css/bootstrap.css"/>
+	</head>
+	<body>
+		<div class="top">
+			<div class="row">
+				
+				<div class="col-md-1">
+					<a href="logout">
+						<h3>Logout</h3>
+					</a>
+				</div>
+				
+				<div class="col-md-4">
+				</div>
+				
+                                <div class="col-md-3">
+                                        <p>Today is  {{ oggi.day }} / {{ oggi.month }} / {{ oggi.year }} </p>
+                                </div>
+
+				
+				<div class="col-md-3">
+					<p>Today's Check-In: {{ n_checkin }}<br>
+					today's Check-Out: {{ n_checkout }}</p>
+				</div>
+				
+				<div class="col-md-3">
+					<p>Free Rooms: {{ n_libere }}<br>
+					Occupied Rooms: {{ n_occupate }}</p>		
+				</div>
+			
+				<div class="col-md-1 col-sm-4 col-xs-6">
+					<a href="/manager">
+						<img src="th.jpeg" id="mng" class="img-rounded"/>
+					</a>
+				</div>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-md-4 col-sm-6">
+				<div class="div-std c1">
+					<h1>New Booking</h1><br>
+					<form class="form-horizontal" role="form" method="get" action = "booking" >
+					<input name="checkin" type="data-time" class="form-control" placeholder="Check In">
+					<input name="checkout" type="data-time" class="form-control" placeholder="Check Out">
+					<button type="submit" class="btn btn-default">Search</button>
+					</form>
+				</div>	
+			</div>
+			
+			<div class="col-md-4 col-sm-6">
+				<div class="div-std c2">
+					<h1>Reservations</h1><br>
+					<form class="form-horizontal" role="form" method="get">
+					<input name="ResID" type="text" class="form-control" placeholder="Reservation ID">
+					<button type="submit" class="btn btn-default">Search</button>
+					</form>
+				</div>
+			</div>
+				
+			<div class="col-md-4 col-sm-6">
+				<div class="div-std c3">
+					<h1>Guests</h1><br>
+					<form class="form-horizontal" role="form" method="get">
+					<input name="guest" type="text" class="form-control" placeholder="Guest">
+					<button type="submit" class="btn btn-default">Search</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
