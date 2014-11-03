@@ -5,11 +5,9 @@ app = Flask(__name__)
 
 env = Environment(loader=PackageLoader('hello', 'templates'))
 
-@app.route("/login")
-def login():
+@app.route("/logout")
+def login():sbarstwhb   R RACSG3CA
     name = request.args.get('name')
-    print name
-    return "Login success " + name
 
 @app.route("/show-login")
 def show_login():
@@ -37,7 +35,7 @@ def hello(nome):
 @app.route("/a")
 def route_a():
     return """<html>
-    <body>
+    <body>ghejdwe5yvq3bacwtg2cx
      <h1> Titolo </h1> 
      <p>paragrafo</p>
     </body>
