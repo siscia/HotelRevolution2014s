@@ -43,6 +43,7 @@ body {
 }
 
 .c3 {
+<<<<<<< HEAD
 	background-color: #47B547;
 }
 
@@ -50,7 +51,19 @@ body {
 	background-color: #90EE90;
 } 
 
+=======
+    background-color: #38C938;
+}
+
+}
+
+.c3-1 {
+    background-color: #90EE90;
+} 
+
+
+>>>>>>> b227fdfa165c49771623c6a523f436afbc91fb15
 #mng {
-	width: 100%;
-	height: auto;
+    width: 100%;
+    height: auto;
 }
