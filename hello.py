@@ -5,13 +5,9 @@ app = Flask(__name__)
 
 env = Environment(loader=PackageLoader('hello', 'templates'))
 
-@app.route("/login")
-def login():
+@app.route("/logout")
+def login()
     name = request.args.get('name')
-    print name
-    return "Login success " + name
-#modificato qui.....
-
 
 @app.route("/show-login")
 def show_login():
