@@ -9,7 +9,7 @@ body {
 	margin-left: 20px;
 	margin-right: 20px;
 	padding-top: 30px;
-	padding-bottom: 20px;
+	padding-bottom: 10px;
 	padding-left: 20px;
 	padding-right: 20px;
 	border-radius: 5px;
@@ -23,6 +23,15 @@ body {
 	margin-left: 20px;
 	margin-right: 20px;
 	border-radius: 5px;
+}
+
+.normal {
+	text-decoration: none;
+	color: #4D4D4D;
+}
+
+.normal:hover {
+	color: #7F7F7F;
 }
 
 .myform {
@@ -42,28 +51,11 @@ body {
 	background-color: #EADD7C;
 }
 
-.c3 {
-<<<<<<< HEAD
-	background-color: #47B547;
-}
-
 .c3-1 {
-	background-color: #90EE90;
+        background-color: #90EE90;
 } 
 
-=======
-    background-color: #38C938;
-}
-
-}
-
-.c3-1 {
-    background-color: #90EE90;
-} 
-
-
->>>>>>> b227fdfa165c49771623c6a523f436afbc91fb15
 #mng {
     width: 100%;
     height: auto;
-}
+
