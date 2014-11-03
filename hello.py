@@ -10,13 +10,15 @@ def login():
     name = request.args.get('name')
     print name
     return "Login success " + name
+#modificato qui.....
+
 
 @app.route("/show-login")
 def show_login():
     template = env.get_template("example_form.html")
     return template.render()
 
-@app.route("/show-form")
+@app.route("/show-form")vdfnaeò htaò ocòwxrmò
 def show_form():
     template = env.get_template("simple_form.html")
     return template.render()
@@ -37,7 +39,7 @@ def hello(nome):
 @app.route("/a")
 def route_a():
     return """<html>
-    <body>
+    <body> #fgsbrwec\rxqzciao
      <h1> Titolo </h1> 
      <p>paragrafo</p>
     </body>
