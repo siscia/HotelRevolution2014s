@@ -1,9 +1,4 @@
 *.aux
 *.log
 *~
-<<<<<<< HEAD
-*.pyc 
-ex
-=======
 *.pyc
->>>>>>> b227fdfa165c49771623c6a523f436afbc91fb15
