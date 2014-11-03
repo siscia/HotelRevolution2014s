@@ -1,12 +1,12 @@
-from flask import Flask, request, send_from_directory, session, redirect, url_for, abort
+from flask import Flask, request, send_from_directory, redirect, url_for, abort, session
 from jinja2 import Environment, PackageLoader
-from functions import login, logout
-from database import get_guests
-import sqlite3, time, sets
+from session import login, logout
+from database import get_guests, n_CheckIn, n_CheckOut, n_FullRooms, n_FreeRooms, dataINTtodataTime, Free_Rooms
+import sqlite3, time, sets, datetime
 
 app = Flask(__name__, static_folder="/templates")
 
-env = Environment(loader=PackageLoader('hello', 'templates'))
+env = Environment(loader=PackageLoader('project', 'templates'))
 
 
 @app.route("/<path:filename>")
@@ -45,37 +45,19 @@ def main():
     """
     main()
     This function retrieves only the data shown in the upper div of the mainpage and renders it.
-    To do so, it implements various SQL queries, one for each value to retrieve.
-    This rendered page allows the user to call 3 pages: free_rooms() (to begin the reservation process), reservations() (to search for present reservations), guests() (to search for registered guests).
+    From here the user can call 3 pages: free_rooms() (to begin the reservation process), reservations() (to search for present reservations), guests() (to search for registered guests).
     """
     if not session.get('logged_in'):
         abort(401)
     today=20141004
 #    today = time.localtime().tm_year * 10000 + time.localtime().tm_mon * 100 + time.localtime().tm_day
-    conn = sqlite3.connect("hotel.db")
-    cursor = conn.cursor() 
-    n_checkin=0
-    for res in cursor.execute("SELECT * FROM reservations WHERE checkIN = ?", [today]):
-        n_checkin = n_checkin + 1
-    n_checkout=0
-    for res in cursor.execute("SELECT * FROM reservations WHERE checkOUT = ?", [today]):
-        n_checkout = n_checkout + 1
-    n_full=0
-    for res in cursor.execute("SELECT * FROM reservations WHERE checkIN <= ? AND checkOUT >= ?", [today, today]):
-        n_full = n_full + 1
-    n_tot=0
-    for res in cursor.execute("SELECT * FROM rooms"):
-        n_tot = n_tot + 1
-    if n_tot == 0:
-        msg = "No rooms in this hotel?"   #Debug
+    
+    if n_FreeRooms(today) < 0:
+        msg = "Error: the number of today's reservations exceed the total number of rooms. Check the database!"     #Keep this IF...
     else:
-        msg  = "Tutto ok!"
-    n_free = n_tot - n_full
-    if n_free < 0:
-        mappa = {"msg" : "Error: the number of today's reservations exceed the total number of rooms. Check the database!"}     #Keep this IF...
-    oggi = {"day": "04", "month": "10", "year": "2014" }    
-#    oggi = {"day": time.localtime().tm_mday, "month": time.localtime().tm_mon, "year": time.localtime().tm_year }
-    mappa = { "oggi" : oggi, "msg" : msg, "n_checkin" : n_checkin, "n_checkout" : n_checkout, "n_occupate" : n_full, "n_libere" : n_free, "n_tot" : n_tot }
+        msg = ""
+        
+    mappa = { "today" : dataINTtodataTime(today), "msg" : msg, "n_checkin" : n_CheckIn(today), "n_checkout" : n_CheckOut(today), "n_occupate" : n_FullRooms(today), "n_libere" : n_FreeRooms(today)}
     template = env.get_template("main.html")
     return template.render(mappa)
 
@@ -90,18 +72,8 @@ def free_rooms():
         abort(401)
     today=20141004
 #    today = time.localtime().tm_year * 10000 + time.localtime().tm_mon * 100 + time.localtime().tm_mday
-    oggi = {"day": "04", "month": "10", "year": "2014" }    
-#    oggi = {"day": time.localtime().tm_mday, "month": time.localtime().tm_mon, "year": time.localtime().tm_year }
-    conn = sqlite3.connect("hotel.db")
-    cursor = conn.cursor()
-    cursor.execute("SELECT id_room FROM reservations WHERE checkIN <= ? AND checkOUT >= ?", [request.args["checkin"], request.args["checkout"]])
-    dbfullrooms = cursor.fetchall()
-    cursor.execute("SELECT * FROM rooms")
-    dbrooms = cursor.fetchall()
-    rooms = set(dbrooms)
-    fullrooms = set(dbfullrooms)
-    freerooms = list(rooms.difference(fullrooms))
-    mappa = {"rooms" : freerooms}
+
+    mappa = {"rooms" : Free_Rooms(request.args["checkin"], request.args["checkout"])}
     template = env.get_template("booking.html")
     return template.render(mappa)
    
@@ -130,8 +102,8 @@ def confirm():
         if same:
             mappa= {"guest" : same, "msg" : "Exact match found." }
             return template.render(mappa)
-        else:
-            mappa = {"msg" : "Maybe you meant " + [for id in identitites: id[1] + " " + id[2] + "? "]}
+        #else:
+            #mappa = {"msg" : "Maybe you meant " + [for id in identitites: id[1] + " " + id[2] + "? "]}
     guest = [request.form["name"], request.form["surname"], request.form["email"]]
     mappa["guest"] = guest
     return template.render(mappa)
