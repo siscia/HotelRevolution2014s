@@ -29,6 +29,7 @@ def MatchingGuest(keys, values):
     """
 #    match = set([])
     n = 0
+    match=[]
     for n in xrange(len(keys)-1):
         dblista = get_guests(keys[n], values[n])
         if n == 0:
