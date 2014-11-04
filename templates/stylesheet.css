@@ -4,7 +4,6 @@ body {
 }
 
 .top {
-	background-color: #BFBFBF;
 	margin-top: -20px;
 	margin-left: 20px;
 	margin-right: 20px;
@@ -25,13 +24,17 @@ body {
 	border-radius: 5px;
 }
 
+.div-margin {
+	border: 5px solid #FF9900;
+}
+
 .normal {
 	text-decoration: none;
-	color: #4D4D4D;
+	color: #E5E5E5;
 }
 
 .normal:hover {
-	color: #7F7F7F;
+	color: #FFFFFF;
 }
 
 .myform {
@@ -40,24 +43,24 @@ body {
 }
 
 .c1 {
-	background-color: #ADD8E6;
-}
-
-.c1-1 {
-	background-color: #DCA1DC;
+	background-color: #097054;
 }
 
 .c2 {
-	background-color: #EADD7C;
+	background-color: #FFDE00;
 }
 
 .c3 {
-	background-color: #47B547;
+	background-color: #6599FF;
 }
 
-.c3-1 {
-	background-color: #90EE90;
-} 
+.c4 {
+	background-color: #FF9900;
+}
+
+.c-ok {
+	background-color: #28B528;
+}
 
 .mng {
 	width: 100%;
