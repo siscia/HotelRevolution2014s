@@ -14,7 +14,9 @@
 				<div class="div-std c1">
 					<h1 align="center">Welcome!</h1>
 					<br>
-					<form method="post" class="form-horizontal" role="form"/>
+					{{ msg }}
+					<br>
+					<form method="post" class="form-horizontal" role="form" action="login"/>
 						<input class="form-control myform" name="name" type="text" placeholder="User name">
 						<input class="form-control myform" name="pass" type="password" placeholder="password">
 						<button class="btn btn-default" type="submit">Submit</button>	

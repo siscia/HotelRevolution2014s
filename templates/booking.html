@@ -15,12 +15,8 @@
 					element.className = "";
 				} else {
 					box.checked = "checked";
-					element.className = "c3-1";
-					document.getElementById("#R").value = element.getElementsByTagName("td")[1].text; }
-			}
-				
-			function showBookingInfo(element){
-				
+					element.className = "c3-1";}
+					<!--document.getElementById("#R").value = element.getElementsByTagName("td")[1].text; 
 			}
 		</script>
 	</head>
@@ -29,24 +25,24 @@
 			<div class="row">
 				
 				<div class="col-md-1">
-					<a href="main.html"><h1><span class="glyphicon glyphicon-home"></span></h1></a>
+					<a href="main.html" class="normal"><h1 class="mng"><span class="glyphicon glyphicon-home"></span></h1></a>
 				</div>
 				
 				<div class="col-md-5">
 				</div>
 				
 				<div class="col-md-6">	
-					<form class="form-inline" role="form" method="get">
+					<form class="form-inline" role="form" method="get" action="free_rooms">
 						<input name="checkin" type="data-time" class="form-control" placeholder="Check In">
 						<input name="checkout" type="data-time" class="form-control" placeholder="Check Out">
-						<button type="submit" class="btn btn-default">Search</button>
+						<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Search</button>
 					</form>
 				</div>
 			</div>
 		</div>
 		
 		<div class="row">
-			<form class="form-horizontal" role="form" method="get">
+			<form class="form-horizontal" role="form" method="get" action="confirm">
 				<div class="col-md-8">
 					<div class="div-std">
 						<table class="table table-bordered">
@@ -60,14 +56,14 @@
 								</tr>
 							</thead>
 							<tbody>
-								
-								<!-- {% for room in rooms %} -->
+								{% for room in rooms %}
 								<tr onclick="selectCheckBox(this);">
 									<td class="hidden"><input type="checkbox" name="{{ room[0] }}"></td>
 									<td>{{ room[0] }}</td>
 									<td>{{ room[1] }}</td>
 									<td>{{ room[2] }}</td>
 									<td>{{ room[3] }} €</td>
+								{% endfor %}
 								</tr>
 							</tbody>
 						</table>
@@ -77,11 +73,11 @@
 				<div class="col-md-4">
 					<div class="div-std c1-1">				
 						<h3>Booking Form</h3>
-						<p>{{ alert message }}</p>
+						<p>{{ msg }}</p>
 						<input name="name" type="text" class="form-control myform" placeholder="First Name">
 						<input name="surname" type="text" class="form-control myform" placeholder="Family Name">
 						<input name="e_mail" type="email" class="form-control myform" placeholder="email address">
-						<button type="submit" class="btn btn-default">Confirm</button>
+						<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-save"></span> Confirm</button>
 					</div>
 				</div>
 			</form>
