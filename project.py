@@ -1,8 +1,11 @@
+
+#***** ROUTING FUNCTIONS by Sara & Simo ***************************************************
+
 from flask import Flask, request, send_from_directory, redirect, url_for, abort, session
 from jinja2 import Environment, PackageLoader
 from session import login, logout
 from database import get_guests, n_CheckIn, n_CheckOut, n_FullRooms, n_FreeRooms, Free_Rooms
-from utilities import dataINTtodataTime, dataINT, FindMatchingGuest
+from utilities import dataINTtodataTime, dataINT, MatchingGuest
 import sqlite3, time, sets, datetime
 
 app = Flask(__name__, static_folder="/templates")
@@ -10,6 +13,7 @@ app = Flask(__name__, static_folder="/templates")
 env = Environment(loader=PackageLoader('project', 'templates'))
 
 
+#Does not work....
 @app.route("/<path:filename>")
 def staticfiles(filename):
     return send_from_directory(app.static_folder, filename)
@@ -95,37 +99,23 @@ def confirm():
     - Perfectly matching: all the fields matches, notes excluded.
     - Partially matching: name, surname, passport matches.
     """
-    
-  
     if not session.get('logged_in'):
         abort(401)
-    template = env.get_template("confirm.html")
-    
-    l=["Sara", "Zan", "", "", "", "", ""]
-    print FindMatchingGuest(l)
-    
-    guest = [request.form["name"], request.form["surname"], request.form["email"]]
-    mappa["guest"] = guest
-    
+# Here I build the map basing on the fields present in the interface (it can be done better maybe?)
+    guests = []
+    keys = []
+    if request.form["name"] != "":
+        guests.append(request.form["name"])
+        keys.append("name")
+    if request.form["surname"] != "":
+        guests.append(request.form["surname"])
+        keys.append("surname")
+    if request.form["email"] != "":
+        guests.append(request.form["email"])
+        keys.append("email")
+    mappa= {"guests" : MatchingGuest(keys, guests)}
+    template = env.get_template("booking_confirm.html")
     return template.render(mappa)
-    
-    
-    names = set(get_guests("name", request.form["name"]))
-    surnames = set(get_guests("surname", request.form["surname"]))
-    identities = list(names.intersect(surnames))
-    if identities:
-        same = list(identities.intersect(set(get_guests("email", request.form["email"]))))
-        if same:
-            mappa= {"guest" : same, "msg" : "Exact match found." }
-            return template.render(mappa)
-        #else:
-            #mappa = {"msg" : "Maybe you meant " + [for id in identitites: id[1] + " " + id[2] + "? "]}
-    guest = [request.form["name"], request.form["surname"], request.form["email"]]
-    mappa["guest"] = guest
-    return template.render(mappa)
-
-
-
 
     
 @app.route("/guests")
@@ -134,7 +124,6 @@ def guests():
         abort(401)
     template = env.get_template("guests.html")
     return template.render(mappa)
-
 
 
 @app.route("/logout")

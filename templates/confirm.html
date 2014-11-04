@@ -10,17 +10,18 @@
             Selected rooms:  {% for room in rooms %} <br> {{ room.id }}  {% endfor %}
             <br><br>
             Guest's data: <br>
-             {{ guest[1] }} <br>
-             {{ guest[2] }} <br>
+            
+            {% for guest in guests %}
+             <h3>{{ guest[1] }} {{ guest[2] }}</h3> <br>
              {{ guest[3] }} <br>
              {{ guest[4] }} <br>
              {{ guest[5] }} <br>
              {{ guest[6] }} <br>
              {{ guest[7] }} <br>
-             {{ guest[8] }} <br>
              <br>
-             {{ new_guest }} <br>
-             {{ matching_guest }}
+             *************************
+             <br>
+             {% endfor %}
          </p>
         <a href="resid">Book</a>
         </p>
