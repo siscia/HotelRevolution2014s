@@ -15,8 +15,8 @@ from config import DATABASE_PATH
 def Free_Rooms(checkin, checkout):
     "Return a list of the rooms which are free in the given period"
     conn = sqlite3.connect(DATABASE_PATH)
-    rooms = set(conn.execute("SELECT id_room FROM reservations WHERE checkIN <= ? AND checkOUT >= ?", (checkin, checkout)))
-    fullrooms = set(conn.execute("SELECT * FROM rooms"))
+    fullrooms = set(conn.execute("SELECT id_room FROM reservations WHERE checkIN <= ? AND checkOUT >= ?", (checkin, checkout)))
+    rooms = set(conn.execute("SELECT * FROM rooms"))
     return list(rooms.difference(fullrooms))
 
 def n_CheckIn(date):
@@ -72,28 +72,7 @@ def checkIn_date(date):
     conn = sqlite3.connect(DATABASE_PATH)
     return list(cursor.execute("SELECT * FROM reservations WHERE checkIN=?",[date]))
 
-def dataINTtodataTime(dataInt):
-    "Transform a date given as INT in a common date format"
-    year = dataInt/10000
-    month = (dataInt-(year*10000))/100
-    day = dataInt -(year*10000+month*100)
-    return datetime.datetime(year,month,day)
-
 def priceFromRoomId(id_room):
     "Return the price of a room given the room ID"
     conn = sqlite3.connect(DATABASE_PATH)
     return list(cursor.execute("SELECT price_night FROM rooms WHERE id_room=?",[id_room]))[0]
-
-def checkOut_price(rooms):
-    "Calculate the price of a stay, given the reservation ID ?????? ###############################"
-    roomsInfo = []
-    for r in rooms:
-        print r
-        checkIN = dataINTtodataTime(r[2])
-        checkOUT = dataINTtodataTime(r[3])
-        days = checkOUT - checkIN
-        price = priceFromRoomId(r[1])* days
-        roomInfo.append({"id_room" : r[1],
-                         "id_guest" : r[2],
-                         "price" : price})
-    return roomsInfo

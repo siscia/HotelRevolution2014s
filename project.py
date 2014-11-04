@@ -1,7 +1,8 @@
 from flask import Flask, request, send_from_directory, redirect, url_for, abort, session
 from jinja2 import Environment, PackageLoader
 from session import login, logout
-from database import get_guests, n_CheckIn, n_CheckOut, n_FullRooms, n_FreeRooms, dataINTtodataTime, Free_Rooms
+from database import get_guests, n_CheckIn, n_CheckOut, n_FullRooms, n_FreeRooms, Free_Rooms
+from utilities import dataINTtodataTime, dataINT, FindMatchingGuest
 import sqlite3, time, sets, datetime
 
 app = Flask(__name__, static_folder="/templates")
@@ -49,14 +50,11 @@ def main():
     """
     if not session.get('logged_in'):
         abort(401)
-    today=20141004
-#    today = time.localtime().tm_year * 10000 + time.localtime().tm_mon * 100 + time.localtime().tm_day
-    
+    today = dataINT()
     if n_FreeRooms(today) < 0:
         msg = "Error: the number of today's reservations exceed the total number of rooms. Check the database!"     #Keep this IF...
     else:
         msg = ""
-        
     mappa = { "today" : dataINTtodataTime(today), "msg" : msg, "n_checkin" : n_CheckIn(today), "n_checkout" : n_CheckOut(today), "n_occupate" : n_FullRooms(today), "n_libere" : n_FreeRooms(today)}
     template = env.get_template("main.html")
     return template.render(mappa)
@@ -66,13 +64,12 @@ def main():
 def free_rooms():
     """
     free_rooms()
-    Here the system check how many rooms are available in the period of time given in input from the mainpage, create a list of them and renders the informations in the template. From that interface the user can choose which room to book and select it. He can also insert the rough information about the client, that will be used by the next functions (namely booking() ) before performing the actual booking process.
+    In this page are shown a list of available rooms in a certain period of time and a form that the receptionist have to fill with the guest's data.
+    From this interface the user can choose which room to book and select it. He can also insert the informations about the client, that will be used by the next functions before performing the actual booking process.
     """
     if not session.get('logged_in'):
         abort(401)
-    today=20141004
-#    today = time.localtime().tm_year * 10000 + time.localtime().tm_mon * 100 + time.localtime().tm_mday
-
+    today = dataINT()
     mappa = {"rooms" : Free_Rooms(request.args["checkin"], request.args["checkout"])}
     template = env.get_template("booking.html")
     return template.render(mappa)
@@ -82,17 +79,36 @@ def free_rooms():
 def confirm():
     """
     confirm()
-    Here the system tries to find out if the guest's data inserted correspond to an already registered guest. If it finds a good match, it WILL NOT ASK FOR CONFIRMATION and will go straight on to confirm(), where the user will be at last allowed to confirm all the data entered before writing into the database. If it finds completely no match, he will prepare to write into the database the guest's info before performing the reservation process. In case of ambiguity, the system will suppose a new guest, while informing the user that there is a partial match.
-    Priority of fields:
-    - ID (usually not entered by the user, however)
-    - Passport No.
-    - Name & Surname
-    - email address
-    - any other data.
+    This page shows a sum-up of all the information inserted by the receptionist.
+    Guest's data goes through some preprocessing before being shown: it's processed by MatchingGuest() in order to find if the guest has already been registered in the database. Four cases can be distinguished:
+    - MatchingGuest() found only one perfectly matching row in the database. 
+        In this case the infos shown are the ones found in the database.
+    - FullyMatchingGuest() found no perfectly matching rows in the database.
+        - MatchingGuest() found one partial match.
+            in this case the receptionist is asked to modify the database in order to update guest's data, instead than inserting a new entry.
+        - MatchingGuest() found more than one partial match.
+            In this case The receptionist is asked to choose the guest between the partial matching ones and modify it, or to insert a completely new entry.
+        - MatchinGuest() found no matching rows.
+            In this case the data shown are the one the receptionist entered before.
+
+    MatchingGuest() permits to distinguish between "completely matching" and "partially matching".
+    - Perfectly matching: all the fields matches, notes excluded.
+    - Partially matching: name, surname, passport matches.
     """
+    
+  
     if not session.get('logged_in'):
         abort(401)
     template = env.get_template("confirm.html")
+    
+    l=["Sara", "Zan", "", "", "", "", ""]
+    print FindMatchingGuest(l)
+    
+    guest = [request.form["name"], request.form["surname"], request.form["email"]]
+    mappa["guest"] = guest
+    
+    return template.render(mappa)
+    
     
     names = set(get_guests("name", request.form["name"]))
     surnames = set(get_guests("surname", request.form["surname"]))
