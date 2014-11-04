@@ -41,14 +41,14 @@ def priceFromRoomId(id_room):
 
 def checkOut_price(rooms):
     roomsInfo = []
+    print rooms
     for r in rooms:
-        print r
         checkIN = dataINTtodataTime(r[2])
         checkOUT = dataINTtodataTime(r[3])
-        days = checkOUT - checkIN
-        price = priceFromRoomId(r[1])* days
-        roomInfo.append({"id_room" : r[1],
-                         "id_guest" : r[2],
-                         "price" : price})
+        days = (checkOUT - checkIN).days
+        price = priceFromRoomId(r[0]) * days
+        roomsInfo.append({"id_room" : r[0],
+                          "id_guest" : r[2],
+                          "price" : price})
         
     return roomsInfo
