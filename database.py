@@ -12,8 +12,8 @@ from config import DATABASE_PATH
 def Free_Rooms(checkin, checkout):
     "Return a list of the rooms which are free in the given period"
     conn = sqlite3.connect(DATABASE_PATH)
-    rooms = set(conn.execute("SELECT id_room FROM reservations WHERE checkIN <= ? AND checkOUT >= ?", (checkin, checkout)))
-    fullrooms = set(conn.execute("SELECT * FROM rooms"))
+    fullrooms = set(conn.execute("SELECT id_room FROM reservations WHERE checkIN <= ? AND checkOUT >= ?", (checkin, checkout)))
+    rooms = set(conn.execute("SELECT * FROM rooms"))
     return list(rooms.difference(fullrooms))
 
 def n_CheckIn(date):

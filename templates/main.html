@@ -7,12 +7,11 @@
 		<script src="datepicker/js/bootstrap-datepicker.js"></script>
 	</head>
 	<body>
-		<div class="top">
+		<div class="top c1">
 			<div class="row">
-				
 				<div class="col-md-2">	
 					<button action="logout" class="btn btn-default btn-lg">
-						<span class="glyphicon glyphicon-off"></span> Logout
+						<span class="glyphicon glyphicon-log-out"></span> Logout
 					</button>
 				</div>
 				
@@ -22,7 +21,7 @@
 				
 				<div class="col-md-3">
 					<p>Today's Check-In: {{ n_checkin }}<br>
-					today's Check-Out: {{ n_checkout }}</p>
+					Today's Check-Out: {{ n_checkout }}</p>
 				</div>
 				
 				<div class="col-md-3">
@@ -31,8 +30,8 @@
 				</div>
 			
 				<div class="col-md-1 col-sm-4 col-xs-6">
-					<a href="/manager">
-						<img src="th.jpeg"class="img-rounded mng"/>
+					<a href="manager">
+						<img src="Manager.png"class="img-rounded mng"/>
 					</a>
 				</div>
 			</div>
@@ -40,7 +39,7 @@
 		
 		<div class="row">
 			<div class="col-md-4 col-sm-6">
-				<div class="div-std c1">
+				<div class="div-std c2">
 					<h1>New Booking</h1><br>
 					<form class="form-horizontal" role="form" method="get" action="free_rooms">
 						<input name="checkin" type="data-time" class="form-control myform" placeholder="Check In">
@@ -51,7 +50,7 @@
 			</div>
 			
 			<div class="col-md-4 col-sm-6">
-				<div class="div-std c2">
+				<div class="div-std c3">
 					<h1>Reservations</h1><br>
 					<form class="form-horizontal myform" role="form" method="get" action="reservations">
 					<input name="ResID" type="text" class="form-control myform" placeholder="Reservation ID">
@@ -61,7 +60,7 @@
 			</div>
 				
 			<div class="col-md-4 col-sm-6">
-				<div class="div-std c3">
+				<div class="div-std c4">
 					<h1>Guests</h1><br>
 					<form class="form-horizontal myform" role="form" method="get" action="guests">
 					<input name="guest" type="text" class="form-control myform" placeholder="Guest">
