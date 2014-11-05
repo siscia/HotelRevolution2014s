@@ -15,13 +15,14 @@
 					</a>
 				</div>
 				<div class="col-md-11">
-					<h1 class="clear text-right">Good Morning {{ username }}</h1>
+					<h1 class="clear text-right">Good Morning {{ username }}!</h1>
 				</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-8">
 				<div class="div-std c2">
+					{% if lista %}
 					<table class="table">
 						<caption><h3>Today's Check-Out</h3><br></caption>
 						<thead>
@@ -40,13 +41,16 @@
 								<td>{{ surname }} {{ name }} </td>
 								<td>{{ year }}/{{ month }}/{{ day }}</td>
 								<td>{{ days_stayed }}</td>
-								<td>7{{ room_number }}</td>
+								<td>{{ room_number }}</td>
 								<td>{{ reservation_id }}</td>
 								<td>{{ due }}</td>
 							</tr>
 							{% endfor %}
 						</tbody>
 					</table>
+					{% else %}
+					<h4>Great! Nobody Leaves the Hotel Today!</h4>
+					{% endif %}
 				</div>
 			</div>
 			<div class="col-md-4">
