@@ -4,8 +4,13 @@
 from flask import Flask, request, send_from_directory, redirect, url_for, abort, session
 from jinja2 import Environment, PackageLoader
 from session import login, logout
+<<<<<<< HEAD
 from database import get_guests, n_CheckIn, n_CheckOut, n_FullRooms, n_FreeRooms, Free_Rooms
 from utilities import MatchingGuest, dataINTtodataTime, dataINT
+=======
+from database import get_guests, n_checkin, n_checkout, n_fullrooms, n_freerooms, free_rooms
+from utilities import dataINT_to_datatime, dataINT, matching_guest
+>>>>>>> 7c22dc16755db3aa1691b15e7187f5081a40c2de
 import sqlite3, time, sets, datetime
 
 app = Flask(__name__, static_folder="/templates")
@@ -56,17 +61,17 @@ def main():
     if not session.get('logged_in'):
         abort(401)
     today = dataINT()
-    if n_FreeRooms(today, today) < 0:
+    if n_free_rooms(today) < 0:
         msg = "Error: the number of today's reservations exceed the total number of rooms. Check the database!"     #Keep this IF...
     else:
         msg = ""
-    mappa = { "today" : today, "msg" : msg, "n_checkin" : n_CheckIn(today), "n_checkout" : n_CheckOut(today), "n_occupate" : n_FullRooms(today, today), "n_libere" : n_FreeRooms(today, today)}
+    mappa = { "today" : dataINTtodataTime(today), "msg" : msg, "n_checkin" : n_checkin(today), "n_checkout" : n_checkout(today), "n_occupate" : n_fullrooms(today), "n_libere" : n_freerooms(today)}
     template = env.get_template("main.html")
     return template.render(mappa)
 
 
 @app.route("/free_rooms", methods=["GET"])
-def free_rooms():
+def free_rooms_page():
     """
     free_rooms()
     In this page are shown a list of available rooms in a certain period of time and a form that the receptionist have to fill with the guest's data.
@@ -75,7 +80,8 @@ def free_rooms():
     if not session.get('logged_in'):
         abort(401)
     today = dataINT()
-    mappa = {"n_rooms" : n_FreeRooms(request.args.get("checkin"), request.args.get("checkin")), "rooms" : Free_Rooms(request.args.get("checkin"), request.args.get("checkout")), "checkin" : request.args.get("checkin"), "checkout": request.args.get("checkout")}
+    mappa = {"rooms" : free_rooms(request.args["checkin"], request.args["checkout"])}
+>>>>>>> 7c22dc16755db3aa1691b15e7187f5081a40c2de
     template = env.get_template("booking.html")
     return template.render(mappa)
    
