@@ -1,6 +1,7 @@
 body {
 	padding-left: 20px;
 	padding-right: 20px;
+	padding-bottom: 20px;
 }
 
 .top {
@@ -38,31 +39,35 @@ body {
 }
 
 .myform {
-	margin-top: 7px;
-	margin-bottom: 7px;
+	margin-bottom: 9px;
 }
 
 .c1 {
-	background-color: #097054;
+	background-color: #2A92F7;
 }
 
 .c2 {
-	background-color: #FFDE00;
+	background-color: #2A92F7;
 }
 
 .c3 {
-	background-color: #6599FF;
+	background-color: #245DA3;
 }
 
 .c4 {
-	background-color: #FF9900;
+	background-color: #C0D7E4;
 }
 
-.c-ok {
-	background-color: #28B528;
-}
 
 .mng {
 	width: 100%;
 	height: auto;
+}
+
+.inline-2 {
+	width: 50%;
+}
+
+.mybtn {
+	background-color: #FFA411;
 }

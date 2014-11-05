@@ -3,17 +3,43 @@
 		<title>HR - Home</title>
 		<link rel="stylesheet" href="stylesheet.css"/>
 		<link rel="stylesheet" href="bootstrap-3.2.0-dist/css/bootstrap.css"/>
-	<!--	<link rel="stylesheet" href="datepicker/datepicker.css"/>
-		<script type="text/javascript" src="datepicker/datepicker.js"></script> -->
+		<meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+		<script type="text/javascript">
+		function changeGuestForm(element) {
+			var x = element;
+			var y = document.getElementById("guestForm");	
+			y.placeholder = "Guest's " + x.options[x.selectedIndex].text;
+			y.name = x.options[x.selectedIndex].value;
+		}
+		
+		function changeResForm(element) {
+			var x = element;
+			var y = document.getElementById("resForm");
+			var z = document.getElementById("resForm2");
+			if (x.selectedIndex == 1) {
+				z.classList.remove("hidden");
+				y.placeholder = "First Name";
+				z.placeholder = "Family Name";
+				y.name = "name";
+				z.name = "surname";
+			} else {
+				z.classList.add("hidden");
+				y.placeholder = "Reservation ID";
+				y.name = "id_res";
+			}
+		}
+		</script>
 	</head>
-	<body>
-		<div class="top c1">
+	<body class="c4">
+		<div class="top c3">
 			<div class="row">
 				
-				<div class="col-md-2">	
-					<button action="logout" class="btn btn-default btn-lg">
-						<span class="glyphicon glyphicon-log-out"></span> Logout
-					</button>
+				<div class="col-md-2">
+					<a href="login">
+						<button  class="btn btn-default btn-lg">
+							<span class="glyphicon glyphicon-log-out"></span> Logout
+						</button>
+					</a>
 				</div>
 				
 				<div class="col-md-3">
@@ -31,7 +57,7 @@
 				</div>
 			
 				<div class="col-md-1 col-sm-4 col-xs-6">
-					<a href="/manager">
+					<a href="manager">
 						<img src="Manager.png"class="img-rounded mng"/>
 					</a>
 				</div>
@@ -40,37 +66,44 @@
 		
 		<div class="row">
 			<div class="col-md-4 col-sm-6">
-				<div class="div-std c2">
-					<h1>New Booking</h1><br>
+				<div class="div-std c1">
+					<h1> <span class="glyphicon glyphicon-calendar"></span> New Booking</h1><br>
 					<form class="form-horizontal" role="form" method="get">
 						<input name="checkin" id="checkin" type="text" class="form-control myform" placeholder="Check In">
 						<input name="checkout" type="data-time" class="form-control myform" placeholder="Check Out">
-						<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Search</button>
+						<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Go</button>
 					</form>
 				</div>	
 			</div>
 			
 			<div class="col-md-4 col-sm-6">
-				<div class="div-std c3">
-					<h1>Reservations</h1><br>
+				<div class="div-std c1">
+					<h1><span class="glyphicon glyphicon-book"></span> Reservations</h1><br>
 					<form class="form-horizontal myform" role="form" method="get">
-					<input name="ResID" type="text" class="form-control myform" placeholder="Reservation ID">
-					<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Search</button>
+					<input name="id_res" id="resForm" type="text" class="form-control myform" placeholder="Reservation ID">
+					<input name="name" id="resForm2" type="text" class="form-control myform hidden">
+					<select class="form-control myform" onchange="changeResForm(this);">
+						<option value="id_res">Reservation ID</option>
+						<option>Guest's name and surname</option>
+					</select>
+					<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Go</button>
 					</form>
 				</div>
 			</div>
 				
 			<div class="col-md-4 col-sm-6">
-				<div class="div-std c4">
-					<h1>Guests</h1><br>
+				<div class="div-std c1">
+					<h1><span class="glyphicon glyphicon-user"></span> Guests</h1><br>
 					<form class="form-horizontal myform" role="form" method="get">
-					<input name="guest" type="text" class="form-control myform" placeholder="Guest">
-					<select class="form-control myform">
-						  <option name="name">First Name</option>
-						  <option name="surname">Family Name</option>
-						  <option name="id_guest">ID</option>
+					<input name="name" id="guestForm" type="text" class="form-control myform" placeholder="Guest's First name">
+					<select class="form-control myform" onchange="changeGuestForm(this);">
+						  <option value="name">First Name</option>
+						  <option value="surname">Family Name</option>
+						  <option value="id_guest">ID</option>
+						  <option value="passport">Passport N°</option>
+						  <option value="email">e-mail</option>
 					</select>
-					<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Search</button>
+					<button type="submit" class="btn mybtn btn-block"><span class="glyphicon glyphicon-search"></span> Go</button>
 					</form>
 				</div>
 			</div>
