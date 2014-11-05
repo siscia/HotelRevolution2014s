@@ -17,14 +17,25 @@
 					box.checked = "checked";
 					element.className = "c-ok";}
 			}
+			
+			function validateForm() {
+				var x = document.getElementById("nameForm").value;
+				var	y = document.getElementById("surnameForm").value;
+				if ((x == null || x == "") || (y == null || y =="")) {
+					alert("First name and Family name must be filled out");
+					return false;
+				}
+			}
 		</script>
 	</head>
-	<body>
+	<body class="c4">
 		<div class="top c1">
 			<div class="row">
 				
 				<div class="col-md-1">
-					<a href="main.html" class="normal"><h1 class="mng"><span class="glyphicon glyphicon-home"></span></h1></a>
+					<a href="main.html">
+						<button class="btn btn-lg btn-default"><span class="glyphicon glyphicon-home"></span> Home</button>
+					</a>
 				</div>
 				
 				<div class="col-md-5">
@@ -41,9 +52,9 @@
 		</div>
 		
 		<div class="row">
-			<form class="form-horizontal" role="form" method="post" action="confirm">
+			<form class="form-horizontal" role="form" method="get" onsubmit="return validateForm(this)">
 				<div class="col-md-8">
-					<div class="div-std div-margin">
+					<div class="div-std c2">
 						<table class="table">
 							<thead>
 								<tr>
@@ -64,6 +75,7 @@
 									<td>{{ room[3] }} €</td>
 								{% endfor %}
 								</tr>
+								{% endfor %}
 							</tbody>
 						</table>
 					</div>
@@ -71,11 +83,13 @@
 				
 				<div class="col-md-4">
 					<div class="div-std c3">				
-						<h3>Booking Form</h3>
-						<p>{{ message }}</p>
-						<input name="name" type="text" class="form-control myform ok" placeholder="First Name *">
-						<input name="surname" type="text" class="form-control myform" placeholder="Family Name *">
-						<input name="email" type="email" class="form-control myform" placeholder="email address">
+						<h3 class="clear">Booking Form</h3>
+						<p>{{ msg }}</p>
+						<label name="checkin">Check-in:</label><br>
+						<label name="checkout">Checck-out:</label><br>	
+						<input name="name" id="nameForm" type="text" class="form-control myform" placeholder="First Name *">
+						<input name="surname" id="surnameForm" type="text" class="form-control myform" placeholder="Family Name *">
+						<input name="e_mail" type="email" class="form-control myform" placeholder="email address">
 						<input name="passport" type="text" class="form-control myform" placeholder="Passport ID">
 						<input name="address" type="text" class="form-control myform" placeholder="Address">
 						<input name="phone" type="text" class="form-control myform" placeholder="Phone number">

@@ -1,6 +1,7 @@
 body {
 	padding-left: 20px;
 	padding-right: 20px;
+	padding-bottom: 20px;
 }
 
 .top {
@@ -24,10 +25,6 @@ body {
 	border-radius: 5px;
 }
 
-.div-margin {
-	border: 5px solid #FF9900;
-}
-
 .normal {
 	text-decoration: none;
 	color: #E5E5E5;
@@ -38,31 +35,34 @@ body {
 }
 
 .myform {
-	margin-top: 7px;
-	margin-bottom: 7px;
+	margin-bottom: 9px;
+}
+
+.clear {
+	color: #E6E6FA;
 }
 
 .c1 {
-	background-color: #097054;
+	background-color: #2A92F7;
 }
 
 .c2 {
-	background-color: #FFDE00;
+	background-color: #E6E6FA;
 }
 
 .c3 {
-	background-color: #6599FF;
+	background-color: #245DA3;
 }
 
 .c4 {
-	background-color: #FF9900;
+	background-color: #C0D7E4;
 }
 
-.c-ok {
-	background-color: #28B528;
+.c5 {
+	background-color: #90EE90;
 }
 
-#mng {
+.mng {
     width: 100%;
     height: auto;
-
+}

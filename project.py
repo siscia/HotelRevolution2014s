@@ -14,6 +14,8 @@ env = Environment(loader=PackageLoader('project', 'templates'))
 
 
 
+
+
 #Does not work....
 @app.route("/<path:filename>")
 def staticfiles(filename):
