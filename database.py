@@ -81,7 +81,6 @@ def price_from_room_id(id_room):
 def checkout_price(rooms):
     "Given a list of rooms return a map with the id of the room, the id of the guest and the total price for the particular staying."
     roomsInfo = []
-    print rooms
     for r in rooms:
         checkIN = dataINTtodataTime(r[2])
         checkOUT = dataINTtodataTime(r[3])
