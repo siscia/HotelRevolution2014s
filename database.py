@@ -66,7 +66,7 @@ def checkin_date(date):
     conn = sqlite3.connect(DATABASE_PATH)
     return list(cursor.execute("SELECT * FROM reservations WHERE checkIN=?",[date]))
 
-def dataINTtodataTime(dataInt):
+def dataINT_to_datatime(dataInt):
     """ given a date in INT format (i.e. year+month+day) it return the date in DATATIME format"""
     year = dataInt/10000
     month = (dataInt-(year*10000))/100
@@ -92,3 +92,24 @@ def checkout_price(rooms):
                          "price" : price})
     return roomsInfo
 
+def guest_leaving(date):
+    """Given a date in input return a list of guest who are leaving."""
+    conn = sqlite3.connect(DATABASE_PATH)
+    guest = conn.execute("""select 
+            guests.name, guests.surname, 
+            reservations.checkIN, reservations.checkOUT, 
+            rooms.price_night, rooms.id_room,
+            reservations.rowid
+        from reservations 
+        inner join guests on reservations.id_guest = guests.id_guest 
+        inner join rooms on reservations.id_room = rooms.id_room 
+        where checkOUT = ?""", [(date)])
+    guest = [{"name" : g[0], "surname" : g[1],
+              "checkIN" : dataINT_to_datatime(g[2]),
+              "checkOUT" : dataINT_to_datatime(g[3]),
+              "days_stayed" : dataINT_to_datatime(g[3]) - dataINT_to_datatime(g[2]),
+              "due" : (dataINT_to_datatime(g[3]) - dataINT_to_datatime(g[2])).days * g[4],
+              "room_number" : g[5],
+              "reservation_id" : g[6]
+          } for g in list(guest)]
+    return guest

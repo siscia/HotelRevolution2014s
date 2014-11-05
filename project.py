@@ -12,7 +12,6 @@ app = Flask(__name__, static_folder="/templates")
 
 env = Environment(loader=PackageLoader('project', 'templates'))
 
-
 #Does not work....
 @app.route("/<path:filename>")
 def staticfiles(filename):
