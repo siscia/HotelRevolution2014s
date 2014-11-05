@@ -42,7 +42,7 @@
 				</div>
 				
 				<div class="col-md-6">	
-					<form class="form-inline" role="form" method="get">
+					<form class="form-inline" role="form" method="get" action="free_rooms">
 						<input name="checkin" type="data-time" class="form-control" placeholder="Check In">
 						<input name="checkout" type="data-time" class="form-control" placeholder="Check Out">
 						<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Search</button>
@@ -66,7 +66,6 @@
 								</tr>
 							</thead>
 							<tbody>
-								
 								{% for room in rooms %}
 								<tr onclick="selectCheckBox(this);">
 									<td class="hidden"><input type="checkbox" name="{{ room[0] }}"></td>
@@ -74,6 +73,7 @@
 									<td>{{ room[1] }}</td>
 									<td>{{ room[2] }}</td>
 									<td>{{ room[3] }} €</td>
+								{% endfor %}
 								</tr>
 								{% endfor %}
 							</tbody>
@@ -84,7 +84,7 @@
 				<div class="col-md-4">
 					<div class="div-std c3">				
 						<h3 class="clear">Booking Form</h3>
-						<p>{{ alert message }}</p>
+						<p>{{ msg }}</p>
 						<label name="checkin">Check-in:</label><br>
 						<label name="checkout">Checck-out:</label><br>	
 						<input name="name" id="nameForm" type="text" class="form-control myform" placeholder="First Name *">

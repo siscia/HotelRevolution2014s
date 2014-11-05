@@ -16,15 +16,18 @@
 				<div class="div-std c2">
 					<h1>Booking Confirmation</h1><br>
 					<p class="lead">
-					<strong>Name: </strong>Pino<br>
-					<strong>Surname: </strong>Puzzetta<br>
-					<strong>email: </strong>pino@puzzetta.com<br>
+					{% for guest in guests %}
+					<strong>Name: </strong>{{guest[1]}}<br>
+					<strong>Surname: </strong>{{guest[2]}}<br>
+					<strong>email: </strong>{{guest[3]}}<br>
+					<button type="button" class="btn btn-default btn-lg btn-block"><span class="glyphicon glyphicon-ok"></span> Select Me</button>
 					<br>
-					<strong>Check-In: </strong> 2015 / 7 / 10<br>
-					<strong>Check-Out: </strong> 2015 / 7 / 25<br>
+					{% endfor %}
+					<strong>Check-In: </strong> {{ checkin }} <br>
+					<strong>Check-Out: </strong> {{ checkout }}<br>
 					<br>
-					<strong>Room Booked:</strong> 404<br>
-					<strong>Price: </strong> 450$
+					<strong>Room Booked:</strong> {% for room in rooms %} {{ room.id }} {% endfor %}<br>
+					<strong>Price: </strong> {{ price }}
 					</p>
 					<button type="button" class="btn btn-default btn-lg btn-block"><span class="glyphicon glyphicon-ok"></span> Book</button>
 					<button type="button" class="btn btn-default btn-lg btn-block"><span class="glyphicon glyphicon-remove"></span> Go Back</button>

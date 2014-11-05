@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <title> HR - Confirm </title>
+    </head>
+
+    <body>
+        <h2> Confirm the data you entered!</h2>
+
+         <p>
+            Selected rooms:  {% for room in rooms %} <br> {{ room.id }}  {% endfor %}
+            <br><br>
+            Guest's data: <br>
+            
+            {% for guest in guests %}
+             <h3>{{ guest[1] }} {{ guest[2] }}</h3> <br>
+             {{ guest[3] }} <br>
+             {{ guest[4] }} <br>
+             {{ guest[5] }} <br>
+             {{ guest[6] }} <br>
+             {{ guest[7] }} <br>
+             <br>
+             *************************
+             <br>
+             {% endfor %}
+         </p>
+        <a href="resid">Book</a>
+        </p>
+    </body>
+</html>
