@@ -45,6 +45,7 @@ def n_FreeRooms(checkin, checkout):
     "Calculate how many rooms are full in a given period"
     conn = sqlite3.connect(DATABASE_PATH)
     n_tot = Extract(conn.execute("SELECT COUNT(*) FROM rooms"))
+    print 1
     n_full = Extract(n_FullRooms(checkin, checkout))
     return n_tot - n_full
 
