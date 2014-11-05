@@ -4,13 +4,8 @@
 from flask import Flask, request, send_from_directory, redirect, url_for, abort, session
 from jinja2 import Environment, PackageLoader
 from session import login, logout
-<<<<<<< HEAD
-from database import get_guests, n_CheckIn, n_CheckOut, n_FullRooms, n_FreeRooms, Free_Rooms
-from utilities import MatchingGuest, dataINTtodataTime, dataINT
-=======
 from database import get_guests, n_checkin, n_checkout, n_fullrooms, n_freerooms, free_rooms
 from utilities import dataINT_to_datatime, dataINT, matching_guest
->>>>>>> 7c22dc16755db3aa1691b15e7187f5081a40c2de
 import sqlite3, time, sets, datetime
 
 app = Flask(__name__, static_folder="/templates")
@@ -81,7 +76,6 @@ def free_rooms_page():
         abort(401)
     today = dataINT()
     mappa = {"rooms" : free_rooms(request.args["checkin"], request.args["checkout"])}
->>>>>>> 7c22dc16755db3aa1691b15e7187f5081a40c2de
     template = env.get_template("booking.html")
     return template.render(mappa)
    
