@@ -56,11 +56,13 @@ def main():
     if not session.get('logged_in'):
         abort(401)
     today = dataINT()
-    if n_free_rooms(today) < 0:
-        msg = "Error: the number of today's reservations exceed the total number of rooms. Check the database!"     #Keep this IF...
-    else:
-        msg = ""
-    mappa = { "today" : dataINTtodataTime(today), "msg" : msg, "n_checkin" : n_checkin(today), "n_checkout" : n_checkout(today), "n_occupate" : n_fullrooms(today), "n_libere" : n_freerooms(today)}
+#    if n_freerooms(today, today) < 0:
+#        msg = "Error: the number of today's reservations exceed the total number of rooms. Check the database!"     #Keep this IF...
+#    else:
+#        msg = ""
+    msg = ""
+    mappa = { "today" : dataINT_to_datatime(today), "msg" : msg, "n_checkin" : "##", "n_checkout" : "##", "n_occupate" : "##", "n_libere" : "##"}
+#    mappa = { "today" : dataINT_to_dataTime(today), "msg" : msg, "n_checkin" : n_checkin(today), "n_checkout" : n_checkout(today), "n_occupate" : "##", "n_libere" : "##"}
     template = env.get_template("main.html")
     return template.render(mappa)
 
@@ -75,13 +77,13 @@ def free_rooms_page():
     if not session.get('logged_in'):
         abort(401)
     today = dataINT()
-    mappa = {"rooms" : free_rooms(request.args["checkin"], request.args["checkout"])}
+    mappa = {"rooms" : free_rooms(request.args["checkin"], request.args["checkout"]), "checkin" : request.args["checkin"], "checkout" : request.args["checkout"]}
     template = env.get_template("booking.html")
     return template.render(mappa)
    
 
-@app.route("/confirm", methods=["GET"])
-def confirm():
+@app.route("/confirm/<checkin>-<checkout>", methods=["GET"])
+def confirm(checkin, checkout):
     """
     confirm()
     This page shows a sum-up of all the information inserted by the receptionist.
@@ -102,17 +104,16 @@ def confirm():
     """
     if not session.get('logged_in'):
         abort(401)
-    print "k"
-    mappa = {"checkin": request.args["checkin"], "checkout": request.args["checkout"]}
-    print "k"
-    if request.args.get("a"):
-        print "a"
+    mappa = {"checkin": checkin, "checkout": checkout}
+    sel_rooms=[]
+    for room in free_rooms(checkin, checkout):
+        if request.args.get(str(room[0])) == "on":
+            sel_rooms.append(room)
+    print sel_rooms
+    mappa["rooms"] = sel_rooms
     print 2
     """
-    for item in list(request.args)
-        print 1
- 
-
+    
     guests = []
     keys = []
     for item in request.args:
@@ -140,7 +141,15 @@ def guests():
     if not session.get('logged_in'):
         abort(401)
     template = env.get_template("guests.html")
-    return template.render(mappa)
+    return template.render()
+
+
+@app.route("/reservations")
+def reserv():
+    if not session.get('logged_in'):
+        abort(401)
+    template = env.get_template("reservations.html")
+    return template.render()
 
 
 @app.route("/logout")
