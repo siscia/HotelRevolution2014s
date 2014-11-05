@@ -1,0 +1,13 @@
+pagina del manager:
+    ospiti che devono andarsene oggi
+        nome
+        cognome
+        quando sono arrivati
+        giorni che sono stati
+        quanto devono sganciare
+
+ 
+pagina revenue:
+    total revenue 
+    grafico del periodo selezionato
+        
