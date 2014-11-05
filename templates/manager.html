@@ -1,0 +1,64 @@
+<html>
+	<head>
+		<title>HR - Manager</title>
+		
+		<meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+		<link rel="stylesheet" href="stylesheet.css"/>
+		<link rel="stylesheet" href="bootstrap-3.2.0-dist/css/bootstrap.css"/>
+	</head>
+	<body class="c4">
+		<div class="top c3">
+			<div class="row">
+				<div class="col-md-1">
+					<a href="main">
+						<button class="btn btn-lg btn-default"><span class="glyphicon glyphicon-home"></span> Home</button>
+					</a>
+				</div>
+				<div class="col-md-11">
+					<h1 class="clear text-right">Good Morning {{ username }}</h1>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-8">
+				<div class="div-std c2">
+					<table class="table">
+						<caption><h3>Today's Check-Out</h3><br></caption>
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Arrival</th>
+								<th>Days</th>
+								<th>Room</th>
+								<th>Res ID</th>
+								<th>Due</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for room in rooms %}
+							<tr>
+								<td>{{ surname }} {{ name }} </td>
+								<td>{{ year }}/{{ month }}/{{ day }}</td>
+								<td>{{ days_stayed }}</td>
+								<td>7{{ room_number }}</td>
+								<td>{{ reservation_id }}</td>
+								<td>{{ due }}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="div-std c1">
+					<h3>Calculate Revenue</h3>
+					<form class="form-horizontal" role="form" method="get">
+						<input name="begin" class="form-control myform input-lg" placeholder="from">
+						<input name="end" class="form-control myform input-lg" placeholder="to">
+						<button type="submit" class="btn btn-default btn-lg btn-block">Calculate</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
