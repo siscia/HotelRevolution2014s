@@ -2,9 +2,9 @@
 	<head>
 		<title>HR - Home</title>
 		<link rel="stylesheet" href="stylesheet.css"/>
-		<link rel="stylesheet" href="datepicker/css/datepicker.css">
 		<link rel="stylesheet" href="bootstrap-3.2.0-dist/css/bootstrap.css"/>
-		<script src="datepicker/js/bootstrap-datepicker.js"></script>
+	<!--	<link rel="stylesheet" href="datepicker/datepicker.css"/>
+		<script type="text/javascript" src="datepicker/datepicker.js"></script> -->
 	</head>
 	<body>
 		<div class="top c1">
@@ -43,7 +43,7 @@
 				<div class="div-std c2">
 					<h1>New Booking</h1><br>
 					<form class="form-horizontal" role="form" method="get">
-						<input name="checkin" type="data-time" class="form-control myform" placeholder="Check In">
+						<input name="checkin" id="checkin" type="text" class="form-control myform" placeholder="Check In">
 						<input name="checkout" type="data-time" class="form-control myform" placeholder="Check Out">
 						<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Search</button>
 					</form>
@@ -66,8 +66,8 @@
 					<form class="form-horizontal myform" role="form" method="get">
 					<input name="guest" type="text" class="form-control myform" placeholder="Guest">
 					<select class="form-control myform">
-						  <option name="name">Name</option>
-						  <option name="surname">Surname</option>
+						  <option name="name">First Name</option>
+						  <option name="surname">Family Name</option>
 						  <option name="id_guest">ID</option>
 					</select>
 					<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Search</button>
