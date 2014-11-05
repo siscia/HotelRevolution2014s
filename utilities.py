@@ -1,11 +1,8 @@
 
 #**** UTILITIES by Gio & Sara **************************************************
 
-from database import priceFromRoomId, get_guests
+from database import price_from_room_id, get_guests
 import datetime
-
-
-
 
 def MapFromLists(keys, values):
     """ 
@@ -21,13 +18,12 @@ def MapFromLists(keys, values):
         mappa[keys[n]] = values[n]
     return mappa
 
-def MatchingGuest(keys, values):
+def matching_guest(keys, values):
     """
     This function tries to find a guest in the database, given some parameters different from the ID.
     Returns a list of guests that match in the values given in "keys".
     The two lists MUST have the same lenght.
     """
-#    match = set([])
     n = 0
     match=[]
     for n in xrange(len(keys)-1):
@@ -42,7 +38,7 @@ def dataINT():
     return 20141004
 #    return time.localtime().tm_year * 10000 + time.localtime().tm_mon * 100 + time.localtime().tm_day
 
-def dataINTtodataTime(dataInt):
+def dataINT_to_datatime(dataInt):
     "Transform a date given as INT in a common date format"
     year = dataInt/10000
     month = (dataInt-(year*10000))/100

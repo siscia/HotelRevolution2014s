@@ -4,8 +4,8 @@
 from flask import Flask, request, send_from_directory, redirect, url_for, abort, session
 from jinja2 import Environment, PackageLoader
 from session import login, logout
-from database import get_guests, n_CheckIn, n_CheckOut, n_FullRooms, n_FreeRooms, Free_Rooms
-from utilities import dataINTtodataTime, dataINT, MatchingGuest
+from database import get_guests, n_checkin, n_checkout, n_fullrooms, n_free_rooms, free_rooms
+from utilities import dataINT_to_datatime, dataINT, matching_guest
 import sqlite3, time, sets, datetime
 
 app = Flask(__name__, static_folder="/templates")
@@ -55,17 +55,17 @@ def main():
     if not session.get('logged_in'):
         abort(401)
     today = dataINT()
-    if n_FreeRooms(today) < 0:
+    if n_free_rooms(today) < 0:
         msg = "Error: the number of today's reservations exceed the total number of rooms. Check the database!"     #Keep this IF...
     else:
         msg = ""
-    mappa = { "today" : dataINTtodataTime(today), "msg" : msg, "n_checkin" : n_CheckIn(today), "n_checkout" : n_CheckOut(today), "n_occupate" : n_FullRooms(today), "n_libere" : n_FreeRooms(today)}
+    mappa = { "today" : dataINTtodataTime(today), "msg" : msg, "n_checkin" : n_checkin(today), "n_checkout" : n_checkout(today), "n_occupate" : n_fullrooms(today), "n_libere" : n_free_rooms(today)}
     template = env.get_template("main.html")
     return template.render(mappa)
 
 
 @app.route("/free_rooms", methods=["GET"])
-def free_rooms():
+def free_rooms_page():
     """
     free_rooms()
     In this page are shown a list of available rooms in a certain period of time and a form that the receptionist have to fill with the guest's data.
@@ -74,7 +74,7 @@ def free_rooms():
     if not session.get('logged_in'):
         abort(401)
     today = dataINT()
-    mappa = {"rooms" : Free_Rooms(request.args["checkin"], request.args["checkout"])}
+    mappa = {"rooms" : free_rooms(request.args["checkin"], request.args["checkout"])}
     template = env.get_template("booking.html")
     return template.render(mappa)
    
