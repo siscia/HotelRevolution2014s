@@ -4,13 +4,17 @@
 from flask import Flask, request, send_from_directory, redirect, url_for, abort, session
 from jinja2 import Environment, PackageLoader
 from session import login, logout
-from database import get_guests, n_checkin, n_checkout, n_fullrooms, n_free_rooms, free_rooms
+from database import get_guests, n_checkin, n_checkout, n_fullrooms, n_freerooms, free_rooms
 from utilities import dataINT_to_datatime, dataINT, matching_guest
 import sqlite3, time, sets, datetime
 
 app = Flask(__name__, static_folder="/templates")
 
 env = Environment(loader=PackageLoader('project', 'templates'))
+
+
+
+
 
 #Does not work....
 @app.route("/<path:filename>")
@@ -54,11 +58,13 @@ def main():
     if not session.get('logged_in'):
         abort(401)
     today = dataINT()
-    if n_free_rooms(today) < 0:
-        msg = "Error: the number of today's reservations exceed the total number of rooms. Check the database!"     #Keep this IF...
-    else:
-        msg = ""
-    mappa = { "today" : dataINTtodataTime(today), "msg" : msg, "n_checkin" : n_checkin(today), "n_checkout" : n_checkout(today), "n_occupate" : n_fullrooms(today), "n_libere" : n_free_rooms(today)}
+#    if n_freerooms(today, today) < 0:
+#        msg = "Error: the number of today's reservations exceed the total number of rooms. Check the database!"     #Keep this IF...
+#    else:
+#        msg = ""
+    msg = ""
+    mappa = { "today" : dataINT_to_datatime(today), "msg" : msg, "n_checkin" : "##", "n_checkout" : "##", "n_occupate" : "##", "n_libere" : "##"}
+#    mappa = { "today" : dataINT_to_dataTime(today), "msg" : msg, "n_checkin" : n_checkin(today), "n_checkout" : n_checkout(today), "n_occupate" : "##", "n_libere" : "##"}
     template = env.get_template("main.html")
     return template.render(mappa)
 
@@ -73,20 +79,20 @@ def free_rooms_page():
     if not session.get('logged_in'):
         abort(401)
     today = dataINT()
-    mappa = {"rooms" : free_rooms(request.args["checkin"], request.args["checkout"])}
+    mappa = {"rooms" : free_rooms(request.args["checkin"], request.args["checkout"]), "checkin" : request.args["checkin"], "checkout" : request.args["checkout"]}
     template = env.get_template("booking.html")
     return template.render(mappa)
    
 
-@app.route("/confirm", methods=["POST"])
-def confirm():
+@app.route("/confirm/<checkin>-<checkout>", methods=["GET"])
+def confirm(checkin, checkout):
     """
     confirm()
     This page shows a sum-up of all the information inserted by the receptionist.
     Guest's data goes through some preprocessing before being shown: it's processed by MatchingGuest() in order to find if the guest has already been registered in the database. Four cases can be distinguished:
     - MatchingGuest() found only one perfectly matching row in the database. 
         In this case the infos shown are the ones found in the database.
-    - FullyMatchingGuest() found no perfectly matching rows in the database.
+    - MatchingGuest() found no perfectly matching rows in the database.
         - MatchingGuest() found one partial match.
             in this case the receptionist is asked to modify the database in order to update guest's data, instead than inserting a new entry.
         - MatchingGuest() found more than one partial match.
@@ -100,29 +106,52 @@ def confirm():
     """
     if not session.get('logged_in'):
         abort(401)
-# Here I build the map basing on the fields present in the interface (it can be done better maybe?)
+    mappa = {"checkin": checkin, "checkout": checkout}
+    sel_rooms=[]
+    for room in free_rooms(checkin, checkout):
+        if request.args.get(str(room[0])) == "on":
+            sel_rooms.append(room)
+    print sel_rooms
+    mappa["rooms"] = sel_rooms
+    print 2
+    """
+    
     guests = []
     keys = []
-    if request.form["name"] != "":
-        guests.append(request.form["name"])
-        keys.append("name")
-    if request.form["surname"] != "":
-        guests.append(request.form["surname"])
-        keys.append("surname")
-    if request.form["email"] != "":
-        guests.append(request.form["email"])
-        keys.append("email")
-    mappa= {"guests" : MatchingGuest(keys, guests)}
+    for item in request.args:
+        if request.args[item] != "":
+            guest.append(request.args[item])
+            keys.append(item)
+    match = MatchingGuest(keys, guests)
+    if match:
+        mappa["guests"] = match
+        return mappa
+    for item in ["name", "surname", "passport"]:
+        if request.args[item] != "":
+            guest.append(request.args[item])
+            keys.append(item)
+    match = MatchingGuest(keys, guest)
+    """
     template = env.get_template("booking_confirm.html")
     return template.render(mappa)
 
+    
+    
     
 @app.route("/guests")
 def guests():
     if not session.get('logged_in'):
         abort(401)
     template = env.get_template("guests.html")
-    return template.render(mappa)
+    return template.render()
+
+
+@app.route("/reservations")
+def reserv():
+    if not session.get('logged_in'):
+        abort(401)
+    template = env.get_template("reservations.html")
+    return template.render()
 
 
 @app.route("/logout")
