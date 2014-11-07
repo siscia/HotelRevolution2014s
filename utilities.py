@@ -1,7 +1,7 @@
 
 #**** UTILITIES by Gio & Sara **************************************************
 
-from database import price_from_room_id, get_guests
+from database import price_from_room_id, get_item
 import datetime
 
 def MapFromLists(keys, values):
@@ -27,7 +27,7 @@ def matching_guest(keys, values):
     n = 0
     match=[]
     for n in xrange(len(keys)-1):
-        dblista = get_guests(keys[n], values[n])
+        dblista = get_item("guests", keys[n], values[n])
         if n == 0:
             match = set(dblista)
         match = match & set(dblista)

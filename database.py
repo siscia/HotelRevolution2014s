@@ -49,15 +49,16 @@ def n_freerooms(checkin, checkout):
     n_full = extract(n_fullrooms(checkin, checkout))
     return n_tot - n_full
 
-def get_prenotation(pr_id):
-    "Return a prenotation given the id"
+def n_items(table, field, value):
+    "Counts how many items in the database match the given parameter."
     conn = sqlite3.connect(DATABASE_PATH)
-    return list(conn.execute("SELECT * FROM reservations WHERE rowid = ?", [pr_id]))
+    n_guest= conn.execute("SELECT COUNT(*) FROM " + table + " WHERE " + field + " = ?", [value])
+    return extract(n_guest)
 
-def get_guests(field, value):
-    "Return the list of guests that match the given parameter"
+def get_item(table, field, value):
+    "Return a list of items given the field of the value to match"
     conn = sqlite3.connect(DATABASE_PATH)
-    return list(conn.execute("SELECT * FROM guests WHERE  " + field + "  = ?", [value]))
+    return list(conn.execute("SELECT * FROM " + table + " WHERE " + field + "  = ?", [value]))
 
 def checkout_date(date):
     """return all the checkOut in a given day"""
@@ -95,7 +96,7 @@ def checkout_price(rooms):
     return roomsInfo
 
 def guest_leaving(date):
-    """Given a date in input return a list of guest who are leaving."""
+    """Given a date (INT format) in input return a list of guest who are leaving."""
     conn = sqlite3.connect(DATABASE_PATH)
     guest = conn.execute("""select 
             guests.name, guests.surname, 

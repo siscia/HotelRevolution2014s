@@ -1,10 +1,10 @@
 
 #***** ROUTING FUNCTIONS by Sara & Simo ***************************************************
 
-from flask import Flask, request, send_from_directory, redirect, url_for, abort, session
+from flask import Flask, request, send_from_directory, redirect, url_for, abort, session, render_template
 from jinja2 import Environment, PackageLoader
 from session import login, logout
-from database import get_guests, n_checkin, n_checkout, n_fullrooms, n_freerooms, free_rooms
+from database import get_item, n_checkin, n_checkout, n_fullrooms, n_freerooms, free_rooms, guest_leaving
 from utilities import dataINT_to_datatime, dataINT, matching_guest
 import sqlite3, time, sets, datetime
 
@@ -140,18 +140,80 @@ def confirm(checkin, checkout):
     
 @app.route("/guests")
 def guests():
+    """
+    guests()
+    Shows a list of all the guests recorded in the hotel's database that match the parameter selected in the mainpage.
+    Allows the receptionist to view and modify the informations about any guest: this is useful to update the database.
+    Includes also the informations about all the reservations made by every guest. TO DO!!
+    """
     if not session.get('logged_in'):
         abort(401)
-    template = env.get_template("guests.html")
+    guests = set([])
+    mappa = {}
+    n = 0
+    for field in ["name", "surname", "id_guest", "passport", "email"]:
+        if request.args.get(field):
+            n = n + 1
+            mappa[field] = request.args.get(field)
+            matching = set(get_item("guests", field, request.args.get(field)))
+            if n == 1:
+                guests = matching
+            else:
+                guests = guests.intersection(matching)
+    mappa["guest"] = list(guests)
+    template = env.get_template("guest.html")
     return template.render()
 
 
 @app.route("/reservations")
 def reserv():
+    """
+    reserv()
+    Allow the receptionist to find a reservation given the ID or the name of the guest.
+    In case of many guest with the same name and surname returns the reservations made by both of them: the receptionist can discriminate the users by ID.
+    Anyway, a message will alert the user about that.
+    """
     if not session.get('logged_in'):
         abort(401)
+    reserv = []
+    n_res = 0
+    mappa = {}
+    if request.args.get("id_res"):
+        mappa["id_res"] = request.args.get("id_res")
+        res = get_item("reservations", "id_res", request.args.get("id_res"))
+        reserv.append(res)
+        if len(reserv) > 1:
+            mappa["msg"] = "An error occured: more than one reservation has the selected ID. Check the database!"
+    elif request.args.get("surname"):
+        mappa["name"]= request.args.get("name")
+        mappa["surname"]= request.args.get("surname")
+        surnames = get_item("guests", "surname", request.args.get("surname"))
+        if request.args["name"]:
+            names = set(get_item("guests", "name", request.args.get("name")))
+            guests = list(set(surnames).intersection(names))
+        else:
+            guests = surnames
+        if len(guests) > 1:
+            mappa["msg"] = "More than one guest matches your search. Be careful!"
+        for guest in guests:
+            res = get_item("reservations", "id_guest", guest[0])
+            reserv.append(get_item("reservations", "id_guest", guest[0])[0])
+            n_res = n_res + len(res)
+    mappa["n_res"] = n_res
+    mappa["reservations"] = reserv
     template = env.get_template("reservations.html")
-    return template.render()
+    return template.render(mappa)
+
+
+@app.route("/manager/checkout")
+def checkout():
+    if not session.get('logged_in'):
+        if sudo() == False:
+            abort(401)
+    today = dataINT()
+    template = env.get_template("manager.html")
+    mappa = guest_leaving(today)
+    return render_template(mappa)
 
 
 @app.route("/logout")

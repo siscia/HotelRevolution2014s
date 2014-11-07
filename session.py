@@ -22,3 +22,6 @@ def logout():
     session.pop("logged_in", None)
     return 0
 
+def sudo():
+    # FIX ME!!!
+    return True
