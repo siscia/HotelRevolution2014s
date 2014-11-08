@@ -10,7 +10,7 @@
 		<div class="top c3">
 			<div class="row">
 				<div class="col-md-1">
-					<a href="main">
+					<a href="/main">
 						<button class="btn btn-lg btn-default"><span class="glyphicon glyphicon-home"></span> Home</button>
 					</a>
 				</div>
@@ -39,7 +39,7 @@
 							{% for room in rooms %}
 							<tr>
 								<td>{{ surname }} {{ name }} </td>
-								<td>{{ year }}/{{ month }}/{{ day }}</td>
+								<td>{{ checkIN.year }}/{{ checkIN.month }}/{{ checkIN.day }}</td>
 								<td>{{ days_stayed }}</td>
 								<td>{{ room_number }}</td>
 								<td>{{ reservation_id }}</td>

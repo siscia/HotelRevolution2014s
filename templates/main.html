@@ -34,7 +34,7 @@
 		<div class="top c3">
 			<div class="row">	
 				<div class="col-md-2">
-					<a href="login">
+					<a href="/logout">
 						<button  class="btn btn-default btn-lg">
 							<span class="glyphicon glyphicon-log-out"></span> Logout
 						</button>
@@ -56,8 +56,8 @@
 				</div>
 			
 				<div class="col-md-1 col-sm-4 col-xs-6">
-					<a href="manager">
-						<img src="business_man.png" class="img-rounded mng"/>
+					<a href="manager/checkout">
+						<img src="business_man.png"class="img-rounded mng"/>
 					</a>
 				</div>
 			</div>
@@ -66,11 +66,11 @@
 		<div class="row">
 			<div class="col-md-4 col-sm-6">
 				<div class="div-std c1">
-					<h1> <span class="glyphicon glyphicon-calendar"></span> New Booking</h1><br>
+					<h1><span class="glyphicon glyphicon-calendar"></span> New Booking</h1><br>
 					<form class="form-horizontal" role="form" method="get" action="free_rooms">
 						<input name="checkin" id="checkin" type="text" class="form-control myform" placeholder="Check In">
 						<input name="checkout" type="data-time" class="form-control myform" placeholder="Check Out">
-						<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Go</button>
+						<button type="submit" class="btn btn-default" ><span class="glyphicon glyphicon-search"></span> Go</button>
 					</form>
 				</div>	
 			</div>
@@ -78,7 +78,7 @@
 			<div class="col-md-4 col-sm-6">
 				<div class="div-std c1">
 					<h1><span class="glyphicon glyphicon-book"></span> Reservations</h1><br>
-					<form class="form-horizontal myform" role="form" method="get">
+					<form class="form-horizontal myform" role="form" method="get" action="reservations">
 					<input name="id_res" id="resForm" type="text" class="form-control myform" placeholder="Reservation ID">
 					<input name="name" id="resForm2" type="text" class="form-control myform hidden">
 					<select class="form-control myform" onchange="changeResForm(this);">
@@ -93,7 +93,7 @@
 			<div class="col-md-4 col-sm-6">
 				<div class="div-std c1">
 					<h1><span class="glyphicon glyphicon-user"></span> Guests</h1><br>
-					<form class="form-horizontal myform" role="form" method="get">
+					<form class="form-horizontal myform" role="form" method="get" action="guests">
 					<input name="name" id="guestForm" type="text" class="form-control myform" placeholder="Guest's First name">
 					<select class="form-control myform" onchange="changeGuestForm(this);">
 						  <option value="name">First Name</option>

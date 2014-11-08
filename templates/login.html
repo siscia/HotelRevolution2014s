@@ -4,18 +4,23 @@
 		<link rel="stylesheet" href="bootstrap-3.2.0-dist/css/bootstrap.css"/>
 		<title>HR - Login</title>
 </head>
-<body>
-		<h1 align="center">HotelRevolution2014s</h1>
+<body class="c4">
 		<div class="row">
 			<div class="col-md-4 col-sm-2">
 			</div>
 			
 			<div class="col-md-4 col-sm-8 col-xs-12">
+				<div class="row">
+					<div class="col-md-8 col-md-push-2">
+						<div class="div-std c2">
+							<img src="HR.png" class="mng"/>
+						</div>		
+					</div>
+				</div>	
 				<div class="div-std c3">
-					<h1 align="center">Welcome!</h1>
-					<br>
-					{{ msg }}
-					<form method="post" class="form-horizontal" role="form"/>
+					<h2 class="clear">HotelRevolution2014s</h2>
+					<p align="center"><br>{{ msg }}<br></p>
+					<form method="post" class="form-horizontal" role="form" action="/login">
 						<input class="form-control input-lg myform" name="name" type="text" placeholder="User name">
 						<input class="form-control input-lg myform" name="pass" type="password" placeholder="password">
 						<button class="btn btn-default btn-block btn-lg" type="submit">Log In <span class="glyphicon glyphicon-log-in"></span></button>	
