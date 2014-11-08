@@ -38,6 +38,10 @@ def bootstrap_2():
 def img_1():
     template = env.get_template("business_man.png")
     return template.render()
+@app.route('/HR.png')
+def img_2():
+    template = env.get_template("HR.png")
+    return template.render()
 #*************
 
 
@@ -105,7 +109,7 @@ def free_rooms_page():
     return template.render(mappa)
    
 
-@app.route("/confirm/<checkin>-<checkout>", methods=["GET"])
+@app.route("/confirm-<checkin>-<checkout>", methods=["GET"])
 def confirm(checkin, checkout):
     """
     confirm()
@@ -182,8 +186,9 @@ def guests():
             else:
                 guests = guests.intersection(matching)
     mappa["guest"] = list(guests)
+    print mappa
     template = env.get_template("guest.html")
-    return template.render()
+    return template.render(mappa)
 
 
 @app.route("/reservations")
@@ -226,7 +231,7 @@ def reserv():
     return template.render(mappa)
 
 
-@app.route("/manager/checkout")
+@app.route("/checkout")
 def checkout():
     if not session.get('logged_in') or sudo() == "FALSE":
         abort(401)
@@ -237,7 +242,7 @@ def checkout():
     return template.render(mappa)
 
 
-@app.route("/manager/revenue")
+@app.route("/revenue")
 def revenue():
     return
 

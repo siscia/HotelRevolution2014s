@@ -47,14 +47,20 @@
 					</form>
 				</div>
 				
-				<div class="col-md-6">	
-					
+				<div class="col-md-5">	
+					<h4 class="{% if error %} msg-fail {% else %} msg-ok {% endif %} text-right">CULO</h4>
+				</div>
+				
+				<div class="col-md-1">
+					<a href="/main">
+						<button class="btn btn-default"><span class="glyphicon glyphicon-home"></span> Home</button>
+					</a>
 				</div>
 			</div>
 		</div>
 			
 		<div class="row">
-			<form class="form-horizontal" role="form" method="post">
+			<form class="form-horizontal" role="form" method="post" action="guests">
 				<div class="col-md-6">
 					<div class="div-std c2">
 						<table class="table table-hover">
@@ -70,15 +76,17 @@
 								</tr>
 							</thead>
 							<tbody>
+								{% for g in guest %}
 								<tr onclick="autoFillForm(this);">
-									<td>Marcello</td>
-									<td class="hidden">131020202</td>
-									<td class="hidden">PA123435</td>
-									<td>Bello</td>
-									<td>marcello@bello.com</td>
-									<td class="hidden">building 11</td>
-									<td class="hidden">wechat</td>
+									<td>{{ g[1] }}</td>
+									<td class="hidden">{{ g[5] }}</td>
+									<td class="hidden">{{ g[4] }}</td>
+									<td>{{ g[2] }}</td>
+									<td>{{ g[3] }}</td>
+									<td class="hidden">{{ g[6] }}</td>
+									<td class="hidden">{{ g[7] }}</td>
 								</tr>
+								{% endfor %}
 							</tbody>
 						</table>
 					</div>
@@ -99,7 +107,7 @@
 								<label>Family Name</label>
 								<input name="surname" type="text" class="form-control myform" placeholder="Family Name *" disabled>
 								<label>e-mail address</label>
-								<input name="e_mail" type="email" class="form-control myform" placeholder="email address" disabled>
+								<input name="email" type="email" class="form-control myform" placeholder="email address" disabled>
 								<label>Home Address</label>
 								<input name="address" type="text" class="form-control myform" placeholder="Address" disabled>
 							</div>
