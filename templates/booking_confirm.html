@@ -26,7 +26,7 @@
 					<strong>Check-In: </strong> {{ checkin }} <br>
 					<strong>Check-Out: </strong> {{ checkout }}<br>
 					<br>
-					<strong>Room Booked:</strong> {% for room in rooms %} {{ room.id }} {% endfor %}<br>
+					<strong>Room Booked:</strong> {% for room in rooms %} {{ room[0] }} {% endfor %}<br>
 					<strong>Price: </strong> {{ price }}
 					</p>
 					<button type="button" class="btn btn-default btn-lg btn-block"><span class="glyphicon glyphicon-ok"></span> Book</button>
