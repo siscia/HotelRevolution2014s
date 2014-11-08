@@ -52,7 +52,7 @@
 		</div>
 		
 		<div class="row">
-			<form class="form-horizontal" role="form" method="get" onsubmit="return validateForm(this)">
+			<form class="form-horizontal" role="form" method="get" onsubmit="return validateForm(this)" action="confirm/{{ checkin }}-{{ checkout }}">
 				<div class="col-md-8">
 					<div class="div-std c2">
 						<table class="table">
@@ -86,7 +86,7 @@
 						<h3 class="clear">Booking Form</h3>
 						<p>{{ msg }}</p>
 						<label name="checkin">Check-in:</label><br>
-						<label name="checkout">Checck-out:</label><br>	
+						<label name="checkout">Check-out:</label><br>	
 						<input name="name" id="nameForm" type="text" class="form-control myform" placeholder="First Name *">
 						<input name="surname" id="surnameForm" type="text" class="form-control myform" placeholder="Family Name *">
 						<input name="e_mail" type="email" class="form-control myform" placeholder="email address">
@@ -94,7 +94,7 @@
 						<input name="address" type="text" class="form-control myform" placeholder="Address">
 						<input name="phone" type="text" class="form-control myform" placeholder="Phone number">
 						<textarea name="info" class="form-control myform" rows="2" placeholder="other informations..."></textarea>
-						<button type="submit" class="btn btn-default btn-block">Continue <span class="glyphicon glyphicon-chevron-right"></span></button>
+						<button type="submit" class="btn btn-success btn-default btn-block">Continue <span class="glyphicon glyphicon-chevron-right"></span></button>
 					</div>
 				</div>
 			</form>
