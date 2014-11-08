@@ -22,6 +22,10 @@ env = Environment(loader=PackageLoader('project', 'templates'))
 def stylesheet():
     template = env.get_template("stylesheet.css")
     return template.render()
+@app.route('/datepickr.min.js')
+def stylesheet():
+    template = env.get_template("datepickr.min.js")
+    return template.render()
 @app.route('/bootstrap-3.2.0-dist/css/bootstrap.css')
 def bootstrap():
     template = env.get_template("bootstrap-3.2.0-dist/css/bootstrap.css")
@@ -53,17 +57,15 @@ def loginpage():
         - else renders the login page again showing the failure message to the user.
     """
     if request.method == "GET":
-        mappa = {}
         template = env.get_template("login.html")
-
-        return template.render(mappa)
+        return template.render()
     
     if request.method == "POST":
         log = login(request.form["name"], request.form["pass"])
         if not log:
             return redirect(url_for("main"))
         else:
-            mappa = {"msg" : log }
+            mappa = {"msg" : log , "error" : "TRUE" }
             template = env.get_template("login.html")
             return template.render(mappa)
     return "How could I end up here? :/"
@@ -79,13 +81,10 @@ def main():
     if not session.get('logged_in'):
         abort(401)
     today = dataINT()
-#    if n_freerooms(today, today) < 0:
-#        msg = "Error: the number of today's reservations exceed the total number of rooms. Check the database!"     #Keep this IF...
-#    else:
-#        msg = ""
-    msg = ""
-    mappa = { "today" : dataINT_to_datatime(today), "msg" : msg, "n_checkin" : "##", "n_checkout" : "##", "n_occupate" : "##", "n_libere" : "##"}
-#    mappa = { "today" : dataINT_to_dataTime(today), "msg" : msg, "n_checkin" : n_checkin(today), "n_checkout" : n_checkout(today), "n_occupate" : "##", "n_libere" : "##"}
+    mappa = { "today" : dataINT_to_datatime(today), "n_checkin" : n_checkin(today), "n_checkout" : n_checkout(today), "n_occupate" : n_fullrooms(today, today), "n_libere" : n_freerooms(today, today)}
+    if n_freerooms(today, today) < 0:
+        mappa["msg"]= "Error: the number of today's reservations exceed the total number of rooms. Check the database!"     #Keep this IF...
+        mappa["error"] = "TRUE"
     template = env.get_template("main.html")
     return template.render(mappa)
 
@@ -135,8 +134,6 @@ def confirm(checkin, checkout):
     print sel_rooms
     mappa["rooms"] = sel_rooms
     print 2
-    """
-    
     guests = []
     keys = []
     for item in request.args:
@@ -152,14 +149,14 @@ def confirm(checkin, checkout):
             guest.append(request.args[item])
             keys.append(item)
     match = MatchingGuest(keys, guest)
-    """
+
     template = env.get_template("booking_confirm.html")
     return template.render(mappa)
 
     
     
     
-@app.route("/guests")
+@app.route("/guests", methods==["GET","POST"])
 def guests():
     """
     guests()
@@ -172,15 +169,31 @@ def guests():
     guests = set([])
     mappa = {}
     n = 0
-    for field in ["name", "surname", "id_guest", "passport", "email"]:
-        if request.args.get(field):
-            n = n + 1
-            mappa[field] = request.args.get(field)
-            matching = set(get_item("guests", field, request.args.get(field)))
-            if n == 1:
-                guests = matching
-            else:
-                guests = guests.intersection(matching)
+    if request.method == "GET":
+        for field in ["name", "surname", "id_guest", "passport", "email"]:
+            if request.args.get(field):
+                n = n + 1
+                mappa[field] = request.args.get(field)
+                matching = set(get_item("guests", field, request.args.get(field)))
+                if n == 1:
+                    guests = matching
+                else:
+                    guests = guests.intersection(matching)
+    if request.method == "POST":
+        for field in ["name", "surname", "id_guest", "passport", "email", "note"]:
+            lista.append(request.form[field])
+        #Passo la lista alla funzione di Gio e ottengo un feedback (???)
+        mappa["msg"] = "Database aggiornato correttamente"
+        #Regenerate guest's list
+        for field in ["name", "surname", "id_guest", "passport", "email"]:
+            if request.form[field]:
+                n = n + 1
+                mappa[field] = request.form[field]
+                matching = set(get_item("guests", field, request.form[field]))
+                if n == 1:
+                    guests = matching
+                else:
+                    guests = guests.intersection(matching)
     mappa["guest"] = list(guests)
     template = env.get_template("guest.html")
     return template.render()
@@ -200,14 +213,11 @@ def reserv():
     n_res = 0
     mappa = {}
     if request.args.get("id_res"):
-        mappa["id_res"] = request.args.get("id_res")
-        res = get_item("reservations", "id_res", request.args.get("id_res"))
-        reserv.append(res)
+        reserv.append(get_item("reservations", "id_res", request.args.get("id_res")))
         if len(reserv) > 1:
             mappa["msg"] = "An error occured: more than one reservation has the selected ID. Check the database!"
+            mappa["error"] = "TRUE"
     elif request.args.get("surname"):
-        mappa["name"]= request.args.get("name")
-        mappa["surname"]= request.args.get("surname")
         surnames = get_item("guests", "surname", request.args.get("surname"))
         if request.args["name"]:
             names = set(get_item("guests", "name", request.args.get("name")))
@@ -216,6 +226,7 @@ def reserv():
             guests = surnames
         if len(guests) > 1:
             mappa["msg"] = "More than one guest matches your search. Be careful!"
+            mappa["error"] = "TRUE"
         for guest in guests:
             res = get_item("reservations", "id_guest", guest[0])
             reserv.append(get_item("reservations", "id_guest", guest[0])[0])
@@ -226,7 +237,7 @@ def reserv():
     return template.render(mappa)
 
 
-@app.route("/manager/checkout")
+@app.route("/checkout")
 def checkout():
     if not session.get('logged_in') or sudo() == "FALSE":
         abort(401)
@@ -237,7 +248,7 @@ def checkout():
     return template.render(mappa)
 
 
-@app.route("/manager/revenue")
+@app.route("/revenue")
 def revenue():
     return
 
