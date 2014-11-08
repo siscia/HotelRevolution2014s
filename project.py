@@ -3,12 +3,13 @@
 
 from flask import Flask, request, send_from_directory, redirect, url_for, abort, session, render_template
 from jinja2 import Environment, PackageLoader
-from session import login, logout
+from session import login, logout, sudo
 from database import get_item, n_checkin, n_checkout, n_fullrooms, n_freerooms, free_rooms, guest_leaving
 from utilities import dataINT_to_datatime, dataINT, matching_guest
 import sqlite3, time, sets, datetime
 
 app = Flask(__name__, static_folder="/templates")
+app = Flask(__name__, static_url_path='/static')
 
 env = Environment(loader=PackageLoader('project', 'templates'))
 
@@ -16,10 +17,29 @@ env = Environment(loader=PackageLoader('project', 'templates'))
 
 
 
-#Does not work....
-@app.route("/<path:filename>")
-def staticfiles(filename):
-    return send_from_directory(app.static_folder, filename)
+# FIX WHEN POSSIBLE!!
+@app.route('/stylesheet.css')
+def stylesheet():
+    template = env.get_template("stylesheet.css")
+    return template.render()
+@app.route('/bootstrap-3.2.0-dist/css/bootstrap.css')
+def bootstrap():
+    template = env.get_template("bootstrap-3.2.0-dist/css/bootstrap.css")
+    return template.render()
+@app.route('/bootstrap-3.2.0-dist/fonts/glyphicons-halflings-regular.woff')
+def bootstrap_1():
+    template = env.get_template("/bootstrap-3.2.0-dist/fonts/glyphicons-halflings-regular.woff")
+    return template.render()
+@app.route('/bootstrap-3.2.0-dist/fonts/glyphicons-halflings-regular.ttf')
+def bootstrap_2():
+    template = env.get_template("/bootstrap-3.2.0-dist/fonts/glyphicons-halflings-regular.ttf")
+    return template.render()
+@app.route('/business_man.png')
+def img_1():
+    template = env.get_template("business_man.png")
+    return template.render()
+#*************
+
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -35,6 +55,7 @@ def loginpage():
     if request.method == "GET":
         mappa = {}
         template = env.get_template("login.html")
+
         return template.render(mappa)
     
     if request.method == "POST":
@@ -207,13 +228,18 @@ def reserv():
 
 @app.route("/manager/checkout")
 def checkout():
-    if not session.get('logged_in'):
-        if sudo() == False:
-            abort(401)
+    if not session.get('logged_in') or sudo() == "FALSE":
+        abort(401)
     today = dataINT()
     template = env.get_template("manager.html")
-    mappa = guest_leaving(today)
-    return render_template(mappa)
+    mappa= {"c" : list(guest_leaving(today))}
+    mappa["username"] = session["username"]
+    return template.render(mappa)
+
+
+@app.route("/manager/revenue")
+def revenue():
+    return
 
 
 @app.route("/logout")
@@ -231,7 +257,7 @@ def logoutpage():
         
 
 
-app.secret_key = "guhurehh4gh485gh85sqacszsedwph"
+app.secret_key = ".ASF\x89m\x14\xc9s\x94\xfaq\xca}\xe1/\x1f3\x1dFx\xdc\xf0\xf9"
 
 if __name__ == "__main__":
     app.run(debug=True)
