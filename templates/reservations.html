@@ -56,8 +56,13 @@
 					</form>
 				</div>
 				
-				<div class="col-md-4">	
-					
+				<div class="col-md-3">	
+					<h4 class="{% if error %} msg-fail {% else %} msg-ok {% endif %} text-right">CULO</h4>
+				</div>
+				<div class="col-md-1">
+					<a href="/main">
+						<button class="btn btn-default"><span class="glyphicon glyphicon-home"></span> Home</button>
+					</a>
 				</div>
 			</div>
 		</div>
@@ -80,7 +85,7 @@
 							</thead>
 							<tbody>
 								<tr onclick="autoFillForm(this);">
-									<td>Marcello</td>
+									<td>{{ reservations.name }}</td>
 									<td class="hidden">2014/12/23</td>
 									<td class="hidden">707</td>
 									<td>Bello</td>

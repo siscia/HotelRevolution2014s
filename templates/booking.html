@@ -15,7 +15,7 @@
 					element.className = "";
 				} else {
 					box.checked = "checked";
-					element.className = "c-ok";}
+					element.className = "c1";}
 			}
 			
 			function validateForm() {
@@ -31,28 +31,28 @@
 	<body class="c4">
 		<div class="top c1">
 			<div class="row">
-				
-				<div class="col-md-1">
-					<a href="main.html">
-						<button class="btn btn-lg btn-default"><span class="glyphicon glyphicon-home"></span> Home</button>
-					</a>
+				<div class="col-md-6">	
+					<form class="form-inline" role="form" method="get" action="free_rooms">
+						<input name="checkin" id="datepickin" class="form-control" placeholder="Check In"/>
+						<input name="checkout" id="datepickout" class="form-control" placeholder="Check Out">
+						<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Search</button>
+					</form>
 				</div>
 				
 				<div class="col-md-5">
+					<h4 class="{% if error %} msg-fail {% else %} msg-ok {% endif %} text-right">CULO</h4>
 				</div>
 				
-				<div class="col-md-6">	
-					<form class="form-inline" role="form" method="get" action="free_rooms">
-						<input name="checkin" type="data-time" class="form-control" placeholder="Check In">
-						<input name="checkout" type="data-time" class="form-control" placeholder="Check Out">
-						<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Search</button>
-					</form>
+				<div class="col-md-1">
+					<a href="/main">
+						<button class="btn btn-default"><span class="glyphicon glyphicon-home"></span> Home</button>
+					</a>
 				</div>
 			</div>
 		</div>
 		
 		<div class="row">
-			<form class="form-horizontal" role="form" method="get" onsubmit="return validateForm(this)" action="confirm/{{ checkin }}-{{ checkout }}">
+			<form class="form-horizontal" role="form" method="get" onsubmit="return validateForm(this)" action="confirm-{{ checkin }}-{{ checkout }}">
 				<div class="col-md-8">
 					<div class="div-std c2">
 						<table class="table">
@@ -84,8 +84,6 @@
 					<div class="div-std c3">				
 						<h3 class="clear">Booking Form</h3>
 						<p>{{ msg }}</p>
-						<label name="checkin">Check-in:</label><br>
-						<label name="checkout">Check-out:</label><br>	
 						<input name="name" id="nameForm" type="text" class="form-control myform" placeholder="First Name *">
 						<input name="surname" id="surnameForm" type="text" class="form-control myform" placeholder="Family Name *">
 						<input name="e_mail" type="email" class="form-control myform" placeholder="email address">
@@ -98,5 +96,15 @@
 				</div>
 			</form>
 		</div>
+		<script type="text/javascript" src="datepickr.min.js"></script>
+		<script type="text/javascript">
+			new datepickr('datepickin', {
+				'dateFormat': 'Y/m/d'
+			});
+			
+			new datepickr('datepickout', {
+				'dateFormat': 'Y/m/d'
+			});
+		</script>
 	</body>
 </html>
