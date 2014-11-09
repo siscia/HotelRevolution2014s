@@ -123,18 +123,13 @@ def confirm(checkin, checkout):
         if request.args[item] != "":
             guest.append(request.args[item])
             keys.append(item)
-            print item + ": " + request.args[item]
-            
     match = matching_guest(keys, guest)
-    print match
     if not match:
         for item in ["name", "surname", "passport"]:
             if request.args[item] != "":
                 guest.append(request.args[item])
                 keys.append(item)
         match = matching_guest(keys, guest)
-        mappa["msg"] = "Warning: more than one guest matches the data you entered. Check carefully who is who!"
-        mappa["error"] = "TRUE"
         if not match:
             g=[0]
             for item in ["name", "surname", "email", "passport", "phone", "address", "info"]:
@@ -143,10 +138,16 @@ def confirm(checkin, checkout):
                     g.append("")
                 print item
             if g[1] == "" or g[2] == "" or g[4] == "":
-                mappa["msg"] = "You must insert name, surname, and passport No of the guest to record him/her into the database."
+                mappa["msg"] = "You must insert name, surname, and passport No of the guest."
                 mappa["error"] = "TRUE"
             match.append(g)
+    if len(match)>1:
+        mappa["msg"] = "Warning: more than one guest matches the data you entered. Please insert more data."
+        mappa["error"] = "TRUE"
     mappa["guests"] = match
+    if mappa["error"] == "TRUE":
+        mappa["checkin"] = int(checkin)
+        mappa["checkout"] = int(checkout)
     
     template = env.get_template("booking_confirm.html")
     return template.render(mappa)
@@ -248,13 +249,17 @@ def checkout():
         abort(401)
     today = dataINT()
     template = env.get_template("manager.html")
-    mappa= {"c" : list(guest_leaving(today))}
+    mappa= {"lista" : list(guest_leaving(today))}
     mappa["username"] = session["username"]
+    mappa["date"] = dataINT_to_datetime(today)
     return template.render(mappa)
+
 
 @app.route("/revenue")
 def revenue():
-    return
+    template.env.get_template("revenue.html")
+    return template.render()
+
 
 @app.route("/logout")
 def logoutpage():
@@ -266,8 +271,11 @@ def logoutpage():
         mappa = {"msg" : "Logout successfully"}
         template = env.get_template("login.html")
         return template.render(mappa)
-    else:
-        return "Logout failed!" #Fix this point
+    template = env.get_template("login.html")
+    mappa["msg"] = "There was a problem during the logout process. Try login and logout again (if necessary)."
+    mappa["error"] = "TRUE"
+    return template.render(mappa)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

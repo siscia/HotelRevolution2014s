@@ -22,11 +22,6 @@
 							<strong>Surname: </strong>{{guests[0][2]}}<br>
 							<strong>email: </strong>{{guests[0][3]}}<br>
 							<br>
-							{% if guests[1] %}
-                                                            {% for g in guests[1:]%}
-                                                             There is another {{g[1]}} {{g[2]}}<br>
-                                                            {% endfor %}
-                                                        {% endif %}
 							<strong>Check-In: </strong> {{ checkin }} <br>
 							<strong>Check-Out: </strong> {{ checkout }}<br>
 							<br>

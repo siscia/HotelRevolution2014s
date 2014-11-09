@@ -36,14 +36,14 @@
 							</tr>
 						</thead>
 						<tbody>
-							{% for room in rooms %}
+							{% for l in lista %}
 							<tr>
-								<td>{{ surname }} {{ name }} </td>
-								<td>{{ checkIN.year }}/{{ checkIN.month }}/{{ checkIN.day }}</td>
-								<td>{{ days_stayed }}</td>
-								<td>{{ room_number }}</td>
-								<td>{{ reservation_id }}</td>
-								<td>{{ due }}</td>
+								<td>{{ l.surname }} {{ l.name }} </td>
+								<td>{{ l.checkIN.year }}/{{ l.checkIN.month }}/{{ l.checkIN.day }}</td>
+								<td>{{ l.days_stayed }}</td>
+								<td>{{ l.room_number }}</td>
+								<td>{{ l.reservation_id }}</td>
+								<td>{{ l.due }}</td>
 							</tr>
 							{% endfor %}
 						</tbody>

@@ -9,25 +9,39 @@ from config import DATABASE_PATH
 ## field, string, the name of the column to search
 ## value, string, the value to match
 
-def free_rooms(checkin, checkout):
-    "Return a list of the rooms which are free in the given period"
+def full_rooms(checkin, checkout):
+    "Return a list of the rooms which are full in the given period"
     conn = sqlite3.connect(DATABASE_PATH)
-
-    n_full = conn.execute("SELECT COUNT(*) FROM rooms").fetchall()
-    print list(n_full)
-    fullrooms = set(conn.execute("SELECT id_room FROM reservations WHERE checkIN < ? OR checkOUT > ?", [checkin, checkout]))
-#    print fullrooms
-#    print "*****"
-    rooms = set(conn.execute("SELECT id_room FROM rooms"))
-#    print rooms
-#    print "*****"
-    freerooms = list(rooms.difference(fullrooms))
-#    print freerooms
-#    print "*****"
+    rooms = set(conn.execute("SELECT id_room FROM rooms").fetchall())
+    free = id_free_rooms(checkin, checkout)
+    full = list(rooms.difference(free))
     frooms = []
-    for room in freerooms:
-        frooms.append(list(conn.execute("SELECT * FROM rooms WHERE id_room = ?", room))[0])
+    for room in full:
+        frooms.append(list(conn.execute("SELECT * FROM rooms WHERE id_room = ?", room).fetchall())[0])
+    print "fullrooms:"
+    print frooms
     return frooms
+
+def free_rooms(checkin, checkout):
+    "Return a list of rooms which are free in the given period"
+    conn = sqlite3.connect(DATABASE_PATH)
+    free = id_free_rooms(checkin, checkout)
+    frooms = []
+    for room in free:
+        frooms.append(list(conn.execute("SELECT * FROM rooms WHERE id_room = ?", room).fetchall())[0])
+    print "freerooms:"
+    print frooms
+    return frooms
+
+def id_free_rooms(checkin, checkout):
+    "Return a set of id of the rooms which are free in the given period"
+    conn = sqlite3.connect(DATABASE_PATH)
+    rooms = set(conn.execute("SELECT id_room FROM rooms").fetchall())
+    reserv = set(conn.execute("SELECT id_room FROM reservations").fetchall())
+    surefree= rooms.difference(reserv)
+    free = set(conn.execute("SELECT id_room FROM reservations WHERE checkIN > ? OR checkOUT < ?", [checkout, checkin]).fetchall())
+    free = free.union(surefree)
+    return free
 
 def n_checkin(date):
     "Calculate the number of checkins in a given date"
@@ -42,17 +56,18 @@ def n_checkout(date):
     return n_checkout.fetchall()[0][0]
 
 def n_freerooms(checkin, checkout):
-    "Calculate how many rooms are full in a given date"
-    conn = sqlite3.connect(DATABASE_PATH)
-    n_full = conn.execute("SELECT COUNT(*) FROM reservations WHERE checkIN > ? OR checkOUT < ?", [checkout, checkin])
-    return n_full.fetchall()[0][0]
+    "Calculate how many rooms are free in a given date"
+    n_free = 0
+    for r in free_rooms(checkin, checkout):
+        n_free = n_free + 1
+    return n_free
 
 def n_fullrooms(checkin, checkout):
     "Calculate how many rooms are full in a given date"
-    conn = sqlite3.connect(DATABASE_PATH)
-    n_tot = conn.execute("SELECT COUNT(*) FROM rooms").fetchall()[0][0]
-    n_free = (n_freerooms(checkin, checkout))
-    return n_tot - n_free
+    n_full = 0
+    for r in full_rooms(checkin, checkout):
+        n_full = n_full + 1
+    return n_full
 
 def n_items(table, field, value):
     "Counts how many items in the database match the given parameter."
@@ -85,7 +100,7 @@ def dataINT_to_datatime(dataInt):
 def price_from_room_id(id_room):
     """ return the priceiPerNight given the id of the room"""
     conn = sqlite3.connect(DATABASE_PATH)
-    return cursor.execute("SELECT price_night FROM rooms WHERE id_room=?",[id_room]).fetchall()[0][0] #Suppose that it will find just one room with the selected ID
+    return conn.execute("SELECT price_night FROM rooms WHERE id_room=?",[id_room]).fetchall()[0][0] #Suppose that it will find just one room with the selected ID
 
 def checkout_price(reserv):
     "Given a list of reservations return a map with the id of the room, the id of the guest and the total price for the particular staying."
