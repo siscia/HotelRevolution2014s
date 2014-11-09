@@ -9,17 +9,15 @@ from utilities import dataINT_to_datatime, dataINT, matching_guest
 import sqlite3, time, sets, datetime
 
 app = Flask(__name__, static_folder="templates")
-#app = Flask(__name__, static_url_path='/static')
 
 app.secret_key = ".ASF\x89m\x14\xc9s\x94\xfaq\xca}\xe1/\x1f3\x1dFx\xdc\xf0\xf9"
 
 env = Environment(loader=PackageLoader('project', '/templates'))
 
-
 @app.route('/<path:filename>')
 def static_for_hr(filename):
+    """Serve the static file from the directory app.static_folder"""
     return app.send_static_file(filename)
-
 
 @app.route("/login", methods=["GET", "POST"])
 def loginpage():
@@ -235,11 +233,6 @@ def logoutpage():
         return template.render(mappa)
     else:
         return "Logout failed!" #Fix this point
-
-
-
-    
-
 
 if __name__ == "__main__":
     app.run(debug=True)
