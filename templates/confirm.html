@@ -1,29 +1,30 @@
 <html>
     <head>
-        <title> HR - Confirm </title>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+		<link rel="stylesheet" href="stylesheet.css"/>
+		<link rel="stylesheet" href="bootstrap-3.2.0-dist/css/bootstrap.css"/>
+        <title>HR - Confirm</title>
     </head>
-
-    <body>
-        <h2> Confirm the data you entered!</h2>
-
-         <p>
-            Selected rooms:  {% for room in rooms %} <br> {{ room.id }}  {% endfor %}
-            <br><br>
-            Guest's data: <br>
-            
-            {% for guest in guests %}
-             <h3>{{ guest[1] }} {{ guest[2] }}</h3> <br>
-             {{ guest[3] }} <br>
-             {{ guest[4] }} <br>
-             {{ guest[5] }} <br>
-             {{ guest[6] }} <br>
-             {{ guest[7] }} <br>
-             <br>
-             *************************
-             <br>
-             {% endfor %}
-         </p>
-        <a href="resid">Book</a>
-        </p>
+    <body class="c4">
+        <div class="div-std c2">
+			<h1>Done!</h1>
+			<p class="lead">ID of the reservation: <span style="color:red">{{ id_res }}</span>
+			<br>The reservation is stored to the database succesfully. An e-mail is sended to {{ email }}.
+			<br>Here is a recap of the reservation: </p>
+			{% for ... %}
+			<div class="div-std c3">
+				<p class="clear"><strong>Name: </strong>{{guest[1]}}<br>
+				<strong>Surname: </strong>{{guest[2]}}<br>
+				<strong>email: </strong>{{guest[3]}}<br>
+				<br>
+				<strong>Check-In: </strong> {{ checkin }} <br>
+				<strong>Check-Out: </strong> {{ checkout }}<br>
+				<br>
+				<strong>Room Booked:</strong>{{ room[0] }}<br>
+				<strong>Price: </strong> {{ price }}</p>
+			</div>
+			{% endfor %}
+			<p class="lead"><br>Now click <a href="/login">HERE</a> to go back to the main page</p>
+        </div>
     </body>
 </html>

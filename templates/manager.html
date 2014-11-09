@@ -4,18 +4,21 @@
 		
 		<meta http-equiv="content-type" content="text/html;charset=utf-8"/>
 		<link rel="stylesheet" href="stylesheet.css"/>
-		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
 	</head>
 	<body class="c4">
 		<div class="top c3">
 			<div class="row">
+				<div class="col-md-7">
+					<span class="clear title">Good Morning {{ username }}!</span>
+				</div>
+				<div class="col-md-4">
+					<span class="title clear"><strong>{{ today.day }} / {{ today.month }} / {{ today.year }}</strong></h2>
+				</div>
 				<div class="col-md-1">
 					<a href="/main">
-						<button class="btn btn-lg btn-default"><span class="glyphicon glyphicon-home"></span> Home</button>
+						<button class="btn btn-default"><span class="glyphicon glyphicon-home"></span> Home</button>
 					</a>
-				</div>
-				<div class="col-md-11">
-					<h1 class="clear text-right">Good Morning {{ username }}!</h1>
 				</div>
 			</div>
 		</div>
@@ -57,12 +60,22 @@
 				<div class="div-std c1">
 					<h3>Calculate Revenue</h3>
 					<form class="form-horizontal" role="form" method="get" action="revenue">
-						<input name="begin" class="form-control myform input-lg" placeholder="from">
-						<input name="end" class="form-control myform input-lg" placeholder="to">
+						<input id="datepick1" name="begin" class="form-control myform input-lg" placeholder="from">
+						<input id="datepick2" name="end" class="form-control myform input-lg" placeholder="to">
 						<button type="submit" class="btn btn-default btn-lg btn-block">Calculate</button>
 					</form>
 				</div>
 			</div>
 		</div>
+		<script type="text/javascript" src="datepickr.min.js"></script>
+		<script type="text/javascript">
+			new datepickr('datepick1', {
+				'dateFormat': 'Y/m/d'
+			});
+			
+			new datepickr('datepick2', {
+				'dateFormat': 'Y/m/d'
+			});
+		</script>
 	</body>
 </html>
