@@ -2,6 +2,7 @@
 #***** SESSION MANAGMENT by Sara *****************************************
 
 from flask import session, flash
+from database import get_item
 import sqlite3, datetime, time
 
 
@@ -14,6 +15,7 @@ def login(name, passw):
             if user[0][1] != passw:         #Suppose that I will get only one user with this username
                 return "Invalid password"
             session["logged_in"] = True
+            session["username"] = user[0][0]
             return
         return "Invalid username"
 
@@ -22,3 +24,8 @@ def logout():
     session.pop("logged_in", None)
     return 0
 
+def sudo():
+    if 'username' in session:
+        sudo = get_item("users", "user", session["username"])[0][2]
+        return sudo
+    return False

@@ -1,6 +1,7 @@
 body {
 	padding-left: 20px;
 	padding-right: 20px;
+	padding-bottom: 20px;
 }
 
 .top {
@@ -24,10 +25,6 @@ body {
 	border-radius: 5px;
 }
 
-.div-margin {
-	border: 5px solid #FF9900;
-}
-
 .normal {
 	text-decoration: none;
 	color: #E5E5E5;
@@ -38,31 +35,143 @@ body {
 }
 
 .myform {
-	margin-top: 7px;
-	margin-bottom: 7px;
+	margin-bottom: 9px;
+}
+
+.clear {
+	color: #FFFFFF;
 }
 
 .c1 {
-	background-color: #097054;
+	background-color: #2A92F7;
 }
 
 .c2 {
-	background-color: #FFDE00;
+	background-color: #E6E6FA;
 }
 
 .c3 {
-	background-color: #6599FF;
+	background-color: #245DA3;
 }
 
 .c4 {
-	background-color: #FF9900;
+	background-color: #C0D7E4;
 }
 
-.c-ok {
-	background-color: #28B528;
+.c5 {
+	background-color: #FF783C;
 }
 
-#mng {
+.mng {
     width: 100%;
     height: auto;
+}
 
+.msg-ok {
+	color: #44FF3E;
+	text-decoration: underline;
+}
+
+.msg-fail {
+	color: #FF0000;
+	text-decoration: underline;
+}
+
+/****************** DATEPICKR STYLESHEET ******************************/
+
+.calendar {
+	font-family: 'Trebuchet MS', Tahoma, Verdana, Arial, sans-serif;
+	font-size: 0.9em;
+	background-color: #EEE;
+	color: #333;
+	border: 1px solid #DDD;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	padding: 0.2em;
+	width: 14em;
+}
+
+.calendar .months {
+	background-color: #F6AF3A;
+	border: 1px solid #E78F08;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	color: #FFF;
+	padding: 0.2em;
+	text-align: center;
+}
+
+.calendar .prev-month,
+.calendar .next-month {
+	padding: 0;
+}
+
+.calendar .prev-month {
+	float: left;
+}
+
+.calendar .next-month {
+	float: right;
+}
+
+.calendar .current-month {
+	margin: 0 auto;
+}
+
+.calendar .months .prev-month,
+.calendar .months .next-month {
+	color: #FFF;
+	text-decoration: none;
+	padding: 0 0.4em;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.calendar .months .prev-month:hover,
+.calendar .months .next-month:hover {
+	background-color: #FDF5CE;
+	color: #C77405;
+}
+
+.calendar table {
+	border-collapse: collapse;
+	padding: 0;
+	font-size: 0.8em;
+	width: 100%;
+}
+
+.calendar th {
+	text-align: center;
+}
+
+.calendar td {
+	text-align: right;
+	padding: 1px;
+	width: 14.3%;
+}
+
+.calendar td span {
+	display: block;
+	color: #1C94C4;
+	background-color: #F6F6F6;
+	border: 1px solid #CCC;
+	text-decoration: none;
+	padding: 0.2em;
+	cursor: pointer;
+}
+
+.calendar td span:hover {
+	color: #C77405;
+	background-color: #FDF5CE;
+	border: 1px solid #FBCB09;
+}
+
+.calendar td.today span {
+	background-color: #FFF0A5;
+	border: 1px solid #FED22F;
+	color: #363636;
+}

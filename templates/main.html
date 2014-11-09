@@ -2,36 +2,62 @@
 	<head>
 		<title>HR - Home</title>
 		<link rel="stylesheet" href="stylesheet.css"/>
-		<link rel="stylesheet" href="datepicker/css/datepicker.css">
 		<link rel="stylesheet" href="bootstrap-3.2.0-dist/css/bootstrap.css"/>
-		<script src="datepicker/js/bootstrap-datepicker.js"></script>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+		<script type="text/javascript">
+		function changeGuestForm(element) {
+			var x = element;
+			var y = document.getElementById("guestForm");	
+			y.placeholder = "Guest's " + x.options[x.selectedIndex].text;
+			y.name = x.options[x.selectedIndex].value;
+		}
+		
+		function changeResForm(element) {
+			var x = element;
+			var y = document.getElementById("resForm");
+			var z = document.getElementById("resForm2");
+			if (x.selectedIndex == 1) {
+				z.classList.remove("hidden");
+				y.placeholder = "First Name";
+				z.placeholder = "Family Name";
+				y.name = "name";
+				z.name = "surname";
+			} else {
+				z.classList.add("hidden");
+				y.placeholder = "Reservation ID";
+				y.name = "id_res";
+			}
+		}
+		</script>
 	</head>
-	<body>
-		<div class="top c1">
-			<div class="row">
-				<div class="col-md-2">	
-					<button action="logout" class="btn btn-default btn-lg">
-						<span class="glyphicon glyphicon-log-out"></span> Logout
-					</button>
+	<body class="c4">
+		<div class="top c3">
+			<div class="row">	
+				<div class="col-md-2 col-sm-2">
+					<a href="/logout">
+						<button  class="btn btn-default btn-lg">
+							<span class="glyphicon glyphicon-log-out"></span> Logout
+						</button>
+					</a>
 				</div>
 				
-				<div class="col-md-3">
-					<p>{{ today.day }} / {{ today.month }} / {{ today.year }}</p>
+				<div class="col-md-3 col-sm-3">
+					<h2 class="clear"><strong>{{ today.day }} / {{ today.month }} / {{ today.year }}</strong></h2>
 				</div>
 				
-				<div class="col-md-3">
-					<p>Today's Check-In: {{ n_checkin }}<br>
-					Today's Check-Out: {{ n_checkout }}</p>
+				<div class="col-md-3 col-sm-3">
+					<h4 class="clear">Today's Check-In: {{ n_checkin }}<br>
+					Today's Check-Out: {{ n_checkout }}</h4>
 				</div>
 				
-				<div class="col-md-3">
-					<p>Free Rooms: {{ n_libere }}<br>
-					Occupied Rooms: {{ n_occupate }}</p>		
+				<div class="col-md-3 col-sm-3">
+					<h4 class="clear">Free Rooms: {{ n_libere }}<br>
+					Occupied Rooms: {{ n_occupate }}</h4>		
 				</div>
 			
-				<div class="col-md-1 col-sm-4 col-xs-6">
-					<a href="manager">
-						<img src="Manager.png"class="img-rounded mng"/>
+				<div class="col-md-1 col-sm-1 col-xs-2">
+					<a href="checkout">
+						<img src="business_man.png"class="img-rounded mng"/>
 					</a>
 				</div>
 			</div>
@@ -39,40 +65,57 @@
 		
 		<div class="row">
 			<div class="col-md-4 col-sm-6">
-				<div class="div-std c2">
-					<h1>New Booking</h1><br>
+				<div class="div-std c1">
+					<h1><span class="glyphicon glyphicon-calendar"></span> New Booking</h1><br>
 					<form class="form-horizontal" role="form" method="get" action="free_rooms">
-						<input name="checkin" type="data-time" class="form-control myform" placeholder="Check In">
-						<input name="checkout" type="data-time" class="form-control myform" placeholder="Check Out">
-						<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Search</button>
+					<input name="checkin" id="datepickin" class="form-control myform" placeholder="Check In"/>
+					<input name="checkout" id="datepickout" class="form-control myform" placeholder="Check Out">
+					<button type="submit" class="btn btn-default" ><span class="glyphicon glyphicon-search"></span> Go</button>
 					</form>
 				</div>	
 			</div>
 			
 			<div class="col-md-4 col-sm-6">
-				<div class="div-std c3">
-					<h1>Reservations</h1><br>
+				<div class="div-std c1">
+					<h1><span class="glyphicon glyphicon-book"></span> Reservations</h1><br>
 					<form class="form-horizontal myform" role="form" method="get" action="reservations">
-					<input name="ResID" type="text" class="form-control myform" placeholder="Reservation ID">
-					<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Search</button>
+					<input name="id_res" id="resForm" type="text" class="form-control myform" placeholder="Reservation ID">
+					<input name="name" id="resForm2" type="text" class="form-control myform hidden">
+					<select class="form-control myform" onchange="changeResForm(this);">
+						<option value="id_res">Reservation ID</option>
+						<option>Guest's name and surname</option>
+					</select>
+					<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Go</button>
 					</form>
 				</div>
 			</div>
 				
 			<div class="col-md-4 col-sm-6">
-				<div class="div-std c4">
-					<h1>Guests</h1><br>
+				<div class="div-std c1">
+					<h1><span class="glyphicon glyphicon-user"></span> Guests</h1><br>
 					<form class="form-horizontal myform" role="form" method="get" action="guests">
-					<input name="guest" type="text" class="form-control myform" placeholder="Guest">
-					<select class="form-control myform">
-						  <option name="name">Name</option>
-						  <option name="surname">Surname</option>
-						  <option name="id_guest">ID</option>
+					<input name="name" id="guestForm" type="text" class="form-control myform" placeholder="Guest's First name">
+					<select class="form-control myform" onchange="changeGuestForm(this);">
+						  <option value="name">First Name</option>
+						  <option value="surname">Family Name</option>
+						  <option value="id_guest">ID</option>
+						  <option value="passport">Passport N°</option>
+						  <option value="email">e-mail</option>
 					</select>
-					<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Search</button>
+					<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Go</button>
 					</form>
 				</div>
 			</div>
 		</div>
+		<script type="text/javascript" src="datepickr.min.js"></script>
+		<script type="text/javascript">
+			new datepickr('datepickin', {
+				'dateFormat': 'Y/m/d'
+			});
+			
+			new datepickr('datepickout', {
+				'dateFormat': 'Y/m/d'
+			});
+		</script>	
 	</body>
 </html>

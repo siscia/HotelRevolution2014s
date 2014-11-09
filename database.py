@@ -12,17 +12,27 @@ from config import DATABASE_PATH
 def free_rooms(checkin, checkout):
     "Return a list of the rooms which are free in the given period"
     conn = sqlite3.connect(DATABASE_PATH)
-    fullrooms = set(conn.execute("SELECT id_room FROM reservations WHERE checkIN <= ? AND checkOUT >= ?", (checkin, checkout)))
-    rooms = set(conn.execute("SELECT * FROM rooms"))
-    return list(rooms.difference(fullrooms))
+    n_full = conn.execute("SELECT COUNT(*) FROM rooms")
+    print list(n_full)
+    fullrooms = set(conn.execute("SELECT id_room FROM reservations WHERE checkIN < ? OR checkOUT > ?", [checkin, checkout]))
+    print fullrooms
+    print "*****"
+    rooms = set(conn.execute("SELECT id_room FROM rooms"))
+    print rooms
+    print "*****"
+    freerooms = list(rooms.difference(fullrooms))
+    print freerooms
+    print "*****"
+    frooms = []
+    for room in freerooms:
+        frooms.append(list(conn.execute("SELECT * FROM rooms WHERE id_room = ?", room))[0])
+    return frooms
 
 def n_checkin(date):
     "Calculate the number of checkins in a given date"
     conn = sqlite3.connect(DATABASE_PATH)
-    n_checkin=0
-    for res in conn.execute("SELECT * FROM reservations WHERE checkIN = ?", [date]):
-        n_checkin = n_checkin + 1
-    return n_checkin
+    n_checkin= conn.execute("SELECT COUNT(*) FROM reservations WHERE checkIN = ?", [date])
+    return list(n_checkin)[0][0]
 
 def n_checkout(date):
     "Calculate the number of checkouts in a given date"
@@ -30,34 +40,33 @@ def n_checkout(date):
     n_checkout = conn.execute("SELECT COUNT(*) FROM reservations WHERE checkOUT = ?", [date])
     return list(n_checkout)[0][0]
 
-def n_fullrooms(date):
+def n_freerooms(checkin, checkout):
     "Calculate how many rooms are full in a given date"
     conn = sqlite3.connect(DATABASE_PATH)
-    n_full=0
-    for res in conn.execute("SELECT * FROM reservations WHERE checkIN <= ? AND checkOUT >= ?", [date, date]):
-        n_full = n_full + 1
-    return n_full
+    n_full = conn.execute("SELECT COUNT(*) FROM reservations WHERE checkIN > ? OR checkOUT < ?", [checkout, checkin])
+    return list(n_full)[0][0]
 
-def n_free_rooms(date):
+def n_fullrooms(checkin, checkout):
     "Calculate how many rooms are full in a given date"
     conn = sqlite3.connect(DATABASE_PATH)
-    n_tot=0
-    for res in conn.execute("SELECT * FROM rooms"):
-        n_tot = n_tot + 1
-    return n_tot - n_FullRooms(date)
+    n_tot = list(conn.execute("SELECT COUNT(*) FROM rooms"))[0][0]
+    print 1
+    n_free = (n_freerooms(checkin, checkout))
+    return n_tot - n_free
 
-def get_prenotation(pr_id):
-    "Return a prenotation given the id"
+def n_items(table, field, value):
+    "Counts how many items in the database match the given parameter."
     conn = sqlite3.connect(DATABASE_PATH)
-    return list(conn.execute("SELECT * FROM reservations WHERE rowid = ?", [pr_id]))
+    n_guest= conn.execute("SELECT COUNT(*) FROM " + table + " WHERE " + field + " = ?", [value])
+    return list(n_guest)[0][0]
 
-def get_guests(field, value):
-    "Return the list of guests that match the given parameter"
+def get_item(table, field, value):
+    "Return a list of items given the field of the value to match"
     conn = sqlite3.connect(DATABASE_PATH)
-    return list(conn.execute("SELECT * FROM guests WHERE  " + field + "  = ?", [value]))
+    return list(conn.execute("SELECT * FROM " + table + " WHERE " + field + "  = ?", [value]))
 
 def checkout_date(date):
-    """return all the checkOut in a given day"""
+    "Return all the checkOut in a given day"
     conn = sqlite3.connect(DATABASE_PATH)
     return list(cursor.execute("SELECT * FROM reservations WHERE checkOUT=?",[date]))
 
@@ -92,7 +101,7 @@ def checkout_price(rooms):
     return roomsInfo
 
 def guest_leaving(date):
-    """Given a date in input return a list of guest who are leaving."""
+    """Given a date (INT format) in input return a list of guest who are leaving."""
     conn = sqlite3.connect(DATABASE_PATH)
     guest = conn.execute("""select 
             guests.name, guests.surname, 

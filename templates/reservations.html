@@ -1,13 +1,13 @@
 <html>
 	<head>
-		<title>HR - Guests</title>
+		<title>HR - Reservations</title>
 		<meta http-equiv="content-type" content="text/html;charset=utf-8"/>
 		<link rel="stylesheet" href="stylesheet.css"/>
 		<link rel="stylesheet" href="bootstrap-3.2.0-dist/css/bootstrap.css"/>
 		<script type="text/javascript">
 			function able() {
 				var inputs = document.getElementsByClassName('myform');
-				for(var i = 0; i < inputs.length; i++) {
+				for(var i = 0; i < (inputs.length - 1); i++) {
 					inputs[i].disabled = false;
 				}
 			};
@@ -22,35 +22,43 @@
 			};			
 		</script>
 		<script type="text/javascript">
-			function changeGuestForm(element) {
+			function changeResForm(element) {
 				var x = element;
-				var y = document.getElementById("guestForm");	
-				y.placeholder = "Guest's " + x.options[x.selectedIndex].text;
-				y.name = x.options[x.selectedIndex].value;
+				var y = document.getElementById("resForm");
+				var z = document.getElementById("resForm2");
+				if (x.selectedIndex == 1) {
+					z.classList.remove("hidden");
+					y.placeholder = "First Name";
+					z.placeholder = "Family Name";
+					y.name = "name";
+					z.name = "surname";
+				} else {
+					z.classList.add("hidden");
+					y.placeholder = "Reservation ID";
+					y.name = "id_res";
+				}
 			}
 		</script>
 	</head>
 	<body class="c4">
 		<div class="top c3">
 			<div class="row">
-				<div class="col-md-6">
+				
+				<div class="col-md-8">
 					<form class="form-inline" role="form" method="get">
-						<select class="form-control" onchange="changeGuestForm(this);">
-							  <option value="name">First Name</option>
-							  <option value="surname">Family Name</option>
-							  <option value="id_guest">ID</option>
-							  <option value="passport">Passport N°</option>
-							  <option value="email">e-mail</option>
+						<select class="form-control" onchange="changeResForm(this);">
+							<option value="id_res">Reservation ID</option>
+							<option>Guest's name and surname</option>
 						</select>
-						<input  id="guestForm" name="guest" type="text" class="form-control" placeholder="Guest's First name">
+						<input name="id_res" id="resForm" type="text" class="form-control" placeholder="Reservation ID">						
+						<input name="name" id="resForm2" type="text" class="form-control hidden">
 						<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Search</button>
 					</form>
 				</div>
 				
-				<div class="col-md-5">	
+				<div class="col-md-3">	
 					<h4 class="{% if error %} msg-fail {% else %} msg-ok {% endif %} text-right">CULO</h4>
 				</div>
-				
 				<div class="col-md-1">
 					<a href="/main">
 						<button class="btn btn-default"><span class="glyphicon glyphicon-home"></span> Home</button>
@@ -60,33 +68,31 @@
 		</div>
 			
 		<div class="row">
-			<form class="form-horizontal" role="form" method="post" action="guests">
+			<form class="form-horizontal" role="form" method="post">
 				<div class="col-md-6">
 					<div class="div-std c2">
-						<table class="table table-hover">
+						<table class="table">
 							<thead>
 								<tr>
 									<th>First name</th>
-									<th class="hidden">phone</th>
-									<th class="hidden">passport</th>
+									<th class="hidden">check-in</th>
+									<th class="hidden">room number</th>
 									<th>Family name</th>
-									<th>email</th>
-									<th class="hidden">address</th>	
-									<th class="hidden">info</th>
+									<th class="hidden">check-out</th>
+									<th>Reservation ID</th>	
+									<th class="hidden">price</th>
 								</tr>
 							</thead>
 							<tbody>
-								{% for g in guest %}
 								<tr onclick="autoFillForm(this);">
-									<td>{{ g[1] }}</td>
-									<td class="hidden">{{ g[5] }}</td>
-									<td class="hidden">{{ g[4] }}</td>
-									<td>{{ g[2] }}</td>
-									<td>{{ g[3] }}</td>
-									<td class="hidden">{{ g[6] }}</td>
-									<td class="hidden">{{ g[7] }}</td>
+									<td>{{ reservations.name }}</td>
+									<td class="hidden">2014/12/23</td>
+									<td class="hidden">707</td>
+									<td>Bello</td>
+									<td class="hidden">2014/12/25</td>
+									<td>19385</td>
+									<td class="hidden">150€</td>
 								</tr>
-								{% endfor %}
 							</tbody>
 						</table>
 					</div>
@@ -98,22 +104,22 @@
 							<div class="col-md-6" id="fieldList">
 								<label>First Name</label>
 								<input name="name" type="text" class="form-control myform" placeholder="First Name *" disabled>
-								<label>Phone Number</label>
+								<label>Check-In</label>
 								<input name="phone" type="text" class="form-control myform" placeholder="Phone number" disabled>
-								<label>Passport ID</label>							
+								<label>Room Number</label>							
 								<input name="passport" type="text" class="form-control myform" placeholder="Passport ID" disabled>
+								<p><br></p>
+								<h2 class="text-right"><span class="clear"><strong>Price:</strong></span></h2>
 							</div>
 							<div class="col-md-6">
 								<label>Family Name</label>
 								<input name="surname" type="text" class="form-control myform" placeholder="Family Name *" disabled>
-								<label>e-mail address</label>
-								<input name="email" type="email" class="form-control myform" placeholder="email address" disabled>
-								<label>Home Address</label>
+								<label>Check-Out</label>
+								<input name="e_mail" type="email" class="form-control myform" placeholder="email address" disabled>
+								<label>Reservation ID</label>
 								<input name="address" type="text" class="form-control myform" placeholder="Address" disabled>
-							</div>
-							<div class="col-md-12">
-								<label>Other informations</label>					
-								<textarea name="info" class="form-control myform" rows="2" placeholder="other informations..." disabled></textarea>
+								<p><br></p>
+								<input name="price" type="text" class="form-control myform input-lg" placeholder="$$$" disabled>
 							</div>
 							<div class="col-md-6">
 								<button class="btn btn-warning btn-lg btn-block" type="button" onclick="able();"><span class="glyphicon glyphicon-pencil"></span> Modify</button>
