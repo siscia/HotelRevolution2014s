@@ -12,7 +12,7 @@ from config import DATABASE_PATH
 def free_rooms(checkin, checkout):
     "Return a list of the rooms which are free in the given period"
     conn = sqlite3.connect(DATABASE_PATH)
-    n_full = conn.execute("SELECT COUNT(*) FROM rooms")
+    n_full = conn.execute("SELECT COUNT(*) FROM rooms").fetchall()
     print list(n_full)
     fullrooms = set(conn.execute("SELECT id_room FROM reservations WHERE checkIN < ? OR checkOUT > ?", [checkin, checkout]))
     print fullrooms
@@ -32,25 +32,24 @@ def n_checkin(date):
     "Calculate the number of checkins in a given date"
     conn = sqlite3.connect(DATABASE_PATH)
     n_checkin= conn.execute("SELECT COUNT(*) FROM reservations WHERE checkIN = ?", [date])
-    return list(n_checkin)[0][0]
+    return n_checkin.fetchall()[0][0]
 
 def n_checkout(date):
     "Calculate the number of checkouts in a given date"
     conn = sqlite3.connect(DATABASE_PATH)
     n_checkout = conn.execute("SELECT COUNT(*) FROM reservations WHERE checkOUT = ?", [date])
-    return list(n_checkout)[0][0]
+    return n_checkout.fetchall()[0][0]
 
 def n_freerooms(checkin, checkout):
     "Calculate how many rooms are full in a given date"
     conn = sqlite3.connect(DATABASE_PATH)
     n_full = conn.execute("SELECT COUNT(*) FROM reservations WHERE checkIN > ? OR checkOUT < ?", [checkout, checkin])
-    return list(n_full)[0][0]
+    return n_full.fetchall()[0][0]
 
 def n_fullrooms(checkin, checkout):
     "Calculate how many rooms are full in a given date"
     conn = sqlite3.connect(DATABASE_PATH)
-    n_tot = list(conn.execute("SELECT COUNT(*) FROM rooms"))[0][0]
-    print 1
+    n_tot = conn.execute("SELECT COUNT(*) FROM rooms").fetchall()[0][0]
     n_free = (n_freerooms(checkin, checkout))
     return n_tot - n_free
 
@@ -58,22 +57,22 @@ def n_items(table, field, value):
     "Counts how many items in the database match the given parameter."
     conn = sqlite3.connect(DATABASE_PATH)
     n_guest= conn.execute("SELECT COUNT(*) FROM " + table + " WHERE " + field + " = ?", [value])
-    return list(n_guest)[0][0]
+    return n_guest.fetchall[0][0]
 
 def get_item(table, field, value):
     "Return a list of items given the field of the value to match"
     conn = sqlite3.connect(DATABASE_PATH)
-    return list(conn.execute("SELECT * FROM " + table + " WHERE " + field + "  = ?", [value]))
+    return conn.execute("SELECT * FROM " + table + " WHERE " + field + "  = ?", [value]).fetchall()
 
 def checkout_date(date):
     "Return all the checkOut in a given day"
     conn = sqlite3.connect(DATABASE_PATH)
-    return list(cursor.execute("SELECT * FROM reservations WHERE checkOUT=?",[date]))
+    return cursor.execute("SELECT * FROM reservations WHERE checkOUT=?",[date]).fetchall()
 
 def checkin_date(date):
     "Return a list of the checkin made in the given date"
     conn = sqlite3.connect(DATABASE_PATH)
-    return list(cursor.execute("SELECT * FROM reservations WHERE checkIN=?",[date]))
+    return cursor.execute("SELECT * FROM reservations WHERE checkIN=?",[date]).fetchall()
 
 def dataINT_to_datatime(dataInt):
     """ given a date in INT format (i.e. year+month+day) it return the date in DATATIME format"""
@@ -85,7 +84,7 @@ def dataINT_to_datatime(dataInt):
 def price_from_room_id(id_room):
     """ return the priceiPerNight given the id of the room"""
     conn = sqlite3.connect(DATABASE_PATH)
-    return list(cursor.execute("SELECT price_night FROM rooms WHERE id_room=?",[id_room]))[0]
+    return cursor.execute("SELECT price_night FROM rooms WHERE id_room=?",[id_room]).fetchall()[0]
 
 def checkout_price(rooms):
     "Given a list of rooms return a map with the id of the room, the id of the guest and the total price for the particular staying."
@@ -119,5 +118,5 @@ def guest_leaving(date):
               "due" : (dataINT_to_datatime(g[3]) - dataINT_to_datatime(g[2])).days * g[4],
               "room_number" : g[5],
               "reservation_id" : g[6]
-          } for g in list(guest)]
+          } for g in guest.fetchall()]
     return guest
