@@ -17,18 +17,24 @@
 					<h1>Booking Confirmation</h1><br>
 					<form role="form" action="res_id">
 						<p class="lead">
-							{% for guest in guests %}
 							<strong>Name: </strong>{{guest[1]}}<br>
+							<input name="name" class="hidden" value="{{guest[1]}}" disabled>
 							<strong>Surname: </strong>{{guest[2]}}<br>
+							<input name="surname" class="hidden" value="{{guest[2]}}" disabled>
 							<strong>email: </strong>{{guest[3]}}<br>
-							<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-ok"></span> Select Me</button>
+							<input name="email" class="hidden" value="{{guest[3]}}" disabled>
 							<br>
-							{% endfor %}
 							<strong>Check-In: </strong> {{ checkin }} <br>
+							<input name="checkin" class="hidden" value="{{checkin}}" disabled>
 							<strong>Check-Out: </strong> {{ checkout }}<br>
+							<input name="checkout" class="hidden" value="{{checkout}}" disabled>
 							<br>
-							<strong>Room Booked:</strong> {% for room in rooms %} {{ room[0] }} {% endfor %}<br>
+							<strong>Room Booked:</strong> 
+							{% for room in rooms %} {{ room[0] }} 
+							<input name="{{ room[0] }}" class="hidden" value="1" disabled>
+							{% endfor %}<br>
 							<strong>Price: </strong> {{ price }}
+							<input name="price" class="hidden" value="{{price}}" disabled>
 						</p>
 						<button type="submit" class="btn btn-default btn-lg btn-block"><span class="glyphicon glyphicon-ok"></span> Book</button>
 					</form>
