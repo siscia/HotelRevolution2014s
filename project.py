@@ -4,8 +4,8 @@
 from flask import Flask, request, send_from_directory, redirect, url_for, abort, session, render_template
 from jinja2 import Environment, PackageLoader
 from session import login, logout, sudo
-from database import get_item, n_checkin, n_checkout, n_fullrooms, n_freerooms, free_rooms, guest_leaving
-from utilities import dataINT_to_datatime, dataINT, matching_guest
+from database import get_item, n_checkin, n_checkout, n_fullrooms, n_freerooms, free_rooms, guest_leaving, price_from_room_id
+from utilities import dataINT_to_datatime, datepick_to_dataINT, dataINT, matching_guest
 import sqlite3, time, sets, datetime
 
 app = Flask(__name__, static_folder="/templates")
@@ -23,7 +23,7 @@ def stylesheet():
     template = env.get_template("stylesheet.css")
     return template.render()
 @app.route('/datepickr.min.js')
-def stylesheet():
+def datepicker():
     template = env.get_template("datepickr.min.js")
     return template.render()
 @app.route('/bootstrap-3.2.0-dist/css/bootstrap.css')
@@ -103,7 +103,7 @@ def free_rooms_page():
     if not session.get('logged_in'):
         abort(401)
     today = dataINT()
-    mappa = {"rooms" : free_rooms(request.args["checkin"], request.args["checkout"]), "checkin" : request.args["checkin"], "checkout" : request.args["checkout"]}
+    mappa = {"rooms" : free_rooms(datepick_to_dataINT(request.args["checkin"]), datepick_to_dataINT(request.args["checkout"])), "checkin" : datepick_to_dataINT(request.args["checkin"]), "checkout" : datepick_to_dataINT(request.args["checkout"])}
     template = env.get_template("booking.html")
     return template.render(mappa)
    
@@ -113,18 +113,18 @@ def confirm(checkin, checkout):
     """
     confirm()
     This page shows a sum-up of all the information inserted by the receptionist.
-    Guest's data goes through some preprocessing before being shown: it's processed by MatchingGuest() in order to find if the guest has already been registered in the database. Four cases can be distinguished:
-    - MatchingGuest() found only one perfectly matching row in the database. 
+    Guest's data goes through some preprocessing before being shown: it's processed by matching_guest() in order to find if the guest has already been registered in the database. Four cases can be distinguished:
+    - matching_guest() found only one perfectly matching row in the database. 
         In this case the infos shown are the ones found in the database.
-    - MatchingGuest() found no perfectly matching rows in the database.
-        - MatchingGuest() found one partial match.
+    - matching_guest() found no perfectly matching rows in the database.
+        - matching_guest() found one partial match.
             in this case the receptionist is asked to modify the database in order to update guest's data, instead than inserting a new entry.
-        - MatchingGuest() found more than one partial match.
+        - matching_guest() found more than one partial match.
             In this case The receptionist is asked to choose the guest between the partial matching ones and modify it, or to insert a completely new entry.
-        - MatchinGuest() found no matching rows.
+        - matching_guest() found no matching rows.
             In this case the data shown are the one the receptionist entered before.
 
-    MatchingGuest() permits to distinguish between "completely matching" and "partially matching".
+    matching_guest() permits to distinguish between "completely matching" and "partially matching".
     - Perfectly matching: all the fields matches, notes excluded.
     - Partially matching: name, surname, passport matches.
     """
@@ -135,33 +135,55 @@ def confirm(checkin, checkout):
     for room in free_rooms(checkin, checkout):
         if request.args.get(str(room[0])) == "on":
             sel_rooms.append(room)
-    print sel_rooms
     mappa["rooms"] = sel_rooms
-    print 2
-    guests = []
-    keys = []
-    for item in request.args:
-        if request.args[item] != "":
-            guest.append(request.args[item])
-            keys.append(item)
-    match = MatchingGuest(keys, guests)
-    if match:
-        mappa["guests"] = match
-        return mappa
-    for item in ["name", "surname", "passport"]:
-        if request.args[item] != "":
-            guest.append(request.args[item])
-            keys.append(item)
-    match = MatchingGuest(keys, guest)
+    price = 0
+    for room in sel_rooms:
+        price = price + price_from_room_id(room[0])*(int(checkout)-int(checkin))
+    mappa["price"] = price
 
+    guest = []
+    keys = []
+    match = []
+    for item in ["name", "surname", "email", "passport", "phone", "address", "info"]:
+        if request.args[item] != "":
+            guest.append(request.args[item])
+            keys.append(item)
+            print item + ": " + request.args[item]
+            
+    match = matching_guest(keys, guest)
+    print match
+    if not match:
+        for item in ["name", "surname", "passport"]:
+            if request.args[item] != "":
+                guest.append(request.args[item])
+                keys.append(item)
+        match = matching_guest(keys, guest)
+        mappa["msg"] = "Warning: more than one guest matches the data you entered. Check carefully who is who!"
+        mappa["error"] = "TRUE"
+        if not match:
+            g=[0]
+            for item in ["name", "surname", "email", "passport", "phone", "address", "info"]:
+                g.append(request.args[item])
+                if not request.args[item]:
+                    g.append("")
+                print item
+            if g[1] == "" or g[2] == "" or g[4] == "":
+                mappa["msg"] = "You must insert name, surname, and passport No of the guest to record him/her into the database."
+                mappa["error"] = "TRUE"
+            match.append(g)
+    mappa["guests"] = match
+    
     template = env.get_template("booking_confirm.html")
     return template.render(mappa)
 
+
+@app.route("/res_id")
+def new_reserv_page():
+    return "Fatto"
     
     
-    
-@app.route("/guests", methods==["GET","POST"])
-def guests():
+@app.route("/guests", methods=["GET","POST"])
+def guests_page():
     """
     guests()
     Shows a list of all the guests recorded in the hotel's database that match the parameter selected in the mainpage.
@@ -184,6 +206,7 @@ def guests():
                 else:
                     guests = guests.intersection(matching)
     if request.method == "POST":
+        lista = []
         for field in ["name", "surname", "id_guest", "passport", "email", "note"]:
             lista.append(request.form[field])
         #Passo la lista alla funzione di Gio e ottengo un feedback (???)
@@ -199,13 +222,16 @@ def guests():
                 else:
                     guests = guests.intersection(matching)
     mappa["guest"] = list(guests)
+    if len(guests) == 0:
+        mappa["msg"] = "Nessun ospite corrisponde ai criteri di ricerca."
+        mappa["error"] = "TRUE"
     print mappa
     template = env.get_template("guest.html")
     return template.render(mappa)
 
 
 @app.route("/reservations")
-def reserv():
+def reserv_page():
     """
     reserv()
     Allow the receptionist to find a reservation given the ID or the name of the guest.

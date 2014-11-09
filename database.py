@@ -13,16 +13,16 @@ def free_rooms(checkin, checkout):
     "Return a list of the rooms which are free in the given period"
     conn = sqlite3.connect(DATABASE_PATH)
     n_full = conn.execute("SELECT COUNT(*) FROM rooms")
-    print list(n_full)
+#    print list(n_full)
     fullrooms = set(conn.execute("SELECT id_room FROM reservations WHERE checkIN < ? OR checkOUT > ?", [checkin, checkout]))
-    print fullrooms
-    print "*****"
+#    print fullrooms
+#    print "*****"
     rooms = set(conn.execute("SELECT id_room FROM rooms"))
-    print rooms
-    print "*****"
+#    print rooms
+#    print "*****"
     freerooms = list(rooms.difference(fullrooms))
-    print freerooms
-    print "*****"
+#    print freerooms
+#    print "*****"
     frooms = []
     for room in freerooms:
         frooms.append(list(conn.execute("SELECT * FROM rooms WHERE id_room = ?", room))[0])
@@ -68,12 +68,12 @@ def get_item(table, field, value):
 def checkout_date(date):
     "Return all the checkOut in a given day"
     conn = sqlite3.connect(DATABASE_PATH)
-    return list(cursor.execute("SELECT * FROM reservations WHERE checkOUT=?",[date]))
+    return list(conn.execute("SELECT * FROM reservations WHERE checkOUT=?",[date]))
 
 def checkin_date(date):
     "Return a list of the checkin made in the given date"
     conn = sqlite3.connect(DATABASE_PATH)
-    return list(cursor.execute("SELECT * FROM reservations WHERE checkIN=?",[date]))
+    return list(conn.execute("SELECT * FROM reservations WHERE checkIN=?",[date]))
 
 def dataINT_to_datatime(dataInt):
     """ given a date in INT format (i.e. year+month+day) it return the date in DATATIME format"""
@@ -85,14 +85,14 @@ def dataINT_to_datatime(dataInt):
 def price_from_room_id(id_room):
     """ return the priceiPerNight given the id of the room"""
     conn = sqlite3.connect(DATABASE_PATH)
-    return list(cursor.execute("SELECT price_night FROM rooms WHERE id_room=?",[id_room]))[0]
+    return list(conn.execute("SELECT price_night FROM rooms WHERE id_room=?",[id_room]))[0][0] #Suppose that it will find just one room with the selected ID
 
-def checkout_price(rooms):
-    "Given a list of rooms return a map with the id of the room, the id of the guest and the total price for the particular staying."
+def checkout_price(reserv):
+    "Given a list of reservations return a map with the id of the room, the id of the guest and the total price for the particular staying."
     roomsInfo = []
-    for r in rooms:
-        checkIN = dataINTtodataTime(r[2])
-        checkOUT = dataINTtodataTime(r[3])
+    for r in reserv:
+        checkIN = dataINT_to_datatime(r[2])
+        checkOUT = dataINT_to_datatime(r[3])
         days = checkOUT - checkIN
         price = priceFromRoomId(r[0]) * days.days
         roomsInfo.append({"id_room" : r[0],
