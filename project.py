@@ -1,10 +1,10 @@
 
 #***** ROUTING FUNCTIONS by Sara & Simo ***************************************************
 
-from flask import Flask, request, send_from_directory, redirect, url_for, abort, session, render_template
+from flask import Flask, request, send_from_directory, redirect, url_for, abort, session, render_template, make_response
 from jinja2 import Environment, PackageLoader
 from session import login, logout, sudo
-from database import get_item, n_checkin, n_checkout, n_fullrooms, n_freerooms, free_rooms, guest_leaving
+from database import get_item, n_checkin, n_checkout, n_fullrooms, n_freerooms, free_rooms, guest_leaving, get_revenue
 from utilities import dataINT_to_datatime, dataINT, matching_guest
 import sqlite3, time, sets, datetime
 
@@ -217,10 +217,15 @@ def checkout():
     mappa["username"] = session["username"]
     return template.render(mappa)
 
-@app.route("/revenue")
-def revenue():
-    return
-
+@app.route("/revenue/<date_from>/<date_to>")
+def revenue(date_from, date_to):
+    rev = u"date,money\n"
+    for date, money in get_revenue(date_from, date_to).iteritems():
+        rev += (str(date)[:10] + "," + str(money) + "\n")
+    response = make_response(rev)
+    response.headers['Content-Type'] = 'text/csv'
+    return response
+    
 @app.route("/logout")
 def logoutpage():
     """
@@ -234,5 +239,6 @@ def logoutpage():
     else:
         return "Logout failed!" #Fix this point
 
+    
 if __name__ == "__main__":
     app.run(debug=True)

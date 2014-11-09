@@ -120,3 +120,27 @@ def guest_leaving(date):
               "reservation_id" : g[6]
           } for g in guest.fetchall()]
     return guest
+
+def get_revenue(start_date, end_date):
+    def clean_data(reservation):
+        checkIN = dataINT_to_datatime(r[0])
+        checkOUT = dataINT_to_datatime(r[1])
+        price_night = float(r[2])
+        return [(checkOUT - checkIN).days * price_night,
+                checkOUT]
+    conn = sqlite3.connect(DATABASE_PATH)
+    aggregate = {}
+    rev = conn.execute("""
+    SELECT 
+        checkIN, checkOUT, price_night 
+    FROM reservations 
+    INNER JOIN rooms 
+        ON reservations.id_room = rooms.id_room
+    WHERE checkOUT > ? AND checkOUT < ?
+    """, [start_date, end_date])
+    res_out = [clean_data(r) for r in rev.fetchall()]
+    for r in res_out:
+        if r[1] in aggregate:
+            aggregate[r[1]] += r[0]
+        else: aggregate[r[1]] = r[0]
+    return aggregate
