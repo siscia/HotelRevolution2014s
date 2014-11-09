@@ -56,6 +56,7 @@
 			<form class="form-horizontal" role="form" method="get" onsubmit="return validateForm(this)" action="confirm-{{ checkin }}-{{ checkout }}">
 				<div class="col-md-8">
 					<div class="div-std c2">
+                                                <h4> Found <strong>{{ nrooms }}</strong> free rooms: </h4>
 						<table class="table">
 							<thead>
 								<tr>
@@ -91,7 +92,7 @@
 						<input name="passport" type="text" class="form-control myform" placeholder="Passport ID">
 						<input name="address" type="text" class="form-control myform" placeholder="Address">
 						<input name="phone" type="text" class="form-control myform" placeholder="Phone number">
-						<textarea name="info" class="form-control myform" rows="2" placeholder="other informations..."></textarea>
+						<textarea name="notes" class="form-control myform" rows="2" placeholder="other informations..."></textarea>
 						<button type="submit" class="btn btn-success btn-default btn-block" >Continue <span class="glyphicon glyphicon-chevron-right"></span></button>
 					</div>
 				</div>

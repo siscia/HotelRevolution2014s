@@ -8,23 +8,24 @@
     <body class="c4">
         <div class="div-std c2">
 			<h1>Done!</h1>
-			<p class="lead">ID of the reservation: <span style="color:red">{{ id_res }}</span>
-			<br>The reservation is stored to the database succesfully. An e-mail is sended to {{ email }}.
+			<p class="lead">ID of the reservation: <span style="color:red">{% for i in id %}{{ id }}  {% endfor %}/span>
+			<br>The reservation is stored to the database succesfully. An e-mail is sended to {{ guest[4] }}.
 			<br>Here is a recap of the reservation: </p>
-			{% for ... %}
+			{% for r in ids %}
 			<div class="div-std c3">
 				<p class="clear"><strong>Name: </strong>{{guest[1]}}<br>
 				<strong>Surname: </strong>{{guest[2]}}<br>
 				<strong>email: </strong>{{guest[3]}}<br>
+				<strong>email: </strong>{{guest[4]}}<br>
 				<br>
 				<strong>Check-In: </strong> {{ checkin }} <br>
 				<strong>Check-Out: </strong> {{ checkout }}<br>
 				<br>
-				<strong>Room Booked:</strong>{{ room[0] }}<br>
+				<strong>Room Booked:</strong>{{ r.id_room }}<br>
 				<strong>Price: </strong> {{ price }}</p>
 			</div>
 			{% endfor %}
-			<p class="lead"><br>Now click <a href="/login">HERE</a> to go back to the main page</p>
+			<p class="lead"><br>Now click <a href="/main">HERE</a> to go back to the main page</p>
         </div>
     </body>
 </html>
