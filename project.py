@@ -14,38 +14,35 @@ app = Flask(__name__, static_url_path='/static')
 env = Environment(loader=PackageLoader('project', 'templates'))
 
 
-
-
-
 # FIX WHEN POSSIBLE!!
-@app.route('/stylesheet.css')
-def stylesheet():
-    template = env.get_template("stylesheet.css")
-    return template.render()
-@app.route('/datepickr.min.js')
-def stylesheet():
-    template = env.get_template("datepickr.min.js")
-    return template.render()
-@app.route('/bootstrap-3.2.0-dist/css/bootstrap.css')
-def bootstrap():
-    template = env.get_template("bootstrap-3.2.0-dist/css/bootstrap.css")
-    return template.render()
-@app.route('/bootstrap-3.2.0-dist/fonts/glyphicons-halflings-regular.woff')
-def bootstrap_1():
-    template = env.get_template("/bootstrap-3.2.0-dist/fonts/glyphicons-halflings-regular.woff")
-    return template.render()
-@app.route('/bootstrap-3.2.0-dist/fonts/glyphicons-halflings-regular.ttf')
-def bootstrap_2():
-    template = env.get_template("/bootstrap-3.2.0-dist/fonts/glyphicons-halflings-regular.ttf")
-    return template.render()
-@app.route('/business_man.png')
-def img_1():
-    template = env.get_template("business_man.png")
-    return template.render()
-@app.route('/HR.png')
-def img_2():
-    template = env.get_template("HR.png")
-    return template.render()
+# @app.route('/stylesheet.css')
+# def stylesheet():
+#     template = env.get_template("stylesheet.css")
+#     return template.render()
+# @app.route('/datepickr.min.js')
+# def stylesheet():
+#     template = env.get_template("datepickr.min.js")
+#     return template.render()
+# @app.route('/bootstrap-3.2.0-dist/css/bootstrap.css')
+# def bootstrap():
+#     template = env.get_template("bootstrap-3.2.0-dist/css/bootstrap.css")
+#     return template.render()
+# @app.route('/bootstrap-3.2.0-dist/fonts/glyphicons-halflings-regular.woff')
+# def bootstrap_1():
+#     template = env.get_template("/bootstrap-3.2.0-dist/fonts/glyphicons-halflings-regular.woff")
+#     return template.render()
+# @app.route('/bootstrap-3.2.0-dist/fonts/glyphicons-halflings-regular.ttf')
+# def bootstrap_2():
+#     template = env.get_template("/bootstrap-3.2.0-dist/fonts/glyphicons-halflings-regular.ttf")
+#     return template.render()
+# @app.route('/business_man.png')
+# def img_1():
+#     template = env.get_template("business_man.png")
+#     return template.render()
+# @app.route('/HR.png')
+# def img_2():
+#     template = env.get_template("HR.png")
+#     return template.render()
 #*************
 
 
@@ -157,10 +154,7 @@ def confirm(checkin, checkout):
     template = env.get_template("booking_confirm.html")
     return template.render(mappa)
 
-    
-    
-    
-@app.route("/guests", methods==["GET","POST"])
+@app.route("/guests", methods=["GET","POST"])
 def guests():
     """
     guests()
@@ -202,7 +196,6 @@ def guests():
     print mappa
     template = env.get_template("guest.html")
     return template.render(mappa)
-
 
 @app.route("/reservations")
 def reserv():
@@ -252,11 +245,9 @@ def checkout():
     mappa["username"] = session["username"]
     return template.render(mappa)
 
-
 @app.route("/revenue")
 def revenue():
     return
-
 
 @app.route("/logout")
 def logoutpage():
@@ -271,8 +262,6 @@ def logoutpage():
     else:
         return "Logout failed!" #Fix this point
         
-
-
 app.secret_key = ".ASF\x89m\x14\xc9s\x94\xfaq\xca}\xe1/\x1f3\x1dFx\xdc\xf0\xf9"
 
 if __name__ == "__main__":
