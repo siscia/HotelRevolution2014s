@@ -30,6 +30,11 @@
 				y.name = "id_res";
 			}
 		}
+		
+		function showCredits() {
+			alert("HotelRevolution2014s\n\ndeveloped by:\nGianpaolo branca, Sara Zanzottera, Simone Mosciatti, Giovanni Pelosi\nAll Right Reserved.\n\nLibrary used:\nBootstrap: http://getbootstrap.com/\nGliphicon: http://glyphicons.com/\nSQlite: http://www.sqlite.org/\nFlask: http://flask.pocoo.org/\nJinja 2: http://jinja.pocoo.org/\nd3: http://d3js.org/ ");
+			
+		}
 		</script>
 	</head>
 	<body class="c4">
@@ -89,7 +94,7 @@
 					</select>
 					<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Go</button>
 					</form>
-				</div>
+				</div>									
 			</div>
 				
 			<div class="col-md-4 col-sm-6">
@@ -107,6 +112,9 @@
 					</form>
 				</div>
 			</div>
+		</div>
+		<div class="footer">
+			<button type="button" class="btn btn-link btn-lg" onclick="showCredits();"><span class="clear"><span class="glyphicon glyphicon-comment"></span> Credits...</span></button>
 		</div>
 		<script type="text/javascript" src="datepickr.min.js"></script>
 		<script type="text/javascript">

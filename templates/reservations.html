@@ -13,6 +13,14 @@
 			};
 		</script>
 		<script type="text/javascript">
+			function ableOnSubmit() {
+				var inputs = document.getElementsByClassName('myform');
+				for(var i = 0; i < inputs.length; i++) {
+					inputs[i].disabled = false;
+				}
+			};
+		</script>
+		<script type="text/javascript">
 			function autoFillForm(element) {
 				var inputs = document.getElementsByClassName('myform');
 				var fields = element.getElementsByTagName("td");
@@ -45,7 +53,7 @@
 			<div class="row">
 				
 				<div class="col-md-8">
-					<form class="form-inline" role="form" method="get">
+					<form class="form-inline" role="form" method="post">
 						<select class="form-control" onchange="changeResForm(this);">
 							<option value="id_res">Reservation ID</option>
 							<option>Guest's name and surname</option>
@@ -68,7 +76,7 @@
 		</div>
 			
 		<div class="row">
-			<form class="form-horizontal" role="form" method="post">
+			<form class="form-horizontal" role="form" method="get" onsubmit="ableOnSubmit();">
 				<div class="col-md-6">
 					<div class="div-std c2">
 						<table class="table">
