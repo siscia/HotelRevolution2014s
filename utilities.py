@@ -37,7 +37,7 @@ def dataINT_to_datatime(dataInt):
 
 def datepick_to_dataINT(data):
     "Convert the date format given by datepickr (string) into the dataINT format"
-    if str(data).count("/") != 3:
+    if str(data).count("/") != 2:
         return int(data)
     d = data.split("/")
     date = int(d[0])*10000 + int(d[1])*100 + int(d[2])

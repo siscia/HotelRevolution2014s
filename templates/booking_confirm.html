@@ -16,33 +16,33 @@
 				<div class="div-std c1">
 					<h1>Booking Confirmation</h1><br>
 					<h4 class="text-center {% if error %} msg-fail {% else %} msg-ok {% endif %} text-right">{{ msg }}</h4>
-					<form role="form" method="get" action="res_id">
+					<form role="form" method="post" action="res_id">
 						<p class="lead">
-						        <input name="new_guest" class="hidden" value="{{new_guest}}" disabled>
-					                <input name="id_guest" class="hidden" value="{{guests[0]}}" disabled>
+						    <input name="new_guest" class="hidden" value="{{new_guest}}">
+					        <input name="id_guest" class="hidden" value="{{guests[0]}}">
 							<strong>Name: </strong>{{guests[1]}}<br>
-							<input name="name" class="hidden" value="{{guests[1]}}" disabled>
+							<input name="name" class="hidden" value="{{guests[1]}}">
 							<strong>Surname: </strong>{{guests[2]}}<br>
-							<input name="surname" class="hidden" value="{{guests[2]}}" disabled>
+							<input name="surname" class="hidden" value="{{guests[2]}}">
 							<strong>Email: </strong>{{guests[3]}}<br>
-							<input name="email" class="hidden" value="{{guests[3]}}" disabled>
+							<input name="email" class="hidden" value="{{guests[3]}}">
 							<strong>Passport: </strong>{{guests[4]}}<br>
-							<input name="passport" class="hidden" value="{{guests[4]}}" disabled>
-							<input name="address" class="hidden" value="{{guests[5]}}" disabled>
-							<input name="phone" class="hidden" value="{{guests[6]}}" disabled>
-							<input name="info" class="hidden" value="{{guests[7]}}" disabled>
+							<input name="passport" class="hidden" value="{{guests[4]}}">
+							<input name="address" class="hidden" value="{{guests[5]}}">
+							<input name="phone" class="hidden" value="{{guests[6]}}">
+							<input name="info" class="hidden" value="{{guests[7]}}">
 							<br>
 							<strong>Check-In: </strong>{{ckin.year}}/{{ckin.month}}/{{ckin.day}} <br>
-							<input name="checkin" class="hidden" value="{{checkin}}" disabled>
+							<input name="checkin" class="hidden" value="{{checkin}}">
 							<strong>Check-Out: </strong>{{ckout.year}}/{{ckout.month}}/{{ckout.day}}<br>
-							<input name="checkout" class="hidden" value="{{checkout}}" disabled>
+							<input name="checkout" class="hidden" value="{{checkout}}">
 							<br>
 							<strong>Room Booked:</strong> 
 							{% for room in rooms %} {{ room[0] }} 
-							<input name="{{ room[0] }}" class="hidden" value="1" disabled>
+							<input name="{{ room[0] }}" class="hidden" value="1">
 							{% endfor %}<br>
 							<strong>Price: </strong> {{ price }}
-							<input name="price" class="hidden" value="{{price}}" disabled>
+							<input name="price" class="hidden" value="{{price}}">
 							<input name="id" class="hidden" value="{{ id }}"> 
 						</p>
 						<button type="submit" class="btn btn-default btn-lg btn-block" {%if error == "TRUE"%} disabled {%endif%}><span class="glyphicon glyphicon-ok"></span> Book</button>

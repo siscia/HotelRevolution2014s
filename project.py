@@ -4,7 +4,7 @@
 from flask import Flask, request, send_from_directory, redirect, url_for, abort, session, render_template
 from jinja2 import Environment, PackageLoader
 from session import login, logout, sudo
-from database import get_item, n_checkin, n_checkout, n_fullrooms, n_freerooms, free_rooms, guest_leaving, price_from_room_id, reserv_info, id_rooms, n_items
+from database import get_item, n_checkin, n_checkout, n_fullrooms, n_freerooms, free_rooms, guest_leaving, price_from_room_id, reserv_info, id_rooms, n_items, add_to_db
 from utilities import dataINT_to_datatime, datepick_to_dataINT, dataINT, matching_guest
 import sqlite3, time, sets, datetime
 
@@ -15,10 +15,6 @@ app.secret_key = ".ASF\x89m\x14\xc9s\x94\xfaq\xca}\xe1/\x1f3\x1dFx\xdc\xf0\xf9"
 env = Environment(loader=PackageLoader('project', '/templates'))
 
 
-
-# FIX WHEN POSSIBLE!!
-
-#*************
 
 @app.route('/<path:filename>')
 def static_for_hr(filename):
@@ -156,7 +152,7 @@ def confirm(checkin, checkout):
     return template.render(mappa)
 
 
-@app.route("/res_id")#, methods=["POST"])
+@app.route("/res_id", methods=["POST"])
 def new_reserv_page():
     """
     new_reserv_page():
@@ -170,11 +166,7 @@ def new_reserv_page():
     mappa = {}
     values = []
     
-    print 0
-    print request.args["name"]
-    
     for item in ["id_guest", "name", "surname", "email", "passport", "phone", "address", "info"]:
-        print item
         values.append(request.form[item])
     mappa["guest"] = values
     print 1
@@ -187,15 +179,20 @@ def new_reserv_page():
     print 2
     ids = []
     for room in id_rooms():
+        print room[0]
         values[0] = n_items("reservations", "", "") + 1         #The new ID
         ids.append(values[0])
-        if request.form[room]:
+        print 4
+        if request.form.get(room[0]):
+            print 5
             for item in ["id_guest", "id_room", "checkin", "checkout"]:
                 values.append(request.form[item])
                 result = add_to_db("reservations", values)
+                print "ADDED"
                 if result != "OK":
                     mappa["msg"]="An error occured while creating the new reservation. Please check what's recorded in the system, in order to spot mistakes in the database's content."
                     mappa["error"]="TRUE"
+    print 3
     mappa["id"] = ids
     for i in ids:
         id_room = get_item("reservations", "id_res", i)[1]

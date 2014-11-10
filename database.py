@@ -166,7 +166,7 @@ def columnNames(table):
         columnNames.append(i[0])
     return columnNames
 
-def add_to_db(table, info):
+def add_to_dbb(table, info):
     """given a database, a table, and a information to add, the function add the information"""
     con = sqlite3.connect(DATABASE_PATH)
     data = list()
@@ -187,13 +187,24 @@ def add_to_db(table, info):
     with con:
        cur = con.cursor()
        cur.execute("INSERT INTO "+ table +" "+ colName +" VALUES"+ quere+"",info)
-    return "OK"
+       con.commit()
+    return 1
 
+def add_to_db(table, row):
+    """given a database, a table, and a information to add, the function add the information"""
+    con = sqlite3.connect(DATABASE_PATH)
+    with con:
+        keys = columnNames(table)
+        cur= con.cursor()
+        print keys
+        #cur.execute("INSERT INTO " + table + str(tuple(row)) + " VALUES " + str(tuple(row)))
+        #con.commit()
+    return 1
 
-def modify_db (table, value, field, info):
+def modify_db (table, oldfield, oldvalue, newfield, newvalue):
     con = sqlite3.connect(DATABASE_PATH)
     with con:
         cur= con.cursor()
-        cur.execute("DELETE FROM "+ table +"  WHERE "+ field +" =?",value)
-    add_to_db(table,info)
-    return "OK"
+        cur.execute("UPDATE " + table + " SET " + newfield + " = "+ newvalue + " WHERE " + oldfield + " = " + oldvalue)
+        con.commit()
+    return 1
