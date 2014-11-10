@@ -74,6 +74,7 @@
 									<th>email</th>
 									<th class="hidden">address</th>	
 									<th class="hidden">info</th>
+									<th class="hidden">ID</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -86,6 +87,7 @@
 									<td>{{ g[3] }}</td>
 									<td class="hidden">{{ g[6] }}</td>
 									<td class="hidden">{{ g[7] }}</td>
+									<td class="hidden">{{ g[0] }}</td>
 								</tr>
 								{% endfor %}
 							</tbody>
@@ -115,6 +117,7 @@
 							<div class="col-md-12">
 								<label>Other informations</label>					
 								<textarea name="info" class="form-control myform" rows="2" placeholder="other informations..." disabled></textarea>
+								<input name="id" class="hidden">
 							</div>
 							<div class="col-md-6">
 								<button id="btn-modify"class="btn btn-warning btn-lg btn-block" type="button" onclick="able();" disabled>
