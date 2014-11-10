@@ -7,7 +7,7 @@
 		<script type="text/javascript">
 			function able() {
 				var inputs = document.getElementsByClassName('myform');
-				for(var i = 0; i < (inputs.length - 1); i++) {
+				for(var i = 0; i < (inputs.length - 2); i++) {
 					inputs[i].disabled = false;
 				}
 			};
@@ -57,7 +57,7 @@
 				</div>
 				
 				<div class="col-md-3">	
-					<h4 class="{% if error %} msg-fail {% else %} msg-ok {% endif %} text-right">CULO</h4>
+					<h4 class="{% if error %} msg-fail {% else %} msg-ok {% endif %} text-right">{{msg}}</h4>
 				</div>
 				<div class="col-md-1">
 					<a href="/main">
@@ -84,14 +84,16 @@
 								</tr>
 							</thead>
 							<tbody>
+                                                                {% for r in reservations %}
 								<tr onclick="autoFillForm(this);">
-									<td>{{ reservations.name }}</td>
-									<td class="hidden">2014/12/23</td>
-									<td class="hidden">707</td>
-									<td>Bello</td>
-									<td class="hidden">2014/12/25</td>
-									<td>19385</td>
-									<td class="hidden">150€</td>
+									<td>{{ r[0].name }}</td>
+									<td class="hidden">{{r[0].checkin.year}}/{{r[0].checkin.month}}/{{r[0].checkin.day}}</td>
+									<td class="hidden">{{r[0].room}}</td>
+									<td>{{r[0].surname}}</td>
+									<td class="hidden">{{r[0].checkout.year}}/{{r[0].checkout.month}}/{{r[0].checkout.day}}</td>
+									<td>{{r[0].id_res}}</td>
+									<td class="hidden">{{r[0].price}}</td>
+								{%endfor%}
 								</tr>
 							</tbody>
 						</table>

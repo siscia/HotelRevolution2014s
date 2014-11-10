@@ -4,19 +4,7 @@
 from database import price_from_room_id, get_item
 import datetime
 
-def MapFromLists(keys, values):
-    """ 
-    Create a map merging two lists.
-    The output has this layout: {..., keys[n] : values[n], ...}
-    If the two lists have different lenght returns {"error":"lists of different lenght!"}
-    """
-    if len(keys)!=len(values):
-        return {"error":"lists of different lenght!"}
-    mappa = {}
-    n = 0
-    for n in xrange(len(keys)):
-        mappa[keys[n]] = values[n]
-    return mappa
+
 
 def matching_guest(keys, values):
     """
@@ -26,24 +14,34 @@ def matching_guest(keys, values):
     """
     n = 0
     match=[]
-    for n in xrange(len(keys)-1):
+    for n in xrange(len(keys)):
         dblista = get_item("guests", keys[n], values[n])
+#        print "    dblista " + keys[n] + ": " + values[n]
         if n == 0:
             match = set(dblista)
-        match = match & set(dblista)
-    return match
+        match = match.intersection(set(dblista))
+    return list(match)
 
 def dataINT():
     "Return an integer number representing the current date"
     return 20141004
 #    return time.localtime().tm_year * 10000 + time.localtime().tm_mon * 100 + time.localtime().tm_day
 
+
 def dataINT_to_datatime(dataInt):
-    "Transform a date given as INT in a common date format"
+    "Transform a date given as INT in DATATIME format"
     year = dataInt/10000
     month = (dataInt-(year*10000))/100
     day = dataInt -(year*10000+month*100)
     return datetime.datetime(year,month,day)
+
+def datepick_to_dataINT(data):
+    "Convert the date format given by datepickr (string) into the dataINT format"
+    if str(data).count("/") != 3:
+        return int(data)
+    d = data.split("/")
+    date = int(d[0])*10000 + int(d[1])*100 + int(d[2])
+    return date
 
 def revenue(reservations):
     "Calculate the total revenue in a certain period, given the list of reservation done in that period."
