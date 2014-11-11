@@ -91,10 +91,8 @@
 								</tr>
 							</thead>
 							<tbody>
-							{% if empty %}
-							{% else %}
                                                                 {% for r in reservations %}
-								<tr onclick="autoFillForm(this);">
+								<tr onclick="able(); autoFillForm(this);">
 									<td>{{ r[0].name }}</td>
 									<td class="hidden">{{r[0].checkin.year}}/{{r[0].checkin.month}}/{{r[0].checkin.day}}</td>
 									<td class="hidden">{{r[0].room}}</td>
@@ -104,7 +102,6 @@
 									<td class="hidden">{{r[0].price}}</td>
 								</tr>
 								{%endfor%}
-							{%endif%}
 							</tbody>
 						</table>
 					</div>
@@ -131,14 +128,11 @@
 								<input name="checkout" type="text" class="form-control myform" placeholder="email address" disabled>
 								<label>Reservation ID</label>
 								<input name="id_res" type="text" class="form-control myform" placeholder="Address" disabled>
-								<p><br></p>
 								<input name="price" type="text" class="form-control myform input-lg" placeholder="$$$" disabled>
-							</div>
-							<div class="col-md-6">
-								<button class="btn btn-warning btn-lg btn-block" type="button" onclick="able();"><span class="glyphicon glyphicon-pencil"></span> Modify</button>
-							</div>
-							<div class="col-md-6">
 								<button class="btn btn-success btn-lg btn-block" type="submit"><span class="glyphicon glyphicon-save"></span> Save</button>
+
+							</div>
+							<div class="col-md-12">
 							</div>
 						</div>
 					</div>

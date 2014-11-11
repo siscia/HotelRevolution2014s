@@ -28,9 +28,9 @@ def free_rooms(checkin, checkout):
     free = id_free_rooms(checkin, checkout)
     frooms = []
     for room in free:
-        frooms.append(list(conn.execute("SELECT * FROM rooms WHERE id_room = ?", room).fetchall())[0])
-    print "freerooms:"
-    print frooms
+        item = list(conn.execute("SELECT * FROM rooms WHERE id_room = ?", room).fetchall())
+        if item: 
+            frooms.append(list(conn.execute("SELECT * FROM rooms WHERE id_room = ?", room).fetchall())[0])
     return frooms
 
 def id_rooms():
@@ -164,25 +164,25 @@ def add_generic(table):
         with conn:
             cur =  conn.cursor()
             s = "?, " * (len(values)-1) + "?"
-            print "INSERT INTO " + table + " VALUES ( " + s + ")", values 
-            cur.execute("INSERT INTO " + table + " VALUES ( " + s + ")", values )
+            print "INSERT INTO " + table + " VALUES ( null, " + s + ")", values 
+            cur.execute("INSERT INTO " + table + " VALUES ( null, " + s + ")", values )
             conn.commit()
-        return 1
+        return cur.lastrowid
     return add_specific      
 
 def modify(table):
     "Modifies the row identified by oldvalue and oldfield. If newfield is empty, rewrites the entire line."
     def modify_specific(newfield, newvalue, oldfield, oldvalue):
         con = sqlite3.connect(DATABASE_PATH)
-        with con:
-            cur= con.cursor()
+        with conn:
+            cur= conn.cursor()
             if newfield == "":
                 print "DELETE FROM " + table + " WHERE " + oldfield + " = " + oldvalue
                 cur.execute("DELETE FROM " + table + " WHERE " + oldfield + " = " + oldvalue)
-                con.commit()
+                conn.commit()
                 add_generic(table)(newvalue)
             else:
                 cur.execute("UPDATE " + table + " SET " + newfield + " = " + newvalue + " WHERE " + oldfield + " = " + oldvalue)
-            con.commit()
-        return 1
+            conn.commit()
+        return conn.lastrowid
     return modify_specific

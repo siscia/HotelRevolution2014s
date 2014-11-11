@@ -76,7 +76,7 @@ def free_rooms_page():
         abort(401)
     today = dataINT()
     cin = datepick_to_dataINT(request.args["checkin"])
-    cout = datepick_to_dataINT(request.args["checkin"])
+    cout = datepick_to_dataINT(request.args["checkout"])
     mappa = {"nrooms": n_freerooms(cin, cout), 
              "rooms" : sorted(free_rooms(cin, cout)),
              "checkin" : cin, 
@@ -178,7 +178,7 @@ def new_reserv_page():
     mappa = {}
     values = []
     
-    for item in ["id_guest", "name", "surname", "email", "passport", "address", "phone", "info"]:
+    for item in ["name", "surname", "email", "passport", "address", "phone", "info"]:
         values.append(request.form[item])
     mappa["guest"] = values
     if request.form["new_guest"]:
@@ -194,19 +194,18 @@ def new_reserv_page():
     price = 0
     for room in id_rooms:
         values = []
-        i = n_items("reservations", "", "") + 3         #The new ID
         price = price + (int(request.form["checkout"])-int(request.form["checkin"]))*(get_item("rooms", "id_room", room)[0][3])
-        values.append(i)
         values.append(room)
         for item in ["id_guest", "checkin", "checkout"]:
             values.append(request.form[item])
-        reserv.append(values)
         add = add_generic("reservations")
         result = add(values)
         print "ADDED"
-        if result != 1:
+        if not result:
             mappa["msg"]="An error occured while creating the new reservation. Please check what's recorded in the system, in order to spot mistakes in the database's content."
-            mappa["error"]="TRUE"        
+            mappa["error"]="TRUE"      
+        values.append(result) #NB: in this way the id of the reservation is the LAST ELEMENT! 
+        reserv.append(values) # "values" has the following structure: id_room - id_guest - checkin - checkout - id_res
     mappa["reserv"] = reserv
     mappa["price"] = price
     mappa["ckin"] = dataINT_to_datatime(int(request.form["checkin"]))
