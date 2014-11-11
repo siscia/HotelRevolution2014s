@@ -173,6 +173,7 @@ def get_revenue(start_date, end_date):
     INNER JOIN rooms 
         ON reservations.id_room = rooms.id_room
     WHERE checkOUT > ? AND checkOUT < ?
+    ORDER BY checkOUT asc
     """, [start_date, end_date])
     res_out = [clean_data(r) for r in rev.fetchall()]
     for r in res_out:
