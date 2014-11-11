@@ -2,7 +2,7 @@
 #**** UTILITIES by Gio & Sara **************************************************
 
 from database import price_from_room_id, get_item
-import datetime
+import datetime, time
 
 
 
@@ -24,9 +24,9 @@ def matching_guest(keys, values):
 
 def dataINT():
     "Return an integer number representing the current date"
-    return 20141004
-#    return time.localtime().tm_year * 10000 + time.localtime().tm_mon * 100 + time.localtime().tm_day
-
+    #return 20141004
+    now = datetime.datetime.now()
+    return now.year * 10000 + now.month*100 + now.day
 
 def dataINT_to_datatime(dataInt):
     "Transform a date given as INT in DATATIME format"
