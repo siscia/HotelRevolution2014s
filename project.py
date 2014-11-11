@@ -110,6 +110,10 @@ def confirm(checkin, checkout):
     """
     if not session.get('logged_in'):
         abort(401)
+    print checkin
+    print checkout
+    print dataINT_to_datatime(int(checkin))
+    print dataINT_to_datatime(int(checkout))
     mappa = {"ckin": dataINT_to_datatime(int(checkin)), "ckout": dataINT_to_datatime(int(checkout))}
     sel_rooms=[]
     mappa["error"] = "FALSE"
@@ -120,7 +124,6 @@ def confirm(checkin, checkout):
         mappa["msg"] = "No rooms selected."
         mappa["error"] = "TRUE"
     mappa["rooms"] = sel_rooms
-#Temo calcoli il prezzo sbagliato!! *************************************  <------------------
     price = 0
     for room in sel_rooms:
         price = price + price_from_room_id(room[0])*(int(checkout)-int(checkin))
@@ -158,7 +161,6 @@ def confirm(checkin, checkout):
     mappa["guests"] = match[0]
     mappa["checkin"] = int(checkin)
     mappa["checkout"] = int(checkout)
-    print mappa
     
     template = env.get_template("booking_confirm.html")
     return template.render(mappa)
@@ -184,10 +186,6 @@ def new_reserv_page():
     if request.form["new_guest"]:
         add = add_generic("guests")
         result = add(values)
-        if result != 1:
-            mappa["msg"]="An error occured while recording the new guest's data into the database. No reservations made yet. Please retry and be sure that the guest's data inserted are correct."
-            mappa["error"]="TRUE"
-            return template.render(mappa)
     reserv = []
     id_rooms = request.form["rooms"].split(",")
     id_rooms.pop()
@@ -211,11 +209,76 @@ def new_reserv_page():
     mappa["ckin"] = dataINT_to_datatime(int(request.form["checkin"]))
     mappa["ckout"] = dataINT_to_datatime(int(request.form["checkout"]))
     mappa["plural"] = "FALSE"
+    print mappa
     if len(reserv) > 1:
         mappa["plural"] = "TRUE"
     return template.render(mappa)
-    
-    
+
+
+@app.route("/reservations", methods=["GET","POST"])
+def reserv_page():
+    """
+    reserv()
+    Allow the receptionist to find a reservation given the ID or the name of the guest.
+    In case of many guest with the same name and surname returns the reservations made by both of them: the receptionist can discriminate the guests by ID.
+    Anyway, a message will alert the user about that.
+    """
+    if not session.get('logged_in'):
+        abort(401)
+    reserv = []
+    n_res = 0
+    mappa = {}
+    if request.method == "GET":
+        if request.args.get("id_res"):
+            res = reserv_info(get_item("reservations", "id_res", request.args.get("id_res")))
+            reserv.append(res)
+            if len(res) > 1:
+                mappa["msg"] = "An error occured: more than one reservation has the selected ID. Check the database!"
+                mappa["error"] = "TRUE"
+            if len(res) < 1:
+                mappa["msg"] = "No reservations with the selected ID found."
+                mappa["error"] = "TRUE"
+        elif request.args.get("surname"):
+            surnames = get_item("guests", "surname", request.args.get("surname"))
+            if request.args["name"]:
+                names = set(get_item("guests", "name", request.args.get("name")))
+                guests = list(set(surnames).intersection(names))
+            else:
+                guests = surnames
+            if len(guests) > 1:
+                mappa["msg"] = "More than one guest matches your search. Be careful!"
+                mappa["error"] = "TRUE"
+            if len(guests) < 1:
+                mappa["msg"] = "No guest found with that name."
+                mappa["error"] = "TRUE"
+            for guest in guests:
+                print str(guest) + ":"
+                res = get_item("reservations", "id_guest", guest[0])
+                print res
+                print "**************"
+                reserv.append(reserv_info(res))
+                n_res = n_res + len(res)
+            if n_res == 0:
+                mappa["msg"] = "The selected guest made no reservations, or his/her reservations has been deleted."
+                mappa["error"] = "TRUE"
+    if request.method == "POST":
+        values = []
+        for field in ["room", "id_guest" ,"checkin", "checkout"]:
+            if field == "checkin" or field == "checkout":
+                values.append(datepick_to_dataINT(request.form[field]))
+            else:
+                values.append(request.form[field])
+        mod = modify("reservations")
+        result = mod("", values, "id_res", request.form["id_res"])
+        print result
+        mappa["msg"] = "Database aggiornato correttamente"    
+    mappa["n_res"] = n_res
+    mappa["reservations"] = reserv
+    print mappa
+    template = env.get_template("reservations.html")
+    return template.render(mappa)
+
+
 @app.route("/guests", methods=["GET","POST"])
 def guests_page():
     """
@@ -246,13 +309,13 @@ def guests_page():
 
     if request.method == "POST":
         lista = []
-        for field in ["id_guest", "name", "surname", "email", "passport", "phone", "address", "info"]:
+        for field in [ "name", "surname", "email", "passport", "phone", "address", "info"]:
             lista.append(request.form[field])
         mod = modify("guests")
         result = mod("", lista, "id_guest", request.form["id_guest"])
-        if result != 1:
-            mappa["msg"] = "An error occured while saving the new guest's data. Please retry."
-            mappa["error"] = "TRUE"
+        #if result != 1:
+        #    mappa["msg"] = "An error occured while saving the new guest's data. Please retry."
+        #    mappa["error"] = "TRUE"
         #Regenerate guest's list
         for field in ["name", "surname", "passport", "email"]:
             if request.form[field]:
@@ -271,90 +334,6 @@ def guests_page():
     template = env.get_template("guest.html")
     return template.render(mappa)
 
-
-@app.route("/reservations", methods=["GET","POST"])
-def reserv_page():
-    """
-    reserv()
-    Allow the receptionist to find a reservation given the ID or the name of the guest.
-    In case of many guest with the same name and surname returns the reservations made by both of them: the receptionist can discriminate the guests by ID.
-    Anyway, a message will alert the user about that.
-    """
-    if not session.get('logged_in'):
-        abort(401)
-    reserv = []
-    n_res = 0
-    mappa = {}
-    print "RESERV_PAGE"
-    
-    if request.method == "GET":
-        if request.args.get("id_res"):
-            r = {"id_res" : request.args.get("id_res")} 
-            reserv.append(reserv_info(get_item("reservations", "id_res", request.args.get("id_res"))))
-            if len(reserv) > 1:
-                mappa["msg"] = "An error occured: more than one reservation has the selected ID. Check the database!"
-                mappa["error"] = "TRUE"
-            if len(reserv) < 1:
-                mappa["msg"] = "No reservations with the selected ID found."
-                mappa["error"] = "TRUE"
-        elif request.args.get("surname"):
-            surnames = get_item("guests", "surname", request.args.get("surname"))
-            if request.args["name"]:
-                names = set(get_item("guests", "name", request.args.get("name")))
-                guests = list(set(surnames).intersection(names))
-            else:
-                guests = surnames
-            if len(guests) > 1:
-                mappa["msg"] = "More than one guest matches your search. Be careful!"
-                mappa["error"] = "TRUE"
-            for guest in guests:
-                res = get_item("reservations", "id_guest", guest[0])
-                reserv.append(reserv_info(get_item("reservations", "id_guest", guest[0])[0]))
-                n_res = n_res + len(res)
-            
-    if request.method == "POST":
-        values = []
-        for field in ["name", "surname", "checkin", "checkout", "room"]:
-            if field == "checkin" or field == "checkout":
-                values.append(datepick_to_dataINT(request.form[field]))
-            else:
-                values.append(request.form[field])
-        mod = modify("reservations")
-        result = mod("", values, "id_res", request.form["id_res"])
-        if result != 1:
-            mappa["msg"]="An error occured while recording the reservation's data into the database. Please retry and be sure that the guest's data inserted are correct."
-            mappa["error"]="TRUE"
-            return template.render(mappa)
-        mappa["msg"] = "Database aggiornato correttamente"
-        #Regenerate list of resrvations
-        if request.form["id_res"]:
-            r = {"id_res" : request.form["id_res"]}
-            reserv.append(reserv_info(get_item("reservations", "id_res", request.args.get("id_res"))))
-            if len(reserv) > 1:
-                mappa["msg"] = "An error occured: more than one reservation has the selected ID. Check the database!"
-                mappa["error"] = "TRUE"
-        elif request.form["surname"]:
-            surnames = get_item("guests", "surname", request.form["surname"])
-            if request.form["name"]:
-                names = set(get_item("guests", "name", request.form["name"]))
-                guests = list(set(surnames).intersection(names))
-            else:
-                guests = surnames
-            if len(guests) > 1:
-                mappa["msg"] = "More than one guest matches your search. Be careful!"
-                mappa["error"] = "TRUE"
-            for guest in guests:
-                res = get_item("reservations", "id_guest", guest[0])
-                reserv.append(reserv_info(get_item("reservations", "id_guest", guest[0])[0]))
-                n_res = n_res + len(res)
-            
-    mappa["n_res"] = n_res
-    
-    if reserv:
-        mappa["reservations"] = reserv
-    print mappa
-    template = env.get_template("reservations.html")
-    return template.render(mappa)
 
 
 @app.route("/checkout")
