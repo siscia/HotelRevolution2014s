@@ -113,26 +113,23 @@ def price_from_room_id(id_room):
 def reserv_info(reserv):
     "Given a list of reservations id return a map with the id of the room, the name and surname of the guest and the total price for the particular staying."
     roomsInfo = []
-    print "RESERV_INFO:"
     for res in reserv:
         conn = sqlite3.connect(DATABASE_PATH)
         r = conn.execute("SELECT * FROM reservations WHERE id_res=?", [res[0]]).fetchone()     #Suppose that it will find just one reservation with the selected ID
         checkIN = dataINT_to_datatime(r[3])
         checkOUT = dataINT_to_datatime(r[4])
         days = checkOUT - checkIN
-        print days
         price = price_from_room_id(r[1]) * days.days
-        print price
         name = conn.execute("SELECT name FROM guests WHERE id_guest=?", [r[2]]).fetchone()[0]
         surname = conn.execute("SELECT surname FROM guests WHERE id_guest=?", [r[2]]).fetchone()[0]
         roomsInfo.append({"id_res" : r[0],
                          "room" : r[1],
                          "checkin" : dataINT_to_datatime(r[3]),
                          "checkout" : dataINT_to_datatime(r[4]),
+                         "id_guest" : r[2],
                          "name" : name,
                          "surname" : surname,
                          "price" : price})
-    print roomsInfo
     return roomsInfo
 
 def guest_leaving(date):
@@ -157,6 +154,12 @@ def guest_leaving(date):
           } for g in guest.fetchall()]
     return guest
 
+def available():
+    "Determine if the reservation's data are coherent with the rest of the database"
+    return 0
+
+
+#if I add an inc variable in input for add_specific, I can choose if autoincrement the id or let it in input by the user
 def add_generic(table):
     "add rows in the specified table"
     def add_specific(values):
@@ -164,7 +167,7 @@ def add_generic(table):
         with conn:
             cur =  conn.cursor()
             s = "?, " * (len(values)-1) + "?"
-            print "INSERT INTO " + table + " VALUES ( null, " + s + ")", values 
+            #print "INSERT INTO " + table + " VALUES ( null, " + s + ")", values 
             cur.execute("INSERT INTO " + table + " VALUES ( null, " + s + ")", values )
             conn.commit()
         return cur.lastrowid
@@ -173,16 +176,15 @@ def add_generic(table):
 def modify(table):
     "Modifies the row identified by oldvalue and oldfield. If newfield is empty, rewrites the entire line."
     def modify_specific(newfield, newvalue, oldfield, oldvalue):
-        con = sqlite3.connect(DATABASE_PATH)
+        conn = sqlite3.connect(DATABASE_PATH)
         with conn:
             cur= conn.cursor()
             if newfield == "":
-                print "DELETE FROM " + table + " WHERE " + oldfield + " = " + oldvalue
                 cur.execute("DELETE FROM " + table + " WHERE " + oldfield + " = " + oldvalue)
                 conn.commit()
-                add_generic(table)(newvalue)
+                result = add_generic(table)(newvalue)
             else:
                 cur.execute("UPDATE " + table + " SET " + newfield + " = " + newvalue + " WHERE " + oldfield + " = " + oldvalue)
             conn.commit()
-        return conn.lastrowid
+        return cur.lastrowid
     return modify_specific
