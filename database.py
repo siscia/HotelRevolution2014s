@@ -9,24 +9,44 @@ from config import DATABASE_PATH
 ## field, string, the name of the column to search
 ## value, string, the value to match
 
-def free_rooms(checkin, checkout):
-    "Return a list of the rooms which are free in the given period"
+def full_rooms(checkin, checkout):
+    "Return a list of the rooms which are full in the given period"
     conn = sqlite3.connect(DATABASE_PATH)
-    n_full = conn.execute("SELECT COUNT(*) FROM rooms").fetchall()
-    print list(n_full)
-    fullrooms = set(conn.execute("SELECT id_room FROM reservations WHERE checkIN < ? OR checkOUT > ?", [checkin, checkout]))
-    print fullrooms
-    print "*****"
-    rooms = set(conn.execute("SELECT id_room FROM rooms"))
-    print rooms
-    print "*****"
-    freerooms = list(rooms.difference(fullrooms))
-    print freerooms
-    print "*****"
+    rooms = set(conn.execute("SELECT id_room FROM rooms").fetchall())
+    free = id_free_rooms(checkin, checkout)
+    full = list(rooms.difference(free))
     frooms = []
-    for room in freerooms:
-        frooms.append(list(conn.execute("SELECT * FROM rooms WHERE id_room = ?", room))[0])
+    for room in full:
+        frooms.append(list(conn.execute("SELECT * FROM rooms WHERE id_room = ?", room).fetchall())[0])
+    print "fullrooms:"
+    print frooms
     return frooms
+
+def free_rooms(checkin, checkout):
+    "Return a list of rooms which are free in the given period"
+    conn = sqlite3.connect(DATABASE_PATH)
+    free = id_free_rooms(checkin, checkout)
+    frooms = []
+    for room in free:
+        item = list(conn.execute("SELECT * FROM rooms WHERE id_room = ?", room).fetchall())
+        if item: 
+            frooms.append(list(conn.execute("SELECT * FROM rooms WHERE id_room = ?", room).fetchall())[0])
+    return frooms
+
+def id_rooms():
+    "Return the number of all the rooms of the hotel."
+    conn = sqlite3.connect(DATABASE_PATH)
+    return list(conn.execute("SELECT id_room FROM rooms").fetchall())
+
+def id_free_rooms(checkin, checkout):
+    "Return a set of id of the rooms which are free in the given period"
+    conn = sqlite3.connect(DATABASE_PATH)
+    rooms = set(conn.execute("SELECT id_room FROM rooms").fetchall())
+    reserv = set(conn.execute("SELECT id_room FROM reservations").fetchall())
+    surefree= rooms.difference(reserv)
+    free = set(conn.execute("SELECT id_room FROM reservations WHERE checkIN > ? OR checkOUT < ?", [checkout, checkin]).fetchall())
+    free = free.union(surefree)
+    return free
 
 def n_checkin(date):
     "Calculate the number of checkins in a given date"
@@ -41,23 +61,27 @@ def n_checkout(date):
     return n_checkout.fetchall()[0][0]
 
 def n_freerooms(checkin, checkout):
-    "Calculate how many rooms are full in a given date"
-    conn = sqlite3.connect(DATABASE_PATH)
-    n_full = conn.execute("SELECT COUNT(*) FROM reservations WHERE checkIN > ? OR checkOUT < ?", [checkout, checkin])
-    return n_full.fetchall()[0][0]
+    "Calculate how many rooms are free in a given date"
+    n_free = 0
+    for r in free_rooms(checkin, checkout):
+        n_free = n_free + 1
+    return n_free
 
 def n_fullrooms(checkin, checkout):
     "Calculate how many rooms are full in a given date"
-    conn = sqlite3.connect(DATABASE_PATH)
-    n_tot = conn.execute("SELECT COUNT(*) FROM rooms").fetchall()[0][0]
-    n_free = (n_freerooms(checkin, checkout))
-    return n_tot - n_free
+    n_full = 0
+    for r in full_rooms(checkin, checkout):
+        n_full = n_full + 1
+    return n_full
 
 def n_items(table, field, value):
-    "Counts how many items in the database match the given parameter."
+    "Counts how many items in the database match the given parameter. if field is empty, return a list of all the items in the selected table."
     conn = sqlite3.connect(DATABASE_PATH)
+    if field == "":
+        n_guest= conn.execute("SELECT COUNT(*) FROM " + table)
+        return n_guest.fetchall()[0][0]
     n_guest= conn.execute("SELECT COUNT(*) FROM " + table + " WHERE " + field + " = ?", [value])
-    return n_guest.fetchall[0][0]
+    return n_guest.fetchall()[0][0]
 
 def get_item(table, field, value):
     "Return a list of items given the field of the value to match"
@@ -84,19 +108,31 @@ def dataINT_to_datatime(dataInt):
 def price_from_room_id(id_room):
     """ return the priceiPerNight given the id of the room"""
     conn = sqlite3.connect(DATABASE_PATH)
-    return cursor.execute("SELECT price_night FROM rooms WHERE id_room=?",[id_room]).fetchall()[0]
+    return conn.execute("SELECT price_night FROM rooms WHERE id_room=?",[id_room]).fetchall()[0][0] #Suppose that it will find just one room with the selected ID
 
-def checkout_price(rooms):
-    "Given a list of rooms return a map with the id of the room, the id of the guest and the total price for the particular staying."
+def reserv_info(reserv):
+    "Given a list of reservations id return a map with the id of the room, the name and surname of the guest and the total price for the particular staying."
     roomsInfo = []
-    for r in rooms:
-        checkIN = dataINTtodataTime(r[2])
-        checkOUT = dataINTtodataTime(r[3])
+    print "RESERV_INFO:"
+    for res in reserv:
+        conn = sqlite3.connect(DATABASE_PATH)
+        r = conn.execute("SELECT * FROM reservations WHERE id_res=?", [res[0]]).fetchone()     #Suppose that it will find just one reservation with the selected ID
+        checkIN = dataINT_to_datatime(r[3])
+        checkOUT = dataINT_to_datatime(r[4])
         days = checkOUT - checkIN
-        price = priceFromRoomId(r[0]) * days.days
-        roomsInfo.append({"id_room" : r[0],
-                         "id_guest" : r[1],
+        print days
+        price = price_from_room_id(r[1]) * days.days
+        print price
+        name = conn.execute("SELECT name FROM guests WHERE id_guest=?", [r[2]]).fetchone()[0]
+        surname = conn.execute("SELECT surname FROM guests WHERE id_guest=?", [r[2]]).fetchone()[0]
+        roomsInfo.append({"id_res" : r[0],
+                         "room" : r[1],
+                         "checkin" : dataINT_to_datatime(r[3]),
+                         "checkout" : dataINT_to_datatime(r[4]),
+                         "name" : name,
+                         "surname" : surname,
                          "price" : price})
+    print roomsInfo
     return roomsInfo
 
 def guest_leaving(date):
@@ -144,3 +180,34 @@ def get_revenue(start_date, end_date):
             aggregate[r[1]] += r[0]
         else: aggregate[r[1]] = r[0]
     return aggregate
+
+def add_generic(table):
+    "add rows in the specified table"
+    def add_specific(values):
+        conn = sqlite3.connect(DATABASE_PATH)
+        with conn:
+            cur =  conn.cursor()
+            s = "?, " * (len(values)-1) + "?"
+            print "INSERT INTO " + table + " VALUES ( null, " + s + ")", values 
+            cur.execute("INSERT INTO " + table + " VALUES ( null, " + s + ")", values )
+            conn.commit()
+        return cur.lastrowid
+    return add_specific      
+
+def modify(table):
+    "Modifies the row identified by oldvalue and oldfield. If newfield is empty, rewrites the entire line."
+    def modify_specific(newfield, newvalue, oldfield, oldvalue):
+        con = sqlite3.connect(DATABASE_PATH)
+        with conn:
+            cur= conn.cursor()
+            if newfield == "":
+                print "DELETE FROM " + table + " WHERE " + oldfield + " = " + oldvalue
+                cur.execute("DELETE FROM " + table + " WHERE " + oldfield + " = " + oldvalue)
+                conn.commit()
+                add_generic(table)(newvalue)
+            else:
+                cur.execute("UPDATE " + table + " SET " + newfield + " = " + newvalue + " WHERE " + oldfield + " = " + oldvalue)
+            conn.commit()
+        return conn.lastrowid
+    return modify_specific
+

@@ -3,11 +3,19 @@
 		<title>HR - Reservations</title>
 		<meta http-equiv="content-type" content="text/html;charset=utf-8"/>
 		<link rel="stylesheet" href="stylesheet.css"/>
-		<link rel="stylesheet" href="bootstrap-3.2.0-dist/css/bootstrap.css"/>
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"/>
 		<script type="text/javascript">
 			function able() {
 				var inputs = document.getElementsByClassName('myform');
-				for(var i = 0; i < (inputs.length - 1); i++) {
+				for(var i = 0; i < (inputs.length - 2); i++) {
+					inputs[i].disabled = false;
+				}
+			};
+		</script>
+		<script type="text/javascript">
+			function ableOnSubmit() {
+				var inputs = document.getElementsByClassName('myform');
+				for(var i = 0; i < inputs.length; i++) {
 					inputs[i].disabled = false;
 				}
 			};
@@ -45,7 +53,7 @@
 			<div class="row">
 				
 				<div class="col-md-8">
-					<form class="form-inline" role="form" method="get">
+					<form class="form-inline" role="form" method="get" action="reservations">
 						<select class="form-control" onchange="changeResForm(this);">
 							<option value="id_res">Reservation ID</option>
 							<option>Guest's name and surname</option>
@@ -57,7 +65,7 @@
 				</div>
 				
 				<div class="col-md-3">	
-					<h4 class="{% if error %} msg-fail {% else %} msg-ok {% endif %} text-right">CULO</h4>
+					<h4 class="{% if error %} msg-fail {% else %} msg-ok {% endif %} text-right">{{msg}}</h4>
 				</div>
 				<div class="col-md-1">
 					<a href="/main">
@@ -68,7 +76,6 @@
 		</div>
 			
 		<div class="row">
-			<form class="form-horizontal" role="form" method="post">
 				<div class="col-md-6">
 					<div class="div-std c2">
 						<table class="table">
@@ -84,20 +91,23 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr onclick="autoFillForm(this);">
-									<td>{{ reservations.name }}</td>
-									<td class="hidden">2014/12/23</td>
-									<td class="hidden">707</td>
-									<td>Bello</td>
-									<td class="hidden">2014/12/25</td>
-									<td>19385</td>
-									<td class="hidden">150€</td>
+                                                                {% for r in reservations %}
+								<tr onclick="able(); autoFillForm(this);">
+									<td>{{ r[0].name }}</td>
+									<td class="hidden">{{r[0].checkin.year}}/{{r[0].checkin.month}}/{{r[0].checkin.day}}</td>
+									<td class="hidden">{{r[0].room}}</td>
+									<td>{{r[0].surname}}</td>
+									<td class="hidden">{{r[0].checkout.year}}/{{r[0].checkout.month}}/{{r[0].checkout.day}}</td>
+									<td>{{r[0].id_res}}</td>
+									<td class="hidden">{{r[0].price}}</td>
 								</tr>
+								{%endfor%}
 							</tbody>
 						</table>
 					</div>
 				</div>
-				
+                        <form class="form-horizontal" role="form" action="reservations" method="post" onsubmit="ableOnSubmit();">
+
 				<div class="col-md-6">
 					<div class="div-std c1">
 						<div class="row">
@@ -105,9 +115,9 @@
 								<label>First Name</label>
 								<input name="name" type="text" class="form-control myform" placeholder="First Name *" disabled>
 								<label>Check-In</label>
-								<input name="phone" type="text" class="form-control myform" placeholder="Phone number" disabled>
+								<input name="checkin" type="text" class="form-control myform" placeholder="Phone number" disabled>
 								<label>Room Number</label>							
-								<input name="passport" type="text" class="form-control myform" placeholder="Passport ID" disabled>
+								<input name="room" type="text" class="form-control myform" placeholder="Passport ID" disabled>
 								<p><br></p>
 								<h2 class="text-right"><span class="clear"><strong>Price:</strong></span></h2>
 							</div>
@@ -115,17 +125,14 @@
 								<label>Family Name</label>
 								<input name="surname" type="text" class="form-control myform" placeholder="Family Name *" disabled>
 								<label>Check-Out</label>
-								<input name="e_mail" type="email" class="form-control myform" placeholder="email address" disabled>
+								<input name="checkout" type="text" class="form-control myform" placeholder="email address" disabled>
 								<label>Reservation ID</label>
-								<input name="address" type="text" class="form-control myform" placeholder="Address" disabled>
-								<p><br></p>
+								<input name="id_res" type="text" class="form-control myform" placeholder="Address" disabled>
 								<input name="price" type="text" class="form-control myform input-lg" placeholder="$$$" disabled>
-							</div>
-							<div class="col-md-6">
-								<button class="btn btn-warning btn-lg btn-block" type="button" onclick="able();"><span class="glyphicon glyphicon-pencil"></span> Modify</button>
-							</div>
-							<div class="col-md-6">
 								<button class="btn btn-success btn-lg btn-block" type="submit"><span class="glyphicon glyphicon-save"></span> Save</button>
+
+							</div>
+							<div class="col-md-12">
 							</div>
 						</div>
 					</div>
