@@ -2,7 +2,7 @@
 	<head>
 		<title>HR - Home</title>
 
-		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
 		<link rel="stylesheet" href="stylesheet.css"/>
 
 		<meta http-equiv="content-type" content="text/html;charset=utf-8"/>
@@ -30,6 +30,11 @@
 				y.name = "id_res";
 			}
 		}
+		
+		function showCredits() {
+			alert("HotelRevolution2014s\n\ndeveloped by:\nGianpaolo branca, Sara Zanzottera, Simone Mosciatti, Giovanni Pelosi\nAll Right Reserved.\n\nLibraries used:\nBootstrap: http://getbootstrap.com/\nGliphicon: http://glyphicons.com/\nSQlite: http://www.sqlite.org/\nFlask: http://flask.pocoo.org/\nJinja 2: http://jinja.pocoo.org/\nd3: http://d3js.org/ ");
+			
+		}
 		</script>
 	</head>
 	<body class="c4">
@@ -44,7 +49,7 @@
 				</div>
 				
 				<div class="col-md-3 col-sm-3">
-					<h2 class="clear"><strong>{{ today.day }} / {{ today.month }} / {{ today.year }}</strong></h2>
+					<span class="title clear"><strong>{{ today.day }} / {{ today.month }} / {{ today.year }}</strong></h2>
 				</div>
 				
 				<div class="col-md-3 col-sm-3">
@@ -89,7 +94,7 @@
 					</select>
 					<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> Go</button>
 					</form>
-				</div>
+				</div>									
 			</div>
 				
 			<div class="col-md-4 col-sm-6">
@@ -100,7 +105,6 @@
 					<select class="form-control myform" onchange="changeGuestForm(this);">
 						  <option value="name">First Name</option>
 						  <option value="surname">Family Name</option>
-						  <option value="id_guest">ID</option>
 						  <option value="passport">Passport N°</option>
 						  <option value="email">e-mail</option>
 					</select>
@@ -108,6 +112,9 @@
 					</form>
 				</div>
 			</div>
+		</div>
+		<div class="footer">
+			<button type="button" class="btn btn-link btn-lg" onclick="showCredits();"><span class="clear"><span class="glyphicon glyphicon-comment"></span> Credits...</span></button>
 		</div>
 		<script type="text/javascript" src="datepickr.min.js"></script>
 		<script type="text/javascript">
