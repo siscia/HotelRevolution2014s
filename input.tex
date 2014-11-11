@@ -1,0 +1,95 @@
+\documentclass{article}
+\usepackage[english]{babel}
+\usepackage{longtable}
+\begin{document}
+\begin{center}
+	\begin{longtable}{| l | l | p{7cm} |}
+	\hline
+	\textbf{Field Name} & \textbf{Input Type} & \textbf{Description} \\ 
+	\hline \hline	
+	\multicolumn{3}{|c|}{\textbf{Login}} \\ 
+	\hline \hline
+	Username 		& text box 		& Username \\ 
+	Password 		& text box 		& Password, printed on screen like ' *** ' \\
+	Log-in			& button 		& log-in if the credential are correct \\ 
+	\hline \hline
+	\multicolumn{3}{|c|}{\textbf{Main Page}} \\ 
+	\hline \hline
+	Log-out			& button		& log-out from the system and go back to the log-in \\
+	Manager	btn		& button		& go to the manager page if the user is logged as manager \\
+	Credits			& button		& show in a pop-up the credits for HotelRevolution2014s \\
+	\hline
+	Check-in		& datepicker 	& Check-in for the new reservation \\ 
+	Check-out		& datepicker 	& Check-out for the new reservation \\ 
+	Booking Search	& button		& Submit a query to search a room available in the specified period (between check-in and out date \\
+	\hline
+	Reservation ID	& text box 		& Reservation ID \\ 
+	First Name 		& text box	 	& Guest's name \\ 
+	Family Name	 	& text box 		& Guest's surname \\ 
+	Res Dropdown 	& dropdown 		& Switch between Reservations search method: guest's data or reservation's data \\ 
+	Res Search		& button		& submit a query to search in the database the reservation the user is looking for with the previous data \\
+	\hline
+	Guest data		& text box		& Guest's data to search in the database, depending of the selected search method in the following dropdown \\ 
+	Guest Dropdown	& dropdown 		& Switch between Guest search method: name, surname, passport, email \\ 
+	Guest Search	& button		& submit a query to search the guest in the database the user is looking for with the previous data \\
+	\hline \hline
+	\multicolumn{3}{|c|}{\textbf{Reservations Page}} \\ 
+	\hline \hline
+	Reservation ID	& text box 		& Reservation ID \\ 
+	First Name 		& text box	 	& Guest's name \\ 
+	Family Name	 	& text box 		& Guest's surname \\ 
+	Res Dropdown 	& dropdown 		& Switch between Reservations search method: guest's data or reservation's data \\ 
+	Res Search		& button		& Submit a query to search in the database the reservation the user is looking for with the previous data \\
+	Home btn		& button		& Go back to the main page \\
+	\hline
+	AutoFiller		& javascript	& when a row in the reservation's table is clicked, retrieve the data and fill all the text box \\
+	First Name		& text box		& Guest's name for the selected reservation, retrivered from the database \\
+	Family Name		& text box		& Guest's surname, as above \\
+	Check-in		& text box		& Check-in, as above \\
+	Check-out		& text box		& Check-out, as above \\
+	Room Number		& text box		& Room number, as above \\
+	Reservation ID	& text box		& Reservation Id, as above. Cannot be modified \\
+	Price			& text box		& Price of the selected reservation. Cannot be modified \\
+	Save			& button		& Save in the database the modified reservation's data \\
+	\hline \hline
+	\multicolumn{3}{|c|}{\textbf{Guests Page}} \\ 
+	\hline \hline
+	Guest data		& text box		& Guest's data to search in the database, depending of the selected search method in the following dropdown \\ 
+	Guest Dropdown	& dropdown 		& Switch between Guest search method: name, surname, passport, email \\ 
+	Guest Search	& button		& submit a query to search the guest in the database the user is looking for with the previous data \\
+	Home btn		& button		& Go back to the main page \\
+	\hline
+	AutoFiller		& javascript	& when a row in the guest's table is clicked, retrieve the data and fill all the text box \\
+	First Name		& text box		& Guest's name, retrivered from the database \\
+	Family Name		& text box		& Guest's surname, as above \\
+	email Address	& text box		& Guest's email, as above \\
+	Passport ID		& text box		& Guest's passport, as above \\
+	Address			& text box		& Guest's home address, as above \\
+	Phone			& text box		& Guest's phone number, as above \\
+	Info			& text area		& Guest's other info, as above \\
+	Save			& button		& Save in the database the modified guest's data \\
+	\hline \hline
+	\multicolumn{3}{|c|}{\textbf{Booking Page}} \\ 
+	\hline \hline
+	Check-in		& datepicker	& Check-in for the new reservation \\
+	Check-out		& datepicker	& Check-out for the new reservation \\
+	Booking Search	& button		& Submit a query to search a room available in the written period (between check-in and out date \\
+	Home btn		& button		& go back to the main page \\
+	\hline
+	Row-selector	& checkbox		& An hidden checkbox that highlight the row and select the room for the new reservation \\
+	First Name		& text box 		& Guest's first name - required input. An error occured if not filled \\
+	Family Name		& text box 		& Guest's family name - required input. An error occured if not filled \\
+	email Address	& text box		& Guest's email \\
+	Passport ID		& text box		& Guest's passport \\
+	Address			& text box		& Guest's home address \\
+	Phone			& text box		& Guest's phone number \\
+	Info			& text area		& If necessary, other guest's information can be written here \\
+	\hline \hline
+	\multicolumn{3}{|c|}{\textbf{Confirmation Page}} \\
+	\hline \hline
+	Book			& button		& Store the recervation into the database \\
+	Go Back			& button		& if the reservation's data are not correct, go back to the booking page, where the user can modify the data \\
+	\hline
+	\end{longtable}
+\end{center}
+\end{document}

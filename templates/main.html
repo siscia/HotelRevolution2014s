@@ -35,6 +35,46 @@
 			alert("HotelRevolution2014s\n\ndeveloped by:\nGianpaolo branca, Sara Zanzottera, Simone Mosciatti, Giovanni Pelosi\nAll Right Reserved.\n\nLibrary used:\nBootstrap: http://getbootstrap.com/\nGliphicon: http://glyphicons.com/\nSQlite: http://www.sqlite.org/\nFlask: http://flask.pocoo.org/\nJinja 2: http://jinja.pocoo.org/\nd3: http://d3js.org/ ");
 			
 		}
+		
+		function checkBooking() {
+			var D1 = document.getElementById("datepickin").value;
+			var D2 = document.getElementById("datepickout").value;
+			if ((D1 == null || D1 == "") || (D2 == null || D2 == " ")) {
+				alert("Pleas fill the booking form");
+				return false;
+			}
+			var d1 = D1.substring(0,4) + D1.substring(5,7) + D1.substring(8,10);
+			console.log(d1);
+			var d2 = D2.substring(0,4) + D2.substring(5,7) + D2.substring(8,10);
+			if (d1 > d2) {
+				alert("Please check the check-in and check out date,\nthe first date is after the second!");
+				return false;
+			}
+		}
+		
+		function checkReservation() {
+			var r1 = document.getElementById("resForm").value;
+			var r2 = document.getElementById("resForm2");
+			if (r1 == null || r1 == "") {
+				alert("please fill the Reservation Form");
+				return false;
+			}
+			if (!(r2.classList.contains("hidden"))) {
+				r2 = r2.value;
+				if((r2 == null || r2 == "")) {
+					alert("please fill the Reservation Form");
+					return false;
+				}
+			}
+		}
+		
+		function checkGuest() {
+			var g = document.getElementById("guestForm").value;
+			if((g == null || g == "")) {
+					alert("please fill the Guest Form");
+					return false;
+			}
+		}	
 		</script>
 	</head>
 	<body class="c4">
@@ -74,7 +114,7 @@
 			<div class="col-md-4 col-sm-6">
 				<div class="div-std c1">
 					<h1><span class="glyphicon glyphicon-calendar"></span> New Booking</h1><br>
-					<form class="form-horizontal" role="form" method="get" action="free_rooms">
+					<form class="form-horizontal" role="form" method="get" action="free_rooms" onsubmit="return checkBooking();">
 					<input name="checkin" id="datepickin" class="form-control myform" placeholder="Check In"/>
 					<input name="checkout" id="datepickout" class="form-control myform" placeholder="Check Out">
 					<button type="submit" class="btn btn-default" ><span class="glyphicon glyphicon-search"></span> Go</button>
@@ -85,7 +125,7 @@
 			<div class="col-md-4 col-sm-6">
 				<div class="div-std c1">
 					<h1><span class="glyphicon glyphicon-book"></span> Reservations</h1><br>
-					<form class="form-horizontal myform" role="form" method="get" action="reservations">
+					<form class="form-horizontal myform" role="form" method="get" action="reservations" onsubmit="return checkReservation();">
 					<input name="id_res" id="resForm" type="text" class="form-control myform" placeholder="Reservation ID">
 					<input name="name" id="resForm2" type="text" class="form-control myform hidden">
 					<select class="form-control myform" onchange="changeResForm(this);">
@@ -100,7 +140,7 @@
 			<div class="col-md-4 col-sm-6">
 				<div class="div-std c1">
 					<h1><span class="glyphicon glyphicon-user"></span> Guests</h1><br>
-					<form class="form-horizontal myform" role="form" method="get" action="guests">
+					<form class="form-horizontal myform" role="form" method="get" action="guests" onsubmit="return checkGuest();">
 					<input name="name" id="guestForm" type="text" class="form-control myform" placeholder="Guest's First name">
 					<select class="form-control myform" onchange="changeGuestForm(this);">
 						  <option value="name">First Name</option>
