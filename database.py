@@ -113,14 +113,16 @@ def price_from_room_id(id_room):
 def reserv_info(reserv):
     "Given a list of reservations id return a map with the id of the room, the name and surname of the guest and the total price for the particular staying."
     roomsInfo = []
-    
+    print "RESERV_INFO:"
     for res in reserv:
         conn = sqlite3.connect(DATABASE_PATH)
         r = conn.execute("SELECT * FROM reservations WHERE id_res=?", [res[0]]).fetchone()     #Suppose that it will find just one reservation with the selected ID
         checkIN = dataINT_to_datatime(r[3])
         checkOUT = dataINT_to_datatime(r[4])
         days = checkOUT - checkIN
+        print days
         price = price_from_room_id(r[1]) * days.days
+        print price
         name = conn.execute("SELECT name FROM guests WHERE id_guest=?", [r[2]]).fetchone()[0]
         surname = conn.execute("SELECT surname FROM guests WHERE id_guest=?", [r[2]]).fetchone()[0]
         roomsInfo.append({"id_res" : r[0],
@@ -155,56 +157,32 @@ def guest_leaving(date):
           } for g in guest.fetchall()]
     return guest
 
+def add_generic(table):
+    "add rows in the specified table"
+    def add_specific(values):
+        conn = sqlite3.connect(DATABASE_PATH)
+        with conn:
+            cur =  conn.cursor()
+            s = "?, " * (len(values)-1) + "?"
+            print "INSERT INTO " + table + " VALUES ( " + s + ")", values 
+            cur.execute("INSERT INTO " + table + " VALUES ( " + s + ")", values )
+            conn.commit()
+        return 1
+    return add_specific      
 
-def columnNames(table):
-    """given database (i.e. the name of a database) and table (i.e. the name of a table contained inside the databese) the function returns a list with the column's names of the table"""
-    columnNames = list()
-    conn = sqlite3.connect(DATABASE_PATH)
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM "+ table + " ")
-    for i in cursor.description:
-        columnNames.append(i[0])
-    return columnNames
-
-def add_to_dbb(table, info):
-    """given a database, a table, and a information to add, the function add the information"""
-    con = sqlite3.connect(DATABASE_PATH)
-    data = list()
-    num = columnNames(table)
-    colName = '('
-    for i in range(len(num)):
-        if i != len(num)-1:
-            colName = colName+"'"+num[i]+"'"+","
-        else:
-            colName = colName +"'"+num[i]+"'"
-    colName = colName +')'
-    quere = "("
-    for i in range(len(num)):
-        if i != len(num)-1:
-            quere = quere +"?,"
-        else:
-            quere = quere +"?)"
-    with con:
-       cur = con.cursor()
-       cur.execute("INSERT INTO "+ table +" "+ colName +" VALUES"+ quere+"",info)
-       con.commit()
-    return 1
-
-def add_to_db(table, row):
-    """given a database, a table, and a information to add, the function add the information"""
-    con = sqlite3.connect(DATABASE_PATH)
-    with con:
-        keys = columnNames(table)
-        cur= con.cursor()
-        print keys
-        #cur.execute("INSERT INTO " + table + str(tuple(row)) + " VALUES " + str(tuple(row)))
-        #con.commit()
-    return 1
-
-def modify_db (table, oldfield, oldvalue, newfield, newvalue):
-    con = sqlite3.connect(DATABASE_PATH)
-    with con:
-        cur= con.cursor()
-        cur.execute("UPDATE " + table + " SET " + newfield + " = "+ newvalue + " WHERE " + oldfield + " = " + oldvalue)
-        con.commit()
-    return 1
+def modify(table):
+    "Modifies the row identified by oldvalue and oldfield. If newfield is empty, rewrites the entire line."
+    def modify_specific(newfield, newvalue, oldfield, oldvalue):
+        con = sqlite3.connect(DATABASE_PATH)
+        with con:
+            cur= con.cursor()
+            if newfield == "":
+                print "DELETE FROM " + table + " WHERE " + oldfield + " = " + oldvalue
+                cur.execute("DELETE FROM " + table + " WHERE " + oldfield + " = " + oldvalue)
+                con.commit()
+                add_generic(table)(newvalue)
+            else:
+                cur.execute("UPDATE " + table + " SET " + newfield + " = " + newvalue + " WHERE " + oldfield + " = " + oldvalue)
+            con.commit()
+        return 1
+    return modify_specific

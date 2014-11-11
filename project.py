@@ -4,7 +4,7 @@
 from flask import Flask, request, send_from_directory, redirect, url_for, abort, session, render_template
 from jinja2 import Environment, PackageLoader
 from session import login, logout, sudo
-from database import get_item, n_checkin, n_checkout, n_fullrooms, n_freerooms, free_rooms, guest_leaving, price_from_room_id, reserv_info, id_rooms, n_items, add_to_db
+from database import *
 from utilities import dataINT_to_datatime, datepick_to_dataINT, dataINT, matching_guest
 import sqlite3, time, sets, datetime
 
@@ -20,6 +20,7 @@ env = Environment(loader=PackageLoader('project', '/templates'))
 def static_for_hr(filename):
     """Serve the static file from the directory app.static_folder"""
     return app.send_static_file(filename)
+
 
 @app.route("/login", methods=["GET", "POST"])
 def loginpage():
@@ -74,7 +75,15 @@ def free_rooms_page():
     if not session.get('logged_in'):
         abort(401)
     today = dataINT()
-    mappa = {"nrooms": n_freerooms(datepick_to_dataINT(request.args["checkin"]), datepick_to_dataINT(request.args["checkout"])), "rooms" : free_rooms(datepick_to_dataINT(request.args["checkin"]), datepick_to_dataINT(request.args["checkout"])), "checkin" : datepick_to_dataINT(request.args["checkin"]), "checkout" : datepick_to_dataINT(request.args["checkout"])}
+    cin = datepick_to_dataINT(request.args["checkin"])
+    cout = datepick_to_dataINT(request.args["checkin"])
+    mappa = {"nrooms": n_freerooms(cin, cout), 
+             "rooms" : sorted(free_rooms(cin, cout)),
+             "checkin" : cin, 
+             "checkout" : cout, 
+             "ckin" : dataINT_to_datatime(cin), 
+             "ckout" : dataINT_to_datatime(cout)
+             }
     template = env.get_template("booking.html")
     return template.render(mappa)
    
@@ -103,9 +112,13 @@ def confirm(checkin, checkout):
         abort(401)
     mappa = {"ckin": dataINT_to_datatime(int(checkin)), "ckout": dataINT_to_datatime(int(checkout))}
     sel_rooms=[]
+    mappa["error"] = "FALSE"
     for room in free_rooms(checkin, checkout):
         if request.args.get(str(room[0])) == "on":
             sel_rooms.append(room)
+    if sel_rooms == []:
+        mappa["msg"] = "No rooms selected."
+        mappa["error"] = "TRUE"
     mappa["rooms"] = sel_rooms
 #Temo calcoli il prezzo sbagliato!! *************************************  <------------------
     price = 0
@@ -116,7 +129,6 @@ def confirm(checkin, checkout):
     guest = []
     keys = []
     match = []
-    mappa["error"] = "FALSE"
     for item in ["name", "surname", "email", "passport", "phone", "address", "notes"]:
         if request.args[item] != "":
             guest.append(request.args[item])
@@ -166,41 +178,42 @@ def new_reserv_page():
     mappa = {}
     values = []
     
-    for item in ["id_guest", "name", "surname", "email", "passport", "phone", "address", "info"]:
+    for item in ["id_guest", "name", "surname", "email", "passport", "address", "phone", "info"]:
         values.append(request.form[item])
     mappa["guest"] = values
-    print 1
     if request.form["new_guest"]:
-        result = add_to_db("guests", values)
-        if result != "OK":
+        add = add_generic("guests")
+        result = add(values)
+        if result != 1:
             mappa["msg"]="An error occured while recording the new guest's data into the database. No reservations made yet. Please retry and be sure that the guest's data inserted are correct."
             mappa["error"]="TRUE"
             return template.render(mappa)
-    print 2
-    ids = []
-    for room in id_rooms():
-        print room[0]
-        values[0] = n_items("reservations", "", "") + 1         #The new ID
-        ids.append(values[0])
-        print 4
-        if request.form.get(room[0]):
-            print 5
-            for item in ["id_guest", "id_room", "checkin", "checkout"]:
-                values.append(request.form[item])
-                result = add_to_db("reservations", values)
-                print "ADDED"
-                if result != "OK":
-                    mappa["msg"]="An error occured while creating the new reservation. Please check what's recorded in the system, in order to spot mistakes in the database's content."
-                    mappa["error"]="TRUE"
-    print 3
-    mappa["id"] = ids
-    for i in ids:
-        id_room = get_item("reservations", "id_res", i)[1]
-        days = get_item("reservations", "id_res", i)[4] - get_item("reservations", "id_res", i)[3]
-        tot = tot + get_item("rooms", "id_room", id_room)[3]*days
-    mappa["price"] = tot
-            
-
+    reserv = []
+    id_rooms = request.form["rooms"].split(",")
+    id_rooms.pop()
+    price = 0
+    for room in id_rooms:
+        values = []
+        i = n_items("reservations", "", "") + 3         #The new ID
+        price = price + (int(request.form["checkout"])-int(request.form["checkin"]))*(get_item("rooms", "id_room", room)[0][3])
+        values.append(i)
+        values.append(room)
+        for item in ["id_guest", "checkin", "checkout"]:
+            values.append(request.form[item])
+        reserv.append(values)
+        add = add_generic("reservations")
+        result = add(values)
+        print "ADDED"
+        if result != 1:
+            mappa["msg"]="An error occured while creating the new reservation. Please check what's recorded in the system, in order to spot mistakes in the database's content."
+            mappa["error"]="TRUE"        
+    mappa["reserv"] = reserv
+    mappa["price"] = price
+    mappa["ckin"] = dataINT_to_datatime(int(request.form["checkin"]))
+    mappa["ckout"] = dataINT_to_datatime(int(request.form["checkout"]))
+    mappa["plural"] = "FALSE"
+    if len(reserv) > 1:
+        mappa["plural"] = "TRUE"
     return template.render(mappa)
     
     
@@ -217,6 +230,7 @@ def guests_page():
     guests = set([])
     mappa = {}
     n = 0
+    
     if request.method == "GET":
         for field in ["name", "surname", "phone", "passport", "email"]:
             if request.args.get(field):
@@ -233,12 +247,15 @@ def guests_page():
 
     if request.method == "POST":
         lista = []
-        for field in ["id_guest", "name", "surname", "passport", "email", "phone", "address", "info"]:
+        for field in ["id_guest", "name", "surname", "email", "passport", "phone", "address", "info"]:
             lista.append(request.form[field])
-        modify_database("guest", "id_guest", id_guest, lista)
-        mappa["msg"] = "Database aggiornato correttamente"
+        mod = modify("guests")
+        result = mod("", lista, "id_guest", request.form["id_guest"])
+        if result != 1:
+            mappa["msg"] = "An error occured while saving the new guest's data. Please retry."
+            mappa["error"] = "TRUE"
         #Regenerate guest's list
-        for field in ["name", "surname", "phone", "passport", "address", "email"]:
+        for field in ["name", "surname", "passport", "email"]:
             if request.form[field]:
                 n = n + 1
                 mappa[field] = request.form[field]
@@ -250,19 +267,18 @@ def guests_page():
         if len(guests) == 0:
             mappa["msg"] = "An error occured while saving the new guest's data. Please retry."
             mappa["error"] = "TRUE"
-                    
+    
     mappa["guest"] = list(guests)
-
-    print mappa
     template = env.get_template("guest.html")
     return template.render(mappa)
 
-@app.route("/reservations")
+
+@app.route("/reservations", methods=["GET","POST"])
 def reserv_page():
     """
     reserv()
     Allow the receptionist to find a reservation given the ID or the name of the guest.
-    In case of many guest with the same name and surname returns the reservations made by both of them: the receptionist can discriminate the users by ID.
+    In case of many guest with the same name and surname returns the reservations made by both of them: the receptionist can discriminate the guests by ID.
     Anyway, a message will alert the user about that.
     """
     if not session.get('logged_in'):
@@ -270,13 +286,17 @@ def reserv_page():
     reserv = []
     n_res = 0
     mappa = {}
+    print "RESERV_PAGE"
     
     if request.method == "GET":
         if request.args.get("id_res"):
-            r = {"id_res" : request.args.get("id_res")}
+            r = {"id_res" : request.args.get("id_res")} 
             reserv.append(reserv_info(get_item("reservations", "id_res", request.args.get("id_res"))))
             if len(reserv) > 1:
                 mappa["msg"] = "An error occured: more than one reservation has the selected ID. Check the database!"
+                mappa["error"] = "TRUE"
+            if len(reserv) < 1:
+                mappa["msg"] = "No reservations with the selected ID found."
                 mappa["error"] = "TRUE"
         elif request.args.get("surname"):
             surnames = get_item("guests", "surname", request.args.get("surname"))
@@ -294,10 +314,18 @@ def reserv_page():
                 n_res = n_res + len(res)
             
     if request.method == "POST":
-        lista = []
-        for field in ["name", "surname", "checkin", "checkout", "room", "address", "info"]:
-            lista.append(request.form[field])
-        #Passo la lista alla funzione di Gio e ottengo un feedback (???) ********************************
+        values = []
+        for field in ["name", "surname", "checkin", "checkout", "room"]:
+            if field == "checkin" or field == "checkout":
+                values.append(datepick_to_dataINT(request.form[field]))
+            else:
+                values.append(request.form[field])
+        mod = modify("reservations")
+        result = mod("", values, "id_res", request.form["id_res"])
+        if result != 1:
+            mappa["msg"]="An error occured while recording the reservation's data into the database. Please retry and be sure that the guest's data inserted are correct."
+            mappa["error"]="TRUE"
+            return template.render(mappa)
         mappa["msg"] = "Database aggiornato correttamente"
         #Regenerate list of resrvations
         if request.form["id_res"]:
@@ -322,7 +350,9 @@ def reserv_page():
                 n_res = n_res + len(res)
             
     mappa["n_res"] = n_res
-    mappa["reservations"] = reserv
+    
+    if reserv:
+        mappa["reservations"] = reserv
     print mappa
     template = env.get_template("reservations.html")
     return template.render(mappa)
