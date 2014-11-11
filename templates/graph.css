@@ -23,3 +23,10 @@ body {
 .area {
     fill: rgba(28, 93, 189, 1); 
 }
+
+.tip {
+    fill: black;
+    font-size: 1.5em;
+    text-anchor: start;
+    font-weight: 600;
+}

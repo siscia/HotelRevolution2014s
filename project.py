@@ -4,13 +4,8 @@
 from flask import Flask, request, send_from_directory, redirect, url_for, abort, session, render_template, make_response
 from jinja2 import Environment, PackageLoader
 from session import login, logout, sudo
-<<<<<<< HEAD
 from database import get_item, n_checkin, n_checkout, n_fullrooms, n_freerooms, free_rooms, guest_leaving, get_revenue
-from utilities import dataINT_to_datatime, dataINT, matching_guest
-=======
-from database import *
 from utilities import dataINT_to_datatime, datepick_to_dataINT, dataINT, matching_guest
->>>>>>> d4e28bf3ef2b0d5f1d3d69d30e351db1334c8c44
 import sqlite3, time, sets, datetime
 
 app = Flask(__name__, static_folder="templates")
@@ -373,9 +368,8 @@ def checkout():
     mappa["today"] = dataINT_to_datatime(today)
     return template.render(mappa)
 
-<<<<<<< HEAD
-@app.route("/revenue/<date_from>/<date_to>")
-def revenue(date_from, date_to):
+@app.route("/revenue_data/<date_from>/<date_to>")
+def revenue_data(date_from, date_to):
     rev = u"date,money\n"
     for date, money in get_revenue(date_from, date_to).iteritems():
         rev += (str(date)[:10] + "," + str(money) + "\n")
@@ -383,15 +377,11 @@ def revenue(date_from, date_to):
     response.headers['Content-Type'] = 'text/csv'
     return response
     
-=======
-
-@app.route("/revenue")
-def revenue():
+@app.route("/revenue/<date_from>/<date_to>")
+def revenue(date_from, date_to):
     template = env.get_template("revenue.html")
-    return template.render()
+    return template.render({"date_from" : date_from, "date_to" : date_to})
 
-
->>>>>>> d4e28bf3ef2b0d5f1d3d69d30e351db1334c8c44
 @app.route("/logout")
 def logoutpage():
     """
@@ -420,8 +410,6 @@ def unauthorized(e):
 @app.errorhandler(500)
 def internal_error(e):
     return render_template('500.html'), 500
-
-
 
     
 if __name__ == "__main__":
