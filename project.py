@@ -350,7 +350,9 @@ def checkout():
 @app.route("/revenue_data/<date_from>/<date_to>")
 def revenue_data(date_from, date_to):
     rev = u"date,money\n"
-    for date, money in get_revenue(date_from, date_to).iteritems():
+    for x in get_revenue(date_from, date_to):
+        print x
+    for money, date in get_revenue(date_from, date_to):
         rev += (str(date)[:10] + "," + str(money) + "\n")
     response = make_response(rev)
     response.headers['Content-Type'] = 'text/csv'
