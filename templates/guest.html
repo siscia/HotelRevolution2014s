@@ -19,7 +19,6 @@
 				for(var i = 0; i < inputs.length; i++) {
 					inputs[i].value = fields[i].innerHTML;
 				}
-				document.getElementById("btn-modify").disabled = false;	
 				document.getElementById("btn-save").disabled = false;	
 			};			
 		</script>
@@ -79,7 +78,7 @@
 							</thead>
 							<tbody>
 								{% for g in guest %}
-								<tr onclick="autoFillForm(this);">
+								<tr onclick="able(); autoFillForm(this);">
 									<td>{{ g[1] }}</td>
 									<td class="hidden">{{ g[5] }}</td>
 									<td class="hidden">{{ g[4] }}</td>
@@ -117,16 +116,8 @@
 							<div class="col-md-12">
 								<label>Other informations</label>	
 								<textarea name="info" class="form-control myform" rows="2" placeholder="other informations..." disabled></textarea>
-								<input name="id" class="hidden">
-							</div>
-							<div class="col-md-6">
-								<button id="btn-modify"class="btn btn-warning btn-lg btn-block" type="button" onclick="able();" disabled>
-									<span class="glyphicon glyphicon-pencil"></span>Modify
-								</button>
-							</div>
-							<div class="col-md-6">
+								<input name="id_guest" class="hidden myform">
 								<button id="btn-save" class="btn btn-success btn-lg btn-block" type="submit" disabled><span class="glyphicon glyphicon-save"></span> Save</button>
-							</div>
 						</div>
 					</div>
 				</div>
