@@ -120,12 +120,18 @@
 									<td class="hidden">{{r.room}}</td>
 									<td>{{r.surname}}</td>
 									<td class="hidden">{{r.checkout.year}}/{{r.checkout.month}}/{{r.checkout.day}}</td>
+<<<<<<< HEAD
 									<td class="hidden">{{ r.id_guest }}</td>
 									<td>{{r.id_res}}</td>
 									<td class="hidden">{{r.price}}</td>
+=======
+									<td class="hidden">{{ r_idguest }}</td>
+									<td>{{r.id_res}}</td>
+									<td class="hidden">{{r.price}}</td>
+								{% endfor %}
+>>>>>>> a52a54965b36e7f86aa299799dbb90b13fc5d604
 								</tr>
-								{%endfor%}
-							{%endfor%}
+							{% endfor %}
 							</tbody>
 						</table>
 					</div>

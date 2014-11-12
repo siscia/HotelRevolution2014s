@@ -114,6 +114,7 @@ def reserv_info(reserv):
     "Given a list of reservations id return a map with the id of the room, the name and surname of the guest and the total price for the particular staying."
     roomsInfo = []
     for res in reserv:
+        print res
         conn = sqlite3.connect(DATABASE_PATH)
         r = conn.execute("SELECT * FROM reservations WHERE id_res=?", [res[0]]).fetchone()     #Suppose that it will find just one reservation with the selected ID
         checkIN = dataINT_to_datatime(r[3])
@@ -174,10 +175,6 @@ def get_revenue(start_date, end_date):
     ORDER BY checkOUT asc
     """, [start_date, end_date])
     res_out = [clean_data(r) for r in rev.fetchall()]
-    # for r in res_out:
-    #     if r[1] in aggregate:
-    #         aggregate[r[1]] += r[0]
-    #     else: aggregate[r[1]] = r[0]
     aggregate.append(res_out[0])
     for r in res_out[1:]:
         if r[1] == aggregate[-1:][0][1]:

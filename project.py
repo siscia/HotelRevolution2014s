@@ -178,6 +178,7 @@ def new_reserv_page():
     
     for item in ["name", "surname", "email", "passport", "address", "phone", "info"]:
         values.append(request.form[item])
+    # values = [request.form[item] for item in ["name", "surname", "email", "passport", "address", "phone", "info"]]
     mappa["guest"] = values
     if request.form["new_guest"]:
         add = add_generic("guests")
@@ -304,10 +305,7 @@ def guests_page():
         for field in [ "name", "surname", "email", "passport", "phone", "address", "info"]:
             lista.append(request.form[field])
         mod = modify("guests")
-        #result = mod("", lista, "id_guest", request.form["id_guest"])
-        #if result != 1:
-        #    mappa["msg"] = "An error occured while saving the new guest's data. Please retry."
-        #    mappa["error"] = "TRUE"
+        result = mod("", lista, "id_guest", request.form["id_guest"])
         #Regenerate guest's list
         for field in ["name", "surname", "passport", "email"]:
             if request.form[field]:
@@ -396,4 +394,4 @@ def internal_error(e):
     return render_template('500.html'), 500
     
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
