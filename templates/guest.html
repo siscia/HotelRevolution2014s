@@ -11,8 +11,7 @@
 					inputs[i].disabled = false;
 				}
 			};
-		</script>
-		<script type="text/javascript">
+
 			function autoFillForm(element) {
 				var inputs = document.getElementsByClassName('myform');
 				var fields = element.getElementsByTagName("td");
@@ -21,21 +20,28 @@
 				}
 				document.getElementById("btn-save").disabled = false;	
 			};			
-		</script>
-		<script type="text/javascript">
+
 			function changeGuestForm(element) {
 				var x = element;
 				var y = document.getElementById("guestForm");	
 				y.placeholder = "Guest's " + x.options[x.selectedIndex].text;
 				y.name = x.options[x.selectedIndex].value;
-			}
+			};
+			
+			function checkGuest() {
+			var g = document.getElementById("guestForm").value;
+			if((g == null || g == "")) {
+					alert("please fill the Guest Form");
+					return false;
+				}
+			};	
 		</script>
 	</head>
 	<body class="c4">
 		<div class="top c3">
 			<div class="row">
 				<div class="col-md-6">
-					<form class="form-inline" role="form" method="get" action="guests">
+					<form class="form-inline" role="form" method="get" onsubmit="return checkGuest();">
 						<select class="form-control" onchange="changeGuestForm(this);">
 							  <option value="name">First Name</option>
 							  <option value="surname">Family Name</option>
@@ -117,7 +123,7 @@
 								<label>Other informations</label>	
 								<textarea name="info" class="form-control myform" rows="2" placeholder="other informations..." disabled></textarea>
 								<input name="id_guest" class="hidden myform">
-								<button id="btn-save" class="btn btn-success btn-lg btn-block" type="submit" disabled><span class="glyphicon glyphicon-save"></span> Save</button>
+								<button id="btn-save" class="btn btn-success btn-lg btn-block" type="submit" disabled><span class="glyphicon glyphicon-ok"></span> Save</button>
 						</div>
 					</div>
 				</div>
