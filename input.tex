@@ -16,7 +16,7 @@
 	\multicolumn{3}{|c|}{\textbf{Main Page}} \\ 
 	\hline \hline
 	Log-out			& button		& log-out from the system and go back to the log-in \\
-	Manager	btn		& button		& go to the manager page if the user is logged as manager \\
+	Manager			& button		& go to the manager page if the user is logged as manager \\
 	Credits			& button		& show in a pop-up the credits for HotelRevolution2014s \\
 	\hline
 	Check-in		& datepicker 	& Check-in for the new reservation \\ 
@@ -40,7 +40,7 @@
 	Family Name	 	& text box 		& Guest's surname \\ 
 	Res Dropdown 	& dropdown 		& Switch between Reservations search method: guest's data or reservation's data \\ 
 	Res Search		& button		& Submit a query to search in the database the reservation the user is looking for with the previous data \\
-	Home btn		& button		& Go back to the main page \\
+	Home			& button		& Go back to the main page \\
 	\hline
 	AutoFiller		& javascript	& when a row in the reservation's table is clicked, retrieve the data and fill all the text box \\
 	First Name		& text box		& Guest's name for the selected reservation, retrivered from the database \\
@@ -57,7 +57,7 @@
 	Guest data		& text box		& Guest's data to search in the database, depending of the selected search method in the following dropdown \\ 
 	Guest Dropdown	& dropdown 		& Switch between Guest search method: name, surname, passport, email \\ 
 	Guest Search	& button		& submit a query to search the guest in the database the user is looking for with the previous data \\
-	Home btn		& button		& Go back to the main page \\
+	Home			& button		& Go back to the main page \\
 	\hline
 	AutoFiller		& javascript	& when a row in the guest's table is clicked, retrieve the data and fill all the text box \\
 	First Name		& text box		& Guest's name, retrivered from the database \\
@@ -74,7 +74,7 @@
 	Check-in		& datepicker	& Check-in for the new reservation \\
 	Check-out		& datepicker	& Check-out for the new reservation \\
 	Booking Search	& button		& Submit a query to search a room available in the written period (between check-in and out date \\
-	Home btn		& button		& go back to the main page \\
+	Home			& button		& Go back to the main page \\
 	\hline
 	Row-selector	& checkbox		& An hidden checkbox that highlight the row and select the room for the new reservation \\
 	First Name		& text box 		& Guest's first name - required input. An error occured if not filled \\
@@ -88,7 +88,14 @@
 	\multicolumn{3}{|c|}{\textbf{Confirmation Page}} \\
 	\hline \hline
 	Book			& button		& Store the recervation into the database \\
-	Go Back			& button		& if the reservation's data are not correct, go back to the booking page, where the user can modify the data \\
+	Go Back			& button		& If the reservation's data are not correct, go back to the booking page, where the user can modify the data \\
+	\hline \hline
+	\multicolumn{3}{|c|}{\textbf{Manager Page}} \\
+	\hline	\hline
+	Initial date	& text box		& The beginning date for calculate the revenue \\
+	Final date		& text box		& The ending date for calculate the revenue \\
+	Calculate		& button		& Calculate the revenue between the initial and final date \\
+	Home			& button		& Go back to the main page \\
 	\hline
 	\end{longtable}
 \end{center}
