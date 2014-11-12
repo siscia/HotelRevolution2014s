@@ -110,10 +110,6 @@ def confirm(checkin, checkout):
     """
     if not session.get('logged_in'):
         abort(401)
-    print checkin
-    print checkout
-    print dataINT_to_datatime(int(checkin))
-    print dataINT_to_datatime(int(checkout))
     mappa = {"ckin": dataINT_to_datatime(int(checkin)), "ckout": dataINT_to_datatime(int(checkout))}
     sel_rooms=[]
     mappa["error"] = "FALSE"
@@ -199,7 +195,6 @@ def new_reserv_page():
             values.append(request.form[item])
         add = add_generic("reservations")
         result = add(values)
-        print "ADDED"
         if not result:
             mappa["msg"]="An error occured while creating the new reservation. Please check what's recorded in the system, in order to spot mistakes in the database's content."
             mappa["error"]="TRUE"      
@@ -253,12 +248,9 @@ def reserv_page():
                 mappa["msg"] = "No guest found with that name."
                 mappa["error"] = "TRUE"
             for guest in guests:
-                print str(guest) + ":"
                 res = get_item("reservations", "id_guest", guest[0])
-                print res
-                print "**************"
                 reserv.append(reserv_info(res))
-                n_res = n_res + len(res)
+                n_res += len(res)
             if n_res == 0:
                 mappa["msg"] = "The selected guest made no reservations, or his/her reservations has been deleted."
                 mappa["error"] = "TRUE"
@@ -271,11 +263,10 @@ def reserv_page():
                 values.append(request.form[field])
         mod = modify("reservations")
         result = mod("", values, "id_res", request.form["id_res"])
-        print result
-        mappa["msg"] = "Database aggiornato correttamente"    
+        mappa["msg"] = "Database correctly updated"
     mappa["n_res"] = n_res
-    mappa["reservations"] = reserv
-    print mappa
+    if reserv:
+        mappa["reservations"] = reserv
     template = env.get_template("reservations.html")
     return template.render(mappa)
 
@@ -310,13 +301,11 @@ def guests_page():
 
     if request.method == "POST":
         lista = []
+        mappa["msg"] = "Database correctly updated"
         for field in [ "name", "surname", "email", "passport", "phone", "address", "info"]:
             lista.append(request.form[field])
         mod = modify("guests")
         result = mod("", lista, "id_guest", request.form["id_guest"])
-        #if result != 1:
-        #    mappa["msg"] = "An error occured while saving the new guest's data. Please retry."
-        #    mappa["error"] = "TRUE"
         #Regenerate guest's list
         for field in ["name", "surname", "passport", "email"]:
             if request.form[field]:
@@ -348,8 +337,11 @@ def checkout():
     mappa["today"] = dataINT_to_datatime(today)
     return template.render(mappa)
 
+
 @app.route("/revenue_data/<date_from>/<date_to>")
 def revenue_data(date_from, date_to):
+    if not session.get('logged_in') or sudo() == "FALSE":
+        abort(401)
     rev = u"date,money\n"
     for x in get_revenue(date_from, date_to):
         print x
@@ -359,10 +351,18 @@ def revenue_data(date_from, date_to):
     response.headers['Content-Type'] = 'text/csv'
     return response
     
+    
 @app.route("/revenue/<date_from>/<date_to>")
 def revenue(date_from, date_to):
+    if not session.get('logged_in') or sudo() == "FALSE":
+        abort(401)
+    mappa = {"date_from" : date_from, "date_to" : date_to}
+    #mappa["tot"] = revenue(date_from, date_to)
+    mappa["tot"] = "80800.0"
+    print mappa["tot"]
     template = env.get_template("revenue.html")
-    return template.render({"date_from" : date_from, "date_to" : date_to})
+    return template.render(mappa)
+
 
 @app.route("/logout")
 def logoutpage():
