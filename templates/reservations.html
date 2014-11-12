@@ -115,18 +115,17 @@
                                                         {% for reserv in reservations %}
                                                                 {% for r in reserv %}
 								<tr onclick="able(); autoFillForm(this);">
-									<td>{{ r[0].name }}</td>
-									<td class="hidden">{{r[0].checkin.year}}/{{r[0].checkin.month}}/{{r[0].checkin.day}}</td>
-									<td class="hidden">{{r[0].room}}</td>
-									<td>{{r[0].surname}}</td>
-									<td class="hidden">{{r[0].checkout.year}}/{{r[0].checkout.month}}/{{r[0].checkout.day}}</td>
+									<td>{{ r.name }}</td>
+									<td class="hidden">{{r.checkin.year}}/{{r.checkin.month}}/{{r.checkin.day}}</td>
+									<td class="hidden">{{r.room}}</td>
+									<td>{{r.surname}}</td>
+									<td class="hidden">{{r.checkout.year}}/{{r.checkout.month}}/{{r.checkout.day}}</td>
 									<td class="hidden">{{ r_idguest }}</td>
-									<td>{{r[0].id_res}}</td>
-									<td class="hidden">{{r[0].price}}</td>
-								{%endfor%}
+									<td>{{r.id_res}}</td>
+									<td class="hidden">{{r.price}}</td>
+								{% endfor %}
 								</tr>
-								{%endfor%}
-							{%endfor%}
+							{% endfor %}
 							</tbody>
 						</table>
 					</div>

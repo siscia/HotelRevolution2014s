@@ -4,7 +4,7 @@
 from flask import Flask, request, send_from_directory, redirect, url_for, abort, session, render_template, make_response
 from jinja2 import Environment, PackageLoader
 from session import login, logout, sudo
-from database import get_item, n_checkin, n_checkout, n_fullrooms, n_freerooms, free_rooms, guest_leaving, get_revenue, price_from_room_id, n_items
+from database import get_item, n_checkin, n_checkout, n_fullrooms, n_freerooms, free_rooms, guest_leaving, get_revenue, price_from_room_id, n_items, add_generic, reserv_info
 from utilities import dataINT_to_datatime, datepick_to_dataINT, dataINT, matching_guest
 import sqlite3, time, sets, datetime
 
@@ -182,6 +182,7 @@ def new_reserv_page():
     
     for item in ["name", "surname", "email", "passport", "address", "phone", "info"]:
         values.append(request.form[item])
+    # values = [request.form[item] for item in ["name", "surname", "email", "passport", "address", "phone", "info"]]
     mappa["guest"] = values
     if request.form["new_guest"]:
         add = add_generic("guests")
