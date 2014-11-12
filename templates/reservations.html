@@ -140,7 +140,7 @@
 								<label>First Name</label>
 								<input name="name" type="text" class="form-control myform" placeholder="First Name *" disabled>
 								<label>Check-In</label>
-								<input name="checkin" type="text" class="form-control myform" placeholder="Phone number" disabled>
+								<input id="datepickin" name="checkin" type="text" class="form-control myform" placeholder="Phone number" disabled>
 								<label>Room Number</label>							
 								<input name="room_n" type="text" class="form-control myform" placeholder="Passport ID" disabled>
 								<p><br></p>
@@ -150,7 +150,7 @@
 								<label>Family Name</label>
 								<input name="surname" type="text" class="form-control myform" placeholder="Family Name *" disabled>
 								<label>Check-Out</label>
-								<input name="checkout" type="text" class="form-control myform" placeholder="email address" disabled>
+								<input id="datepickout" name="checkout" type="text" class="form-control myform" placeholder="email address" disabled>
 								<input name="idguest" type="text" class="hidden myform" disabled>
 								<label>Reservation ID</label>
 								<input name="id_res" type="text" class="form-control myform" placeholder="Address" disabled>
@@ -170,5 +170,15 @@
 				</div>
 			</form>
 		</div>
+		<script type="text/javascript" src="datepickr.min.js"></script>
+		<script type="text/javascript">
+			new datepickr('datepickin', {
+				'dateFormat': 'Y/m/d'
+			});
+			
+			new datepickr('datepickout', {
+				'dateFormat': 'Y/m/d'
+			});
+		</script>
 	</body>
 </html>
