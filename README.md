@@ -3,7 +3,7 @@
 Project for the course of Software Engineering.
 
 The whole website is accessible at:
-[http://ec2-54-251-161-3.ap-southeast-1.compute.amazonaws.com:5000/main](http://ec2-54-251-161-3.ap-southeast-1.compute.amazonaws.com:5000/main)
+[http://ec2-54-251-161-3.ap-southeast-1.compute.amazonaws.com:5000/login](http://ec2-54-251-161-3.ap-southeast-1.compute.amazonaws.com:5000/login)
 
 Username: `admin` Password: `a`
 
