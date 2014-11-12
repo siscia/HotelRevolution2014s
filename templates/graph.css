@@ -1,0 +1,32 @@
+
+body {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.area {
+    fill: rgba(28, 93, 189, 1); 
+}
+
+.tip {
+    fill: black;
+    font-size: 1.5em;
+    text-anchor: start;
+    font-weight: 600;
+}

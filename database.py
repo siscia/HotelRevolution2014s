@@ -154,12 +154,41 @@ def guest_leaving(date):
           } for g in guest.fetchall()]
     return guest
 
+
 def available():
     "Determine if the reservation's data are coherent with the rest of the database"
     return 0
 
 
-#if I add an inc variable in input for add_specific, I can choose if autoincrement the id or let it in input by the user
+def get_revenue(start_date, end_date):
+    def clean_data(reservation):
+        checkIN = dataINT_to_datatime(r[0])
+        checkOUT = dataINT_to_datatime(r[1])
+        price_night = float(r[2])
+        return [(checkOUT - checkIN).days * price_night,
+                checkOUT]
+    conn = sqlite3.connect(DATABASE_PATH)
+    aggregate = {}
+    rev = conn.execute("""
+    SELECT 
+        checkIN, checkOUT, price_night 
+    FROM reservations 
+    INNER JOIN rooms 
+        ON reservations.id_room = rooms.id_room
+    WHERE checkOUT > ? AND checkOUT < ?
+    """, [start_date, end_date])
+    res_out = [clean_data(r) for r in rev.fetchall()]
+    for r in res_out:
+        if r[1] in aggregate:
+            aggregate[r[1]] += r[0]
+        else: aggregate[r[1]] = r[0]
+    return aggregate
+
+def revenue(start_date, end_date):
+    data = get_revenue(start_date, end_date)
+    rev += [data[field] for field in data]
+    return rev
+
 def add_generic(table):
     "add rows in the specified table"
     def add_specific(values):
@@ -174,17 +203,22 @@ def add_generic(table):
     return add_specific      
 
 def modify(table):
-    "Modifies the row identified by oldvalue and oldfield. If newfield is empty, rewrites the entire line."
+    "Modifies the row identified by oldvalue and oldfield. if newfield is empty rewrites the whole line."
     def modify_specific(newfield, newvalue, oldfield, oldvalue):
         conn = sqlite3.connect(DATABASE_PATH)
         with conn:
-            cur= conn.cursor()
             if newfield == "":
-                cur.execute("DELETE FROM " + table + " WHERE " + oldfield + " = " + oldvalue)
-                conn.commit()
-                result = add_generic(table)(newvalue)
+                conn.row_factory = sqlite3.Row
+                cur = conn.cursor()
+                cur.execute("SELECT * FROM " + table)
+                row = cur.fetchone()
+                newfield = row.keys()[1:]
+                print newfield
             else:
-                cur.execute("UPDATE " + table + " SET " + newfield + " = " + newvalue + " WHERE " + oldfield + " = " + oldvalue)
+                cur = conn.cursor()
+            print "UPDATE " + table + " SET " + str(tuple(newfield)) + " = " + str(tuple(newvalue)) + " WHERE " + oldfield + " = " + oldvalue 
+            [cur.execute("UPDATE " + table + " SET " + str(newfield[n]) + " = " + str(newvalue[n]) + " WHERE " + oldfield + " = " + oldvalue) for n in xrange(len(newfield))]
             conn.commit()
         return cur.lastrowid
     return modify_specific
+

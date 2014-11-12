@@ -1,7 +1,7 @@
 
 #***** ROUTING FUNCTIONS by Sara & Simo ***************************************************
 
-from flask import Flask, request, send_from_directory, redirect, url_for, abort, session, render_template
+from flask import Flask, request, send_from_directory, redirect, url_for, abort, session, render_template, make_response
 from jinja2 import Environment, PackageLoader
 from session import login, logout, sudo
 from database import *
@@ -110,10 +110,6 @@ def confirm(checkin, checkout):
     """
     if not session.get('logged_in'):
         abort(401)
-    print checkin
-    print checkout
-    print dataINT_to_datatime(int(checkin))
-    print dataINT_to_datatime(int(checkout))
     mappa = {"ckin": dataINT_to_datatime(int(checkin)), "ckout": dataINT_to_datatime(int(checkout))}
     sel_rooms=[]
     mappa["error"] = "FALSE"
@@ -198,7 +194,6 @@ def new_reserv_page():
             values.append(request.form[item])
         add = add_generic("reservations")
         result = add(values)
-        print "ADDED"
         if not result:
             mappa["msg"]="An error occured while creating the new reservation. Please check what's recorded in the system, in order to spot mistakes in the database's content."
             mappa["error"]="TRUE"      
@@ -252,12 +247,9 @@ def reserv_page():
                 mappa["msg"] = "No guest found with that name."
                 mappa["error"] = "TRUE"
             for guest in guests:
-                print str(guest) + ":"
                 res = get_item("reservations", "id_guest", guest[0])
-                print res
-                print "**************"
                 reserv.append(reserv_info(res))
-                n_res = n_res + len(res)
+                n_res += len(res)
             if n_res == 0:
                 mappa["msg"] = "The selected guest made no reservations, or his/her reservations has been deleted."
                 mappa["error"] = "TRUE"
@@ -270,11 +262,9 @@ def reserv_page():
                 values.append(request.form[field])
         mod = modify("reservations")
         result = mod("", values, "id_res", request.form["id_res"])
-        print result
         mappa["msg"] = "Database aggiornato correttamente"    
     mappa["n_res"] = n_res
     mappa["reservations"] = reserv
-    print mappa
     template = env.get_template("reservations.html")
     return template.render(mappa)
 
@@ -348,10 +338,22 @@ def checkout():
     return template.render(mappa)
 
 
-@app.route("/revenue")
-def revenue():
+@app.route("/revenue_data/<date_from>/<date_to>")
+def revenue_data(date_from, date_to):
+    rev = u"date,money\n"
+    for date, money in get_revenue(date_from, date_to).iteritems():
+        rev += (str(date)[:10] + "," + str(money) + "\n")
+    response = make_response(rev)
+    response.headers['Content-Type'] = 'text/csv'
+    return response
+    
+    
+@app.route("/revenue/<date_from>/<date_to>")
+def revenue(date_from, date_to):
+    mappa = {"date_from" : date_from, "date_to" : date_to}
+ #   mappa["tot"] = revenue(date_from, date_to)
     template = env.get_template("revenue.html")
-    return template.render()
+    return template.render(mappa)
 
 
 @app.route("/logout")
@@ -383,7 +385,6 @@ def unauthorized(e):
 def internal_error(e):
     return render_template('500.html'), 500
 
-
-
+    
 if __name__ == "__main__":
     app.run(debug=True)
