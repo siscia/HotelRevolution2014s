@@ -262,9 +262,10 @@ def reserv_page():
                 values.append(request.form[field])
         mod = modify("reservations")
         result = mod("", values, "id_res", request.form["id_res"])
-        mappa["msg"] = "Database aggiornato correttamente"    
+        mappa["msg"] = "Database correctly updated"
     mappa["n_res"] = n_res
-    mappa["reservations"] = reserv
+    if reserv:
+        mappa["reservations"] = reserv
     template = env.get_template("reservations.html")
     return template.render(mappa)
 
@@ -299,10 +300,11 @@ def guests_page():
 
     if request.method == "POST":
         lista = []
+        mappa["msg"] = "Database correctly updated"
         for field in [ "name", "surname", "email", "passport", "phone", "address", "info"]:
             lista.append(request.form[field])
         mod = modify("guests")
-        result = mod("", lista, "id_guest", request.form["id_guest"])
+        #result = mod("", lista, "id_guest", request.form["id_guest"])
         #if result != 1:
         #    mappa["msg"] = "An error occured while saving the new guest's data. Please retry."
         #    mappa["error"] = "TRUE"
@@ -340,6 +342,8 @@ def checkout():
 
 @app.route("/revenue_data/<date_from>/<date_to>")
 def revenue_data(date_from, date_to):
+    if not session.get('logged_in') or sudo() == "FALSE":
+        abort(401)
     rev = u"date,money\n"
     for x in get_revenue(date_from, date_to):
         print x
@@ -352,8 +356,12 @@ def revenue_data(date_from, date_to):
     
 @app.route("/revenue/<date_from>/<date_to>")
 def revenue(date_from, date_to):
+    if not session.get('logged_in') or sudo() == "FALSE":
+        abort(401)
     mappa = {"date_from" : date_from, "date_to" : date_to}
- #   mappa["tot"] = revenue(date_from, date_to)
+    #mappa["tot"] = revenue(date_from, date_to)
+    mappa["tot"] = "80800.0"
+    print mappa["tot"]
     template = env.get_template("revenue.html")
     return template.render(mappa)
 

@@ -188,7 +188,9 @@ def get_revenue(start_date, end_date):
 
 def revenue(start_date, end_date):
     data = get_revenue(start_date, end_date)
-    rev = rev + [data[field] for field in data]
+    rev = 0
+    for field in data:
+        rev = rev + field[0]
     return rev
 
 
@@ -209,18 +211,18 @@ def modify(table):
     "Modifies the row identified by oldvalue and oldfield. if newfield is empty rewrites the whole line."
     def modify_specific(newfield, newvalue, oldfield, oldvalue):
         conn = sqlite3.connect(DATABASE_PATH)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
         with conn:
             if newfield == "":
-                conn.row_factory = sqlite3.Row
-                cur = conn.cursor()
                 cur.execute("SELECT * FROM " + table)
                 row = cur.fetchone()
                 newfield = row.keys()[1:]
                 print newfield
-            else:
-                cur = conn.cursor()
-            print "UPDATE " + table + " SET " + str(tuple(newfield)) + " = " + str(tuple(newvalue)) + " WHERE " + oldfield + " = " + oldvalue 
-            [cur.execute("UPDATE " + table + " SET " + str(newfield[n]) + " = " + str(newvalue[n]) + " WHERE " + oldfield + " = " + oldvalue) for n in xrange(len(newfield))]
+            #print "UPDATE " + table + " SET " + str(tuple(newfield)) + " = " + str(tuple(newvalue)) + " WHERE " + oldfield + " = " + oldvalue
+            for n in xrange(len(newfield)):
+                print "UPDATE " + table + " SET " + str(newfield[n]) + " = " + str(newvalue[n]) + " WHERE " + oldfield + " = " + oldvalue
+                cur.execute("UPDATE " + table + " SET " + str(newfield[n]) + " = " + str(newvalue[n]) + " WHERE " + oldfield + " = " + oldvalue)
             conn.commit()
         return cur.lastrowid
     return modify_specific

@@ -71,7 +71,7 @@
 			<div class="row">
 				
 				<div class="col-md-8">
-					<form class="form-inline" role="form" method="post" onsubmit="return checkReservation();">
+					<form class="form-inline" role="form" method="get" action="reservations" onsubmit="return checkReservation();">
 						<select class="form-control" onchange="changeResForm(this);">
 							<option value="id_res">Reservation ID</option>
 							<option>Guest's name and surname</option>
@@ -94,7 +94,7 @@
 		</div>
 			
 		<div class="row">
-			<form class="form-horizontal" role="form" method="post" onsubmit="ableOnSubmit();">
+			<form class="form-horizontal" role="form" method="post" action="reservations" onsubmit="ableOnSubmit();">
 				<div class="col-md-6">
 					<div class="div-std c2">
 						<table class="table">
@@ -115,15 +115,14 @@
                                                         {% for reserv in reservations %}
                                                                 {% for r in reserv %}
 								<tr onclick="able(); autoFillForm(this);">
-									<td>{{ r[0].name }}</td>
-									<td class="hidden">{{r[0].checkin.year}}/{{r[0].checkin.month}}/{{r[0].checkin.day}}</td>
-									<td class="hidden">{{r[0].room}}</td>
-									<td>{{r[0].surname}}</td>
-									<td class="hidden">{{r[0].checkout.year}}/{{r[0].checkout.month}}/{{r[0].checkout.day}}</td>
-									<td class="hidden">{{ r_idguest }}</td>
-									<td>{{r[0].id_res}}</td>
-									<td class="hidden">{{r[0].price}}</td>
-								{%endfor%}
+									<td>{{ r.name }}</td>
+									<td class="hidden">{{r.checkin.year}}/{{r.checkin.month}}/{{r.checkin.day}}</td>
+									<td class="hidden">{{r.room}}</td>
+									<td>{{r.surname}}</td>
+									<td class="hidden">{{r.checkout.year}}/{{r.checkout.month}}/{{r.checkout.day}}</td>
+									<td class="hidden">{{ r.id_guest }}</td>
+									<td>{{r.id_res}}</td>
+									<td class="hidden">{{r.price}}</td>
 								</tr>
 								{%endfor%}
 							{%endfor%}
@@ -142,7 +141,7 @@
 								<label>Check-In</label>
 								<input id="datepickin" name="checkin" type="text" class="form-control myform" placeholder="Phone number" disabled>
 								<label>Room Number</label>							
-								<input name="room_n" type="text" class="form-control myform" placeholder="Passport ID" disabled>
+								<input name="room" type="text" class="form-control myform" placeholder="Passport ID" disabled>
 								<p><br></p>
 								<h2 class="title text-right"><span class="clear"><strong>Price:</strong></span></h2>
 							</div>
@@ -151,7 +150,7 @@
 								<input name="surname" type="text" class="form-control myform" placeholder="Family Name *" disabled>
 								<label>Check-Out</label>
 								<input id="datepickout" name="checkout" type="text" class="form-control myform" placeholder="email address" disabled>
-								<input name="idguest" type="text" class="hidden myform" disabled>
+								<input name="id_guest" type="text" class="hidden myform" disabled>
 								<label>Reservation ID</label>
 								<input name="id_res" type="text" class="form-control myform" placeholder="Address" disabled>
 								<p><br></p>
