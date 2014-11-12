@@ -341,7 +341,9 @@ def checkout():
 @app.route("/revenue_data/<date_from>/<date_to>")
 def revenue_data(date_from, date_to):
     rev = u"date,money\n"
-    for date, money in get_revenue(date_from, date_to).iteritems():
+    for x in get_revenue(date_from, date_to):
+        print x
+    for money, date in get_revenue(date_from, date_to):
         rev += (str(date)[:10] + "," + str(money) + "\n")
     response = make_response(rev)
     response.headers['Content-Type'] = 'text/csv'
@@ -384,7 +386,6 @@ def unauthorized(e):
 @app.errorhandler(500)
 def internal_error(e):
     return render_template('500.html'), 500
-
     
 if __name__ == "__main__":
     app.run(debug=True)

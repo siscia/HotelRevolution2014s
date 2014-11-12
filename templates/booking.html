@@ -27,6 +27,22 @@
 					return false;
 				}
 			}
+			
+			function checkBooking() {
+				var D1 = document.getElementById("datepickin").value;
+				var D2 = document.getElementById("datepickout").value;
+				if ((D1 == null || D1 == "") || (D2 == null || D2 =="")) {
+					alert("Check-in and Check-out fields must be filled");
+					return false;
+				}
+				var d1 = D1.substring(0,4) + D1.substring(5,7) + D1.substring(8,10);
+				console.log(d1);
+				var d2 = D2.substring(0,4) + D2.substring(5,7) + D2.substring(8,10);
+				if (d1 > d2) {
+					alert("Please check the check-in and check out date,\nthe first date is after the second!");
+					return false;
+				}
+			}
 		</script>
 	</head>
 	<body class="c4">

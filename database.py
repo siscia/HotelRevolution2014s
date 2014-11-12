@@ -155,11 +155,6 @@ def guest_leaving(date):
     return guest
 
 
-def available():
-    "Determine if the reservation's data are coherent with the rest of the database"
-    return 0
-
-
 def get_revenue(start_date, end_date):
     def clean_data(reservation):
         checkIN = dataINT_to_datatime(r[0])
@@ -168,7 +163,7 @@ def get_revenue(start_date, end_date):
         return [(checkOUT - checkIN).days * price_night,
                 checkOUT]
     conn = sqlite3.connect(DATABASE_PATH)
-    aggregate = {}
+    aggregate = []
     rev = conn.execute("""
     SELECT 
         checkIN, checkOUT, price_night 
@@ -176,18 +171,26 @@ def get_revenue(start_date, end_date):
     INNER JOIN rooms 
         ON reservations.id_room = rooms.id_room
     WHERE checkOUT > ? AND checkOUT < ?
+    ORDER BY checkOUT asc
     """, [start_date, end_date])
     res_out = [clean_data(r) for r in rev.fetchall()]
-    for r in res_out:
-        if r[1] in aggregate:
-            aggregate[r[1]] += r[0]
-        else: aggregate[r[1]] = r[0]
+    # for r in res_out:
+    #     if r[1] in aggregate:
+    #         aggregate[r[1]] += r[0]
+    #     else: aggregate[r[1]] = r[0]
+    aggregate.append(res_out[0])
+    for r in res_out[1:]:
+        if r[1] == aggregate[-1:][0][1]:
+            aggregate[-1:][0][0] += r[0]
+        else: aggregate.append(r)
     return aggregate
+
 
 def revenue(start_date, end_date):
     data = get_revenue(start_date, end_date)
-    rev += [data[field] for field in data]
+    rev = rev + [data[field] for field in data]
     return rev
+
 
 def add_generic(table):
     "add rows in the specified table"
