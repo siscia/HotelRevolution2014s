@@ -212,6 +212,7 @@ Free Room List      & Receptionist         & Screen                 \\ \hline
 \end{tabular}
 \end{table}
 
+
 \subsubsection{Confirm Reservation}
 
 This Output is both internal and external. Internal because it is seen, on the screen, by the receptionist when he completes a reservation. External because it is sent by e-mail or by phone to the client. The Output design the same in both cases, and it groups the following information:
@@ -282,3 +283,15 @@ This is an internal Output that prints on the screen all the free room in a part
   \item all the feature that are inside the room (i.e. smoker, wi-fi, …)
   \item the total price of the room for the specified period of days
 \end{itemize}
+
+\subsection{Technical Overview}
+
+The application's backend is been developed using python and the minimalist framework ``Flask''.
+
+We valued a lot the simplicity of the system, so we used ``SQLite'' as persintent layer.
+
+The application's frontend is been developed using HTML and CSS, the framework ``Bootstrap'' is been used.
+
+The HTML engine ``Jinja2'' was used to dynamically produce the desired HTML from python's data structure.
+
+Finally the graph is render client side using the javascript library ``D3.js''.
